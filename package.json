@@ -36,6 +36,7 @@
     "@types/supertest": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
@@ -64,6 +65,45 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@modules(.*)$": "<rootDir>/src/modules$1",
+      "^@decorators(.*)$": "<rootDir>/src/decorators$1",
+      "^@interceptors(.*)$": "<rootDir>/src/interceptors$1",
+      "^@providers(.*)$": "<rootDir>/src/providers$1",
+      "^@constants(.*)$": "<rootDir>/src/constants$1",
+      "^@pipes(.*)$": "<rootDir>/src/pipes$1",
+      "^@helpers(.*)$": "<rootDir>/src/helpers$1",
+      "^@guards(.*)$": "<rootDir>/src/guards$1",
+      "^@config(.*)$": "<rootDir>/src/config$1",
+      "^src(.*)$": "<rootDir>/src$1",
+      "^@enums(.*)$": "<rootDir>/src/enums$1",
+      "^@filters(.*)$": "<rootDir>/src/filters$1",
+      "^@validation-constraints(.*)$": "<rootDir>/src/validation-constraints$1",
+      "^@tests(.*)$": "<rootDir>/src/tests$1",
+      "^@types(.*)$": "<rootDir>/src/types$1"
+    }
+  },
+  "_moduleAliases": {
+    "@components": "./dist/components",
+    "@filters": "./dist/filters",
+    "@guards": "./dist/guards",
+    "@enums": "./dist/enums",
+    "@pipes": "./dist/pipes",
+    "@interceptors": "./dist/interceptors",
+    "@interfaces": "./dist/interfaces",
+    "@decorators": "./dist/decorators",
+    "@modules": "./dist/modules",
+    "@config": "./dist/config",
+    "@providers": "./dist/providers",
+    "@helpers": "./dist/helpers",
+    "@constants": "./dist/constants",
+    "@types": "./dist/types",
+    "@validation-constraints": "./dist/validation-constraints"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
