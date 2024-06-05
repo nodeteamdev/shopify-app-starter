@@ -1,5 +1,5 @@
 # ===== npm dependencies for build =====
-FROM node:20.10.0-bullseye-slim AS build_dependencies
+FROM node:22.2.0-bullseye-slim AS build_dependencies
 
 ENV APP_DIR=/app
 
@@ -18,7 +18,7 @@ RUN npm run db:generate
 
 # ===== build =====
 
-FROM node:20.10.0-bullseye-slim as build_product
+FROM node:22.2.0-bullseye-slim as build_product
 
 ENV APP_DIR=/app
 
@@ -33,7 +33,7 @@ RUN export PATH=./node_modules/.bin:$PATH
 RUN npm run build
 
 # ===== npm dependencies for product =====
-FROM node:20.10.0-bullseye-slim as build_dependencies_prod
+FROM node:22.2.0-bullseye-slim as build_dependencies_prod
 
 ENV APP_DIR=/app
 
@@ -52,7 +52,7 @@ RUN npm pkg set scripts.prepare=" "
 RUN npm ci --omit=dev --quit
 
 # ===== product image =====
-FROM node:20.10.0-bullseye-slim
+FROM node:22.2.0-bullseye-slim
 
 ENV APP_DIR=/app
 

@@ -24,7 +24,6 @@ export type AppConfig = {
   readonly env: string;
   readonly version: string;
   readonly isProduction: boolean;
-  readonly saltRounds: number;
   readonly myOrdersUrl: string;
 };
 
@@ -40,7 +39,6 @@ export default registerAs(
       // eslint-disable-next-line global-require,@typescript-eslint/no-var-requires,import/no-dynamic-require
       version: require(path.join(process.cwd(), 'package.json')).version,
       isProduction: process.env.NODE_ENV === 'production',
-      saltRounds: Number(process.env.SALT_ROUNDS),
       myOrdersUrl: process.env.MY_ORDERS_URL || 'https://onix-systems-artcane-ai-frontend.staging.onix.ua/en/profile/orders',
     };
 
@@ -52,7 +50,6 @@ export default registerAs(
       env: Joi.string().required(),
       version: Joi.string().required(),
       isProduction: Joi.boolean().required(),
-      saltRounds: Joi.number().required(),
       myOrdersUrl: Joi.string().required(),
     });
 

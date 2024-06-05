@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String         @id(map: "pk_User") @db.Uuid
+  email              String         @unique
+  password           String
+  resetPasswordToken String?
+  isVerified         Boolean        @default(false)
+  roles              RolesOnUsers[]
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @default(now())
+
+  @@index([isVerified])
+  @@map("users")
+}
+
+model Role {
+  id           String         @id(map: "pk_Role") @db.Uuid
+  name         RolesEnum      @unique @default(USER)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @default(now()) @updatedAt
+  RolesOnUsers RolesOnUsers[]
+
+  @@map("roles")
+}
+
+model RolesOnUsers {
+  User      User     @relation(fields: [userId], references: [id], map: "fk_RolesOnUsers_userId", onDelete: Cascade)
+  userId    String   @db.Uuid
+  role      Role     @relation(fields: [roleId], references: [id], map: "fk_RolesOnUsers_roleId")
+  roleId    String   @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@id(fields: [userId, roleId], map: "pk_RolesOnUsers")
+  @@map("roles_on_users")
+}
+
+enum RolesEnum {
+  USER
+  ADMIN
+  SUPER_ADMIN
+  CUSTOMER
+}

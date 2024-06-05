@@ -2,11 +2,11 @@ import Redis, { Redis as RedisType, Cluster as ClusterType } from 'ioredis';
 import { URL } from 'url';
 import { DynamicModule, Logger, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import RedisClient from './redis.client';
+import RedisClient from '@providers/redis/redis.client';
 
 function getFactory(name: string) {
   return (config: ConfigService): Promise<RedisType | ClusterType> => {
-    const uri = config.get(`redis.${name}`);
+    const uri = config.get(`redis.url`);
     const newUri = new URL(uri);
 
     newUri.searchParams.set(
