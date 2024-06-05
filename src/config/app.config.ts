@@ -1,8 +1,8 @@
+import * as path from 'node:path';
 import { InternalServerErrorException } from '@nestjs/common';
 import { LogLevel } from '@nestjs/common/services/logger.service';
 import { registerAs } from '@nestjs/config';
 import * as Joi from 'joi';
-import * as path from 'path';
 
 function parseLogLevel(level: string | undefined): LogLevel[] {
   if (!level) {

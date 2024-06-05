@@ -17,6 +17,7 @@ export type SearchPaginateOptions = {
   searchColumns?: string[],
   searchValue?: string,
 }
+
 export type SearchPaginateFunction = <T>(model: any, modelName: string, options?: SearchPaginateOptions) => Promise<SearchPaginatedResult<T>>
 
 export const searchPaginator = (defaultOptions: SearchPaginateOptions): SearchPaginateFunction => {

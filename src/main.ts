@@ -1,6 +1,5 @@
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from '@modules/app/app.module';
-import { join } from 'path';
 import { AppConfig } from '@config/app.config';
 import { NgrokConfig } from '@config/ngrok.config';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -14,6 +13,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as Sentry from '@sentry/node';
 import SwaggerCustomOptions from '@options/swagger-custom.options';
 import { Listener } from '@ngrok/ngrok';
+import { SwaggerConfig } from '@config/swagger.config';
 async function bootstrap(): Promise<{
   appConfig: AppConfig;
   ngrokConfig: NgrokConfig;
@@ -23,9 +23,9 @@ async function bootstrap(): Promise<{
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   const configService = app.get(ConfigService);
-  const appConfig = configService.get('app');
-  const swaggerConfig = configService.get('swagger');
-  const sentryConfig = configService.get<SentryConfig>('sentry')!;
+  const appConfig: AppConfig = configService.get('app');
+  const swaggerConfig: SwaggerConfig = configService.get('swagger');
+  const sentryConfig: SentryConfig = configService.get<SentryConfig>('sentry')!;
 
   if (appConfig.isProduction) {
     const newrelic = require('newrelic');

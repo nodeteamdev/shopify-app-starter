@@ -9,7 +9,6 @@ import redisConfig from '@config/redis.config';
 import ngrokConfig from '@config/ngrok.config';
 import swaggerConfig from '@config/swagger.config';
 import RedisModule from '@providers/redis/redis.module';
-const logger: Logger = new Logger('AppModule');
 
 @Module({
   imports: [
