@@ -4,7 +4,7 @@ import * as Joi from 'joi';
 
 export type SwaggerConfig = {
   readonly password: string;
-}
+};
 
 export default registerAs('swagger', () => {
   const swagger = {
@@ -18,7 +18,9 @@ export default registerAs('swagger', () => {
   const { error } = schema.validate(swagger, { abortEarly: false });
 
   if (error) {
-    throw new InternalServerErrorException(`Environments failed: ${error.message}`);
+    throw new InternalServerErrorException(
+      `Environments failed: ${error.message}`,
+    );
   }
 
   return swagger as SwaggerConfig;
