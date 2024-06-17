@@ -20,7 +20,8 @@
 			},
 			"correctness": {
 				"noPrecisionLoss": "error",
-				"noUnusedVariables": "error"
+				"noUnusedVariables": "error",
+				"noUnusedImports": "error"
 			},
 			"style": {
 				"noNamespace": "error",
@@ -46,7 +47,11 @@
 			"bracketSpacing": true,
 			"bracketSameLine": false,
 			"quoteStyle": "single",
-			"attributePosition": "auto"
+			"attributePosition": "auto",
+			"lineEnding": "lf"
+		},
+		"parser": {
+			"unsafeParameterDecoratorsEnabled": true
 		}
 	},
 	"overrides": [
