@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopify App Starter</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4;">
+<table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse; background-color: #ffffff; margin-top: 20px;">
+    <tr>
+        <td align="center" style="padding: 20px 0;">
+            <img src="/" alt="Shopify App Starter" height="100" style="display: block;">
+        </td>
+    </tr>
+    <tr>
+        <td align="center" style="padding: 20px;">
+            <h1 style="font-size: 24px; color: #333333; margin: 0;">Email Verification</h1>
+        </td>
+    </tr>
+    <tr>
+        <td align="center" style="padding: 0 20px;">
+            <p style="font-size: 16px; color: #333333;">To complete your registration and gain full access to our services, please verify your email address by clicking the link below:</p>
+            <a href="{{ callbackUrl }}?token={{ token }}" style="display: inline-block; padding: 12px 24px; background-color: #107DF8; color: #ffffff; text-decoration: none; font-size: 16px; border-radius: 6px;"><b>Verify My Email</b></a>
+            <p style="font-size: 16px; color: #333333;">This link is valid for 1 hour. If it wasn't you, you can ignore this email.</p>
+        </td>
+    </tr>
+    <tr>
+        <td align="center" style="padding: 20px;">
+            <p style="font-size: 16px; color: #333333;">Thank you for choosing Shopify App Starters!</p>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

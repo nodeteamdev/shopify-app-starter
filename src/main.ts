@@ -1,19 +1,27 @@
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
-import { AppModule } from '@modules/app/app.module';
 import { AppConfig } from '@config/app.config';
 import { NgrokConfig } from '@config/ngrok.config';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import { ConfigService } from '@nestjs/config';
 import { SentryConfig } from '@config/sentry.config';
-import helmet from 'helmet';
-import { useContainer } from 'class-validator';
-import { Logger, RequestMethod, ValidationPipe, VersioningOptions, VersioningType } from '@nestjs/common';
-import  * as basicAuth from 'express-basic-auth';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as Sentry from '@sentry/node';
-import SwaggerCustomOptions from '@options/swagger-custom.options';
-import { Listener } from '@ngrok/ngrok';
 import { SwaggerConfig } from '@config/swagger.config';
+import { NodeEnvsEnum } from '@enums/node-envs.enum';
+import { AppModule } from '@modules/app/app.module';
+import {
+  Logger,
+  RequestMethod,
+  ValidationPipe,
+  VersioningOptions,
+  VersioningType,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { Listener } from '@ngrok/ngrok';
+import SwaggerCustomOptions from '@options/swagger-custom.options';
+import * as Sentry from '@sentry/node';
+import { useContainer } from 'class-validator';
+import basicAuth from 'express-basic-auth';
+import helmet from 'helmet';
+
 async function bootstrap(): Promise<{
   appConfig: AppConfig;
   ngrokConfig: NgrokConfig;
@@ -25,9 +33,9 @@ async function bootstrap(): Promise<{
   const configService = app.get(ConfigService);
   const appConfig: AppConfig = configService.get('app');
   const swaggerConfig: SwaggerConfig = configService.get('swagger');
-  const sentryConfig: SentryConfig = configService.get<SentryConfig>('sentry')!;
+  const sentryConfig: SentryConfig = configService.get('sentry')!;
 
-  if (appConfig.isProduction) {
+  if (appConfig.nodeEnv === NodeEnvsEnum.PRODUCTION) {
     const newrelic = require('newrelic');
 
     newrelic.instrumentLoadedModule('app', app);
@@ -54,14 +62,14 @@ async function bootstrap(): Promise<{
      * Enable CORS
      */
 
-      // TODO: we need to change it on stag and prod
+    // TODO: we need to change it on stag and prod
     const options = {
-        origin: '*',
-        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-        preflightContinue: false,
-        optionsSuccessStatus: 204,
-        credentials: true,
-      };
+      origin: '*',
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      preflightContinue: false,
+      optionsSuccessStatus: 204,
+      credentials: true,
+    };
 
     app.enableCors(options);
   }
@@ -99,11 +107,12 @@ async function bootstrap(): Promise<{
   }
 
   {
-    /**
-     * Setup Swagger API documentation
-     */
     app.use(
       ['/docs', '/documentation'],
+      /**
+       * Setup Swagger API documentation
+       */
+      // @ts-ignore
       basicAuth({
         challenge: true,
         users: {
@@ -124,8 +133,10 @@ async function bootstrap(): Promise<{
     SwaggerModule.setup('docs', app, document, SwaggerCustomOptions);
   }
 
-
-  if (appConfig.env === 'production' || appConfig.env === 'staging') {
+  if (
+    appConfig.nodeEnv === NodeEnvsEnum.PRODUCTION ||
+    appConfig.nodeEnv === NodeEnvsEnum.STAGING
+  ) {
     /**
      * Enable Sentry errors collection
      */
@@ -133,7 +144,7 @@ async function bootstrap(): Promise<{
       dsn: sentryConfig.dns,
       tracesSampleRate: 1.0,
       release: '0.0.1',
-      environment: appConfig.env,
+      environment: appConfig.nodeEnv,
     });
   }
 
@@ -149,7 +160,7 @@ bootstrap().then(async ({ appConfig, ngrokConfig }): Promise<void> => {
   Logger.log(`Running in http://localhost:${appConfig.port}`, 'Bootstrap');
   Logger.log(`Docs in http://localhost:${appConfig.port}/docs`, 'Swagger');
 
-  if (appConfig.env === 'development' && ngrokConfig.domain) {
+  if (appConfig.nodeEnv === NodeEnvsEnum.DEVELOPMENT && ngrokConfig.domain) {
     const ngrok = await import('@ngrok/ngrok');
 
     const listener: Listener = await ngrok.forward({
@@ -165,4 +176,3 @@ bootstrap().then(async ({ appConfig, ngrokConfig }): Promise<void> => {
     Logger.log(`Docs at https://${appConfig.host}/docs`, 'Swagger');
   }
 });
-

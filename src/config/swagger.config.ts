@@ -1,25 +1,26 @@
-import { InternalServerErrorException } from '@nestjs/common';
+import { validateScheme } from '@config/utils/scheme-validator.helper';
+import { InternalServerErrorException, Logger } from '@nestjs/common';
 import { registerAs } from '@nestjs/config';
-import * as Joi from 'joi';
+import { z } from 'zod';
 
-export type SwaggerConfig = {
-  readonly password: string;
-}
+const scheme = z.object({
+  password: z.string(),
+});
 
-export default registerAs('swagger', () => {
-  const swagger = {
-    password: process.env.SWAGGER_PASSWORD,
+export type SwaggerConfig = Required<z.infer<typeof scheme>>;
+
+export const swaggerConfig = registerAs('swagger', (): SwaggerConfig => {
+  const config: SwaggerConfig = {
+    password: process.env.SWAGGER_PASSWORD!,
   };
 
-  const schema = Joi.object({
-    password: Joi.string().required(),
-  });
-
-  const { error } = schema.validate(swagger, { abortEarly: false });
-
-  if (error) {
-    throw new InternalServerErrorException(`Environments failed: ${error.message}`);
+  try {
+    validateScheme(scheme, config, new Logger('SwaggerConfig'));
+  } catch (error) {
+    throw new InternalServerErrorException(
+      `Environments failed: ${error.message}`,
+    );
   }
 
-  return swagger as SwaggerConfig;
+  return config;
 });

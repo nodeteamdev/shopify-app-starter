@@ -1,28 +1,26 @@
-import { InternalServerErrorException } from '@nestjs/common';
+import { validateScheme } from '@config/utils/scheme-validator.helper';
+import { InternalServerErrorException, Logger } from '@nestjs/common';
 import { registerAs } from '@nestjs/config';
-import * as Joi from 'joi';
+import { z } from 'zod';
 
-export type SentryConfig = {
-  readonly dns: string;
-};
+const scheme = z.object({
+  dns: z.string().url(),
+});
 
-export default registerAs(
-  'sentry',
-  (): SentryConfig => {
-    const sentry = {
-      dns: process.env.SENTRY_DSN,
-    };
+export type SentryConfig = Required<z.infer<typeof scheme>>;
 
-    const schema = Joi.object({
-      dns: Joi.string().required(),
-    });
+export const sentryConfig = registerAs('sentry', (): SentryConfig => {
+  const config: SentryConfig = {
+    dns: process.env.SENTRY_DSN!,
+  };
 
-    const { error } = schema.validate(sentry, { abortEarly: false });
+  try {
+    validateScheme(scheme, config, new Logger('SentryConfig'));
+  } catch (error) {
+    throw new InternalServerErrorException(
+      `Environments failed: ${error.message}`,
+    );
+  }
 
-    if (error) {
-      throw new InternalServerErrorException(`Environments failed: ${error.message}`);
-    }
-
-    return sentry as SentryConfig;
-  },
-);
+  return config;
+});

@@ -14,15 +14,17 @@ datasource db {
 }
 
 model User {
-  id         String    @id(map: "pk_User") @db.Uuid
-  email      String    @unique
-  password   String
-  isVerified Boolean   @default(false)
-  role       RolesEnum @default(CUSTOMER)
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @default(now())
+  id              String    @id(map: "pk_User") @db.Uuid
+  email           String?   @unique
+  isEmailVerified Boolean   @default(false)
+  firstName       String
+  lastName        String
+  avatarUrl       String?
+  password        String?
+  role            RolesEnum
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
-  @@index([isVerified])
   @@map("users")
 }
 
