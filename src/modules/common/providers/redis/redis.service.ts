@@ -1,10 +1,7 @@
-import { InjectRedis } from '@songkeys/nestjs-redis';
 import { Injectable, Logger } from '@nestjs/common';
+import { InjectRedis } from '@songkeys/nestjs-redis';
 import { Redis } from 'ioredis';
 import { RedisKey } from 'ioredis/built/utils/RedisCommander';
-import * as RedisReadStream from 'redis-rstream';
-import * as RedisWriteStream from 'redis-wstream';
-import { Readable, Writable } from 'node:stream';
 
 @Injectable()
 export class RedisService {
@@ -33,17 +30,6 @@ export class RedisService {
 
   public setOne(key: RedisKey, value: string | Buffer | number): Promise<'OK'> {
     return this.redisClient.set(key, value);
-  }
-
-  public getWriteStream(key: RedisKey, tempKeySuffix?: string): Writable {
-    return new RedisWriteStream(this.redisClient, key, {
-      chunkSize: 16384,
-      tempKeySuffix,
-    });
-  }
-
-  public getReadStream(key: RedisKey): Readable {
-    return new RedisReadStream(this.redisClient, key, { chunkSize: 16384 });
   }
 
   public appendOne(

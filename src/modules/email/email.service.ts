@@ -9,6 +9,7 @@ import * as Handlebars from 'handlebars';
 import { createTransport } from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
 const nodemailerSendgrid = require('nodemailer-sendgrid');
+
 @Injectable()
 export class EmailService {
   private readonly mailTransport!: Mail;
@@ -18,24 +19,23 @@ export class EmailService {
   constructor(private readonly configService: ConfigService) {
     const mailerConfig: MailerConfig =
       this.configService.get<MailerConfig>('mailer');
-    {
-      this.mailTransport = createTransport(
-        nodemailerSendgrid({
-          apiKey: mailerConfig.user.password,
-          host: mailerConfig.host,
-          port: mailerConfig.port,
-        }),
-        {
-          secure: mailerConfig.secure,
-          requireTLS: true,
-          tls: {
-            ciphers: 'SSLv3',
-            rejectUnauthorized: false,
-          },
+
+    this.mailTransport = createTransport(
+      nodemailerSendgrid({
+        apiKey: mailerConfig.user.password,
+        host: mailerConfig.host,
+        port: mailerConfig.port,
+      }),
+      {
+        secure: mailerConfig.secure,
+        requireTLS: true,
+        tls: {
+          ciphers: 'SSLv3',
+          rejectUnauthorized: false,
         },
-      );
-      this.logger.log('Mail transport created');
-    }
+      },
+    );
+    this.logger.log('Mail transport created');
   }
 
   public sendResetPasswordEmail(email: string, token: string): Promise<void> {

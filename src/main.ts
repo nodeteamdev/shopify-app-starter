@@ -20,6 +20,7 @@ import * as Sentry from '@sentry/node';
 import { useContainer } from 'class-validator';
 import basicAuth from 'express-basic-auth';
 import helmet from 'helmet';
+
 async function bootstrap(): Promise<{
   appConfig: AppConfig;
   ngrokConfig: NgrokConfig;
@@ -31,7 +32,7 @@ async function bootstrap(): Promise<{
   const configService = app.get(ConfigService);
   const appConfig: AppConfig = configService.get('app');
   const swaggerConfig: SwaggerConfig = configService.get('swagger');
-  const sentryConfig: SentryConfig = configService.get<SentryConfig>('sentry')!;
+  const sentryConfig: SentryConfig = configService.get('sentry')!;
 
   if (appConfig.nodeEnv === 'production') {
     const newrelic = require('newrelic');
@@ -46,7 +47,7 @@ async function bootstrap(): Promise<{
       contentSecurityPolicy: false,
     }),
   );
-  const _cors = require('cors');
+
   {
     /**
      * Enable Logger
