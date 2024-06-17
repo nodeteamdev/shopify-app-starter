@@ -35,6 +35,7 @@ export class EmailService {
         },
       },
     );
+
     this.logger.log('Mail transport created');
   }
 

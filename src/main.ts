@@ -2,6 +2,7 @@ import { AppConfig } from '@config/app.config';
 import { NgrokConfig } from '@config/ngrok.config';
 import { SentryConfig } from '@config/sentry.config';
 import { SwaggerConfig } from '@config/swagger.config';
+import { NodeEnvsEnum } from '@enums/node-envs.enum';
 import { AppModule } from '@modules/app/app.module';
 import {
   Logger,
@@ -34,7 +35,7 @@ async function bootstrap(): Promise<{
   const swaggerConfig: SwaggerConfig = configService.get('swagger');
   const sentryConfig: SentryConfig = configService.get('sentry')!;
 
-  if (appConfig.nodeEnv === 'production') {
+  if (appConfig.nodeEnv === NodeEnvsEnum.PRODUCTION) {
     const newrelic = require('newrelic');
 
     newrelic.instrumentLoadedModule('app', app);
@@ -132,7 +133,10 @@ async function bootstrap(): Promise<{
     SwaggerModule.setup('docs', app, document, SwaggerCustomOptions);
   }
 
-  if (appConfig.nodeEnv === 'production' || appConfig.nodeEnv === 'staging') {
+  if (
+    appConfig.nodeEnv === NodeEnvsEnum.PRODUCTION ||
+    appConfig.nodeEnv === NodeEnvsEnum.STAGING
+  ) {
     /**
      * Enable Sentry errors collection
      */
@@ -156,7 +160,7 @@ bootstrap().then(async ({ appConfig, ngrokConfig }): Promise<void> => {
   Logger.log(`Running in http://localhost:${appConfig.port}`, 'Bootstrap');
   Logger.log(`Docs in http://localhost:${appConfig.port}/docs`, 'Swagger');
 
-  if (appConfig.nodeEnv === 'development' && ngrokConfig.domain) {
+  if (appConfig.nodeEnv === NodeEnvsEnum.DEVELOPMENT && ngrokConfig.domain) {
     const ngrok = await import('@ngrok/ngrok');
 
     const listener: Listener = await ngrok.forward({
