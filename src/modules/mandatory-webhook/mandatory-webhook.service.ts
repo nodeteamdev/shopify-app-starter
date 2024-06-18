@@ -1,3 +1,4 @@
+import { EmailService } from '@modules/email/email.service';
 import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-app-install.service';
 import { WebhookService } from '@modules/webhook/webhook.service';
 import { Injectable, Logger, RawBodyRequest, UnauthorizedException } from '@nestjs/common';
@@ -10,6 +11,7 @@ export class MandatoryWebhookService {
   constructor(
     private readonly shopifyAppInstallService: ShopifyAppInstallService,
     private readonly webhookService: WebhookService,
+    private readonly emailService: EmailService,
   ) {}
 
   public async validateWebHook(req: RawBodyRequest<Request>): Promise<boolean> {
@@ -35,25 +37,23 @@ export class MandatoryWebhookService {
   public handleCustomersDataRequestWebhook(
     req: RawBodyRequest<Request>,
   ): Promise<void> {
-    return;
-    // return this.handleWebhookRequest(
-    //   req,
-    //   this.emailService.sendCustomerDataRequest,
-    //   'Webhook for requesting customers data from the shop with id',
-    //   'An error occurs during requesting customers data from the shop with id',
-    // );
+    return this.handleWebhookRequest(
+      req,
+      this.emailService.sendCustomerDataRequest,
+      'Webhook for requesting customers data from the shop with id',
+      'An error occurs during requesting customers data from the shop with id',
+    );
   }
 
   public handleCustomersRedactRequestWebhook(
     req: RawBodyRequest<Request>,
   ): Promise<void> {
-    return;
-    // return this.handleWebhookRequest(
-    //   req,
-    //   this.emailService.sendCustomerDataRequest,
-    //   'Webhook for requesting customers redact from the shop with id',
-    //   'An error occurs during requesting customers redact from the shop with id',
-    // );
+    return this.handleWebhookRequest(
+      req,
+      this.emailService.sendCustomerDataRequest,
+      'Webhook for requesting customers redact from the shop with id',
+      'An error occurs during requesting customers redact from the shop with id',
+    );
   }
 
   public async handleUninstallAppWebhook(

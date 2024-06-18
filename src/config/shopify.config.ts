@@ -9,6 +9,7 @@ export type ShopifyConfig = {
   readonly maxPaginationLimit: number;
   readonly appPurchaseOneTimeMinPrice: number;
 };
+
 export default registerAs(
   'shopify',
   (): ShopifyConfig => ({

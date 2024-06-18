@@ -68,6 +68,55 @@ export class EmailService {
     });
   }
 
+  public sendCustomerDataRequest(data: string): Promise<void> {
+    return this.sendCustomerData(
+      data,
+      'customer-data-request.html',
+      'Customer data request',
+    );
+  }
+
+  public sendCustomerRedactDataRequest(data: string): Promise<void> {
+    return this.sendCustomerData(
+      data,
+      'customer-redact.html',
+      'Customer redact data request',
+    );
+  }
+
+  private async sendCustomerData(
+    data: string,
+    pathName: string,
+    subject: string,
+  ): Promise<void> {
+    const appConfig = this.configService.get('app');
+    const logo = appConfig.logoUrl;
+
+    const htmlTemplate = await readFile(
+      path.join(__dirname, './templates', pathName),
+      {
+        encoding: 'utf8',
+      },
+    );
+    const compiledTemplate = Handlebars.compile(htmlTemplate);
+
+    try {
+      const renderedHtml = compiledTemplate({
+        logo,
+        data,
+      });
+
+      await this.mailTransport.sendMail({
+        to: appConfig.adminEmail,
+        from: appConfig.emailFrom,
+        subject,
+        html: renderedHtml,
+      });
+    } catch (e) {
+      Logger.error(e);
+    }
+  }
+
   private async sendEmail({
     email,
     templateFileName,
