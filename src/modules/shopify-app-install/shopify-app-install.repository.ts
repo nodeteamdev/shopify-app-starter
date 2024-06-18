@@ -50,4 +50,18 @@ export class ShopifyAppInstallRepository {
       isCustomStoreApp: false,
     });
   }
+
+  public finishAuth(
+    req: Request,
+    res: Response,
+  ): Promise<{
+    headers: any;
+    // TODO add type from prisma
+    session: any;
+  }> {
+    return ShopifyAppInstallRepository.shopify.auth.callback({
+      rawRequest: req,
+      rawResponse: res,
+    }) as any;
+  }
 }

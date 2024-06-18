@@ -2,15 +2,8 @@ import { Injectable, RawBodyRequest, UnauthorizedException } from '@nestjs/commo
 import { createHmac } from 'node:crypto';
 import { Request, Response } from 'express';
 import { ShopifyAppInstallRepository } from './shopify-app-install.repository';
-
-export type ShopifyRequestQuery = {
-  [key: string]:
-    | undefined
-    | string
-    | string[]
-    | ShopifyRequestQuery
-    | ShopifyRequestQuery[];
-};
+import { ShopifyRequestQuery } from './types/shopify-request-query-type';
+import { WebhookValidation } from '@shopify/shopify-api';
 
 
 @Injectable()
@@ -51,10 +44,14 @@ export class ShopifyAppInstallService {
     return this.shopifyAppInstallRepository.beginAuth(req, res);
   }
 
-  public validateWebhook(req: RawBodyRequest<Request>): Promise<any> {
+  public validateWebhook(req: RawBodyRequest<Request>): Promise<WebhookValidation> {
     return ShopifyAppInstallRepository.shopify.webhooks.validate({
       rawBody: req?.rawBody?.toString() || '',
       rawRequest: req,
     });
+  }
+
+  public finishAuth(req: Request, res: Response): Promise<any> {
+    return this.shopifyAppInstallRepository.finishAuth(req, res);
   }
 }
