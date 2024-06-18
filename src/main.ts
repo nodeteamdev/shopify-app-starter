@@ -14,7 +14,7 @@ import * as Sentry from '@sentry/node';
 import SwaggerCustomOptions from '@options/swagger-custom.options';
 import { Listener } from '@ngrok/ngrok';
 import { SwaggerConfig } from '@config/swagger.config';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap(): Promise<{
   appConfig: AppConfig;

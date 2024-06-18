@@ -26,7 +26,27 @@ model User {
   @@map("users")
 }
 
+model Webhook {
+  id                String                 @id(map: "pk_Webhook") @db.Uuid
+  webhookId         String
+  ecommercePlatform EcommercePlatformsEnum
+  topic             String
+  body              Json
+  headers           Json
+  expiredAt         DateTime
+  createdAt         DateTime               @default(now())
+
+  @@index([webhookId])
+  @@index([expiredAt])
+  @@map("webhooks")
+}
+
 enum RolesEnum {
   CUSTOMER
   SUPER_ADMIN
+}
+
+enum EcommercePlatformsEnum {
+  SHOPIFY
+  WOO_COMMERCE
 }

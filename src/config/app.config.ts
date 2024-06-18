@@ -52,7 +52,6 @@ export default registerAs(
       env: Joi.string().required(),
       version: Joi.string().required(),
       isProduction: Joi.boolean().required(),
-      myOrdersUrl: Joi.string().required(),
     });
 
     const { error } = schema.validate(app, { abortEarly: false });

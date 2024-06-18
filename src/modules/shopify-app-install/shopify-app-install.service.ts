@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, RawBodyRequest, UnauthorizedException } from '@nestjs/common';
 import { createHmac } from 'node:crypto';
 import { Request, Response } from 'express';
 import { ShopifyAppInstallRepository } from './shopify-app-install.repository';
@@ -49,5 +49,12 @@ export class ShopifyAppInstallService {
 
   public beginAuth(req: Request, res: Response): Promise<any> {
     return this.shopifyAppInstallRepository.beginAuth(req, res);
+  }
+
+  public validateWebhook(req: RawBodyRequest<Request>): Promise<any> {
+    return ShopifyAppInstallRepository.shopify.webhooks.validate({
+      rawBody: req?.rawBody?.toString() || '',
+      rawRequest: req,
+    });
   }
 }
