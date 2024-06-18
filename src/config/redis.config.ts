@@ -1,25 +1,26 @@
-import { InternalServerErrorException } from '@nestjs/common';
+import { validateScheme } from '@config/utils/scheme-validator.helper';
+import { InternalServerErrorException, Logger } from '@nestjs/common';
 import { registerAs } from '@nestjs/config';
-import * as Joi from 'joi';
+import { z } from 'zod';
 
-export type RedisConfig = {
-  readonly url: string,
-}
+const scheme = z.object({
+  url: z.string().url(),
+});
 
-export default registerAs('redis', (): RedisConfig => {
-  const redis = {
-    url: process.env.REDIS_URL,
+export type RedisConfig = Required<z.infer<typeof scheme>>;
+
+export const redisConfig = registerAs('redis', (): RedisConfig => {
+  const config: RedisConfig = {
+    url: process.env.REDIS_URL!,
   };
 
-  const schema = Joi.object({
-    url: Joi.string().required(),
-  });
-
-  const { error } = schema.validate(redis, { abortEarly: false });
-
-  if (error) {
-    throw new InternalServerErrorException(`Environments failed: ${error.message}`);
+  try {
+    validateScheme(scheme, config, new Logger('RedisConfig'));
+  } catch (error) {
+    throw new InternalServerErrorException(
+      `Environments failed: ${error.message}`,
+    );
   }
 
-  return redis as RedisConfig;
+  return config;
 });
