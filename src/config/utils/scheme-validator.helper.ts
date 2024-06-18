@@ -1,6 +1,5 @@
 import { InternalServerErrorException, Logger } from '@nestjs/common';
-import { z } from 'zod';
-import { ZodRawShape } from 'zod/lib/types';
+import { z, ZodRawShape } from 'zod';
 import { sendErrorToSentry } from '@helpers/send-error-to-sentry.helper';
 
 export function validateScheme<T extends ZodRawShape>(

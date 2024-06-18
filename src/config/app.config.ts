@@ -19,6 +19,7 @@ const scheme = z.object({
     ]),
   ),
   nodeEnv: z.string(),
+  clientHost: z.string(),
   version: z.string(),
   rateLimitTtl: z.number(),
   rateLimitTimes: z.number(),
@@ -35,6 +36,7 @@ export const appConfig = registerAs('app', (): AppConfig => {
       process.env.APP_LOGGER_LEVEL,
     ) as LogLevel[],
     nodeEnv: process.env.NODE_ENV,
+    clientHost: process.env.CLIENT_HOST_NAME,
     // eslint-disable-next-line global-require,@typescript-eslint/no-var-requires
     version: require(path.join(process.cwd(), 'package.json')).version,
     rateLimitTtl: Number(process.env.DEFAULT_RATE_LIMIT_TTL),

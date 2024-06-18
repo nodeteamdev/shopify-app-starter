@@ -1,6 +1,6 @@
+import { PrismaService } from '@modules/common/providers/prisma';
 import { Injectable } from '@nestjs/common';
 import { Prisma, Webhook } from '@prisma/client';
-import PrismaService from '@providers/prisma/prisma.service';
 
 @Injectable()
 export class WebhookRepository {

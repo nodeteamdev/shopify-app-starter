@@ -1,10 +1,10 @@
-import { Cookies, CookiesType } from "@decorators/cookies.decorator";
 import { Controller, Get, Logger, Query, Req, Res } from "@nestjs/common";
 import { Request, Response } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 import { ShopifyAppInstallService } from "./shopify-app-install.service";
 import { ConfigService } from "@nestjs/config";
 import { AppConfig } from "@config/app.config";
+import { Cookies, CookiesType } from "src/decorators/cookies.decorator";
 
 @ApiTags('Shopify')
 @Controller('shopify')
