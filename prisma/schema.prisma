@@ -31,7 +31,6 @@ model User {
 model Webhook {
   id                String                 @id(map: "pk_Webhook") @db.Uuid
   webhookId         String
-  ecommercePlatform EcommercePlatformsEnum
   topic             String
   body              Json
   headers           Json
@@ -46,9 +45,4 @@ model Webhook {
 enum RolesEnum {
   CUSTOMER
   SUPER_ADMIN
-}
-
-enum EcommercePlatformsEnum {
-  SHOPIFY
-  WOO_COMMERCE
 }

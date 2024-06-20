@@ -1,11 +1,7 @@
--- CreateEnum
-CREATE TYPE "EcommercePlatformsEnum" AS ENUM ('SHOPIFY', 'WOO_COMMERCE');
-
 -- CreateTable
 CREATE TABLE "webhooks" (
     "id" UUID NOT NULL,
     "webhookId" TEXT NOT NULL,
-    "ecommercePlatform" "EcommercePlatformsEnum" NOT NULL,
     "topic" TEXT NOT NULL,
     "body" JSONB NOT NULL,
     "headers" JSONB NOT NULL,

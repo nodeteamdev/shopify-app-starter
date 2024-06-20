@@ -2,12 +2,14 @@ import { EmailService } from '@modules/email/email.service';
 import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-app-install.service';
 import { WebhookService } from '@modules/webhook/webhook.service';
 import { Injectable, Logger, RawBodyRequest, UnauthorizedException } from '@nestjs/common';
-import { EcommercePlatformsEnum, Webhook } from '@prisma/client';
+import { Webhook } from '@prisma/client';
 import { Request } from 'express';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 
 @Injectable()
 export class MandatoryWebhookService {
+  private readonly logger: Logger = new Logger(MandatoryWebhookService.name);
+
   constructor(
     private readonly shopifyAppInstallService: ShopifyAppInstallService,
     private readonly webhookService: WebhookService,
@@ -17,7 +19,7 @@ export class MandatoryWebhookService {
   public async validateWebHook(req: RawBodyRequest<Request>): Promise<boolean> {
     const { valid } = await this.shopifyAppInstallService.validateWebhook(req);
 
-    Logger.debug(
+    this.logger.debug(
       `WebHook received for the topic: ${req?.headers['x-shopify-topic']}`,
     );
 
@@ -26,7 +28,7 @@ export class MandatoryWebhookService {
     }
 
     if (!valid) {
-      Logger.error(
+      this.logger.error(
         `WebHook validation has failed for the WebHook with topic: ${req?.headers['x-shopify-topic']}`,
       );
     }
@@ -65,7 +67,7 @@ export class MandatoryWebhookService {
 
     const { id: shopId } = req.body;
 
-    Logger.debug(
+    this.logger.debug(
       `Webhook for uninstalling app from the shop with id: ${shopId}. ${JSON.stringify(
         {
           body: req.body,
@@ -77,13 +79,13 @@ export class MandatoryWebhookService {
     try {
       await this.uninstallApp(shopId);
 
-      Logger.debug(
+      this.logger.debug(
         `App was successfully uninstalled from the shop with id: ${shopId}`,
       );
 
       await this.saveWebhook(req);
     } catch (error) {
-      Logger.debug(
+      this.logger.debug(
         `An error occurs during uninstalling app from the shop with id: ${shopId}: ${JSON.stringify(
           {
             error,
@@ -115,7 +117,7 @@ export class MandatoryWebhookService {
 
     const { id: shopId } = req.body;
 
-    Logger.debug(
+    this.logger.debug(
       `${loggerInfo}: ${shopId}. ${JSON.stringify({
         body: req.body,
         headers: req.headers,
@@ -126,7 +128,7 @@ export class MandatoryWebhookService {
       await this.saveWebhook(req);
       await emailServiceMethod(data);
     } catch (error) {
-      Logger.debug(
+      this.logger.debug(
         `${loggerError}: ${shopId}: ${JSON.stringify(
           {
             error,
@@ -145,12 +147,11 @@ export class MandatoryWebhookService {
     expiredAt.setMonth(expiredAt.getMonth() + 6);
 
     return this.webhookService.create({
-      id: uuidv4(),
+      id: randomUUID(),
       webhookId: req.headers['x-shopify-webhook-id']?.toString(),
       body: req.body,
       headers: req.headers,
       topic: req.headers['x-shopify-topic']?.toString(),
-      ecommercePlatform: EcommercePlatformsEnum.SHOPIFY,
       expiredAt,
     });
   }
@@ -168,13 +169,12 @@ export class MandatoryWebhookService {
     // );
 
     // if (!webShop) {
-    //   return Logger.debug(
+    //   return this.logger.debug(
     //     `App uninstall webhook tried to uninstall unexisting shop with id: ${shopId}`,
     //   );
     // }
 
     // await this.webShopService.update(webShop.id, {
-    //   ecommercePlatform: null,
     //   config: null,
     // });
   }

@@ -1,9 +1,9 @@
 import { Controller, Post, RawBodyRequest, Req } from '@nestjs/common';
 import { Request } from 'express';
 import { ApiTags } from '@nestjs/swagger';
-import { MandatoryWebhookService } from './mandatory-webhook.service';
+import { MandatoryWebhookService } from '@modules/mandatory-webhook/mandatory-webhook.service';
 
-@ApiTags('Mandatory-webhook')
+@ApiTags('Mandatory Webhook')
 @Controller('mandatory-webhook')
 export class MandatoryWebhookController {
   constructor(private readonly mandatoryWebhookService: MandatoryWebhookService) {}

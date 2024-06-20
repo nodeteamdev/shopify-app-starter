@@ -4,7 +4,7 @@ import { mailerConfig } from '@config/mailer.config';
 import { ngrokConfig } from '@config/ngrok.config';
 import { RedisConfig, redisConfig } from '@config/redis.config';
 import { sentryConfig } from '@config/sentry.config';
-import shopifyConfig from '@config/shopify.config';
+import { shopifyConfig } from '@config/shopify.config';
 import { swaggerConfig } from '@config/swagger.config';
 import { AppController } from '@modules/app/app.controller';
 import { AppService } from '@modules/app/app.service';

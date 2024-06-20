@@ -21,7 +21,7 @@ export class ShopifyAppInstallRepository {
     this.initShopifyApi(shopifyConfig);
   }
 
-  public beginAuth(req: Request, res: Response): Promise<any> {
+  public beginAuth(req: Request, res: Response): Promise<string> {
     const beginParams: BeginParams = {
       shop: ShopifyAppInstallRepository.shopify.utils.sanitizeShop(
         <string>req.query.shop,
@@ -62,6 +62,6 @@ export class ShopifyAppInstallRepository {
     return ShopifyAppInstallRepository.shopify.auth.callback({
       rawRequest: req,
       rawResponse: res,
-    }) as any;
+    });
   }
 }

@@ -89,8 +89,8 @@ export class EmailService {
     pathName: string,
     subject: string,
   ): Promise<void> {
-    const appConfig = this.configService.get('app');
-    const logo = appConfig.logoUrl;
+    const mailerConfig: MailerConfig =
+      this.configService.get<MailerConfig>('mailer');
 
     const htmlTemplate = await readFile(
       path.join(__dirname, './templates', pathName),
@@ -102,18 +102,17 @@ export class EmailService {
 
     try {
       const renderedHtml = compiledTemplate({
-        logo,
         data,
       });
 
       await this.mailTransport.sendMail({
-        to: appConfig.adminEmail,
-        from: appConfig.emailFrom,
+        to: mailerConfig.adminEmail,
+        from: mailerConfig.emailFrom,
         subject,
         html: renderedHtml,
       });
     } catch (e) {
-      Logger.error(e);
+      this.logger.error(e);
     }
   }
 

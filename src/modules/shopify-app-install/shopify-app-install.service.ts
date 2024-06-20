@@ -40,7 +40,7 @@ export class ShopifyAppInstallService {
     return true;
   }
 
-  public beginAuth(req: Request, res: Response): Promise<any> {
+  public beginAuth(req: Request, res: Response): Promise<string> {
     return this.shopifyAppInstallRepository.beginAuth(req, res);
   }
 
@@ -51,6 +51,7 @@ export class ShopifyAppInstallService {
     });
   }
 
+  // TODO change 
   public finishAuth(req: Request, res: Response): Promise<any> {
     return this.shopifyAppInstallRepository.finishAuth(req, res);
   }

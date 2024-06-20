@@ -23,7 +23,7 @@ services:
       - redis
 
   postgres:
-    container_name: postgres-shopify-starter
+    container_name: postgres-shopify-starter-app
     image: postgres:latest
     restart: unless-stopped
     environment:
@@ -38,6 +38,7 @@ services:
 
   minio:
     image: minio/minio
+    container_name: minio-shopify-starter-app
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -50,7 +51,7 @@ services:
 
   redis:
     image: redis:latest
-    container_name: redis-shopify-starter
+    container_name: redis-shopify-starter-app
     restart: unless-stopped
     environment:
       - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL

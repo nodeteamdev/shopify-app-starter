@@ -1,7 +1,7 @@
 import { Controller, Get, Logger, Query, Req, Res } from "@nestjs/common";
 import { Request, Response } from 'express';
 import { ApiTags } from '@nestjs/swagger';
-import { ShopifyAppInstallService } from "./shopify-app-install.service";
+import { ShopifyAppInstallService } from "@modules/shopify-app-install/shopify-app-install.service";
 import { ConfigService } from "@nestjs/config";
 import { AppConfig } from "@config/app.config";
 import { Cookies, CookiesType } from "src/decorators/cookies.decorator";
@@ -18,7 +18,7 @@ export class ShopifyAppInstallController {
   public async installApp(
     @Query('shop') shop: string,
     @Cookies()
-    { upBoostUserId: userId, upBoostWebShopId: webShopId }: CookiesType,
+    { userId, webShopId }: CookiesType,
     @Req() req: Request,
     @Res() res: Response,
   ): Promise<void> {
@@ -29,7 +29,7 @@ export class ShopifyAppInstallController {
 
     if (shop && session) {
       Logger.log(
-        `The app has been open for the shop: ${shop}. The request will be redirected to the UpBoost host: ${clientHost}`,
+        `The app has been open for the shop: ${shop}. The request will be redirected to the host: ${clientHost}`,
       );
 
       return res.redirect(`https://${clientHost}`);
@@ -50,7 +50,7 @@ export class ShopifyAppInstallController {
   // async callback(
   //   @Query('shop') shop: string,
   //   @Cookies()
-  //   { upBoostUserId: userId, upBoostWebShopId: webShopId }: CookiesType,
+  //   { userId, webShopId }: CookiesType,
   //   @Req() req: Request,
   //   @Res() res: Response,
   // ): Promise<void> {

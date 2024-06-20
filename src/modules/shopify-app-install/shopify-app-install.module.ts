@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ShopifyAppInstallController } from './shopify-app-install.controller';
-import { ShopifyAppInstallService } from './shopify-app-install.service';
-import { ShopifyAppInstallRepository } from './shopify-app-install.repository';
+import { ShopifyAppInstallController } from '@modules/shopify-app-install/shopify-app-install.controller';
+import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-app-install.service';
+import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopify-app-install.repository';
 
 @Module({
   controllers: [ShopifyAppInstallController],
