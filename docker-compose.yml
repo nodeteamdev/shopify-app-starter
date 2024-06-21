@@ -2,16 +2,15 @@ services:
   app:
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./apps/server/Dockerfile
     container_name: shopify-starter-app
     env_file:
-      - ./.env
+      - ./apps/server/.env
     environment:
       - REDIS_URL=redis://redis:6379
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/postgres?schema=public
     volumes:
       - ./:/app:cached
-      - /app/node_modules # anonymous volume for node_modules only
     restart: always
     ports:
       - 3000:3000
