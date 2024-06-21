@@ -1,6 +1,7 @@
 import { AppConfig } from '@config/app.config';
 import { NgrokConfig } from '@config/ngrok.config';
 import { SentryConfig } from '@config/sentry.config';
+import cookieParser from 'cookie-parser';
 import { SwaggerConfig } from '@config/swagger.config';
 import { NodeEnvsEnum } from '@enums/node-envs.enum';
 import { AppModule } from '@modules/app/app.module';
@@ -27,6 +28,8 @@ async function bootstrap(): Promise<{
   ngrokConfig: NgrokConfig;
 }> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  app.use(cookieParser());
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 

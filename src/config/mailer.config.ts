@@ -11,6 +11,8 @@ const scheme = z.object({
     email: z.string(),
     password: z.string(),
   }),
+  emailFrom: z.string(),
+  adminEmail: z.string(),
 });
 
 export type MailerConfig = Required<z.infer<typeof scheme>>;
@@ -31,6 +33,8 @@ export const mailerConfig = registerAs('mailer', (): MailerConfig => {
       email: process.env.MAILER_USER_EMAIL,
       password: process.env.MAILER_USER_PASSWORD,
     },
+    adminEmail: process.env.ADMIN_EMAIL,
+    emailFrom: process.env.EMAIL_FROM,
   };
 
   validateScheme(scheme, config, new Logger('MailerConfig'));

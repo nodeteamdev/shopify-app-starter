@@ -28,6 +28,18 @@ model User {
   @@map("users")
 }
 
+model Webhook {
+  id                String                 @id(map: "pk_Webhook") @db.Uuid
+  webhookId         String
+  topic             String
+  body              Json
+  headers           Json
+  createdAt         DateTime               @default(now())
+
+  @@index([webhookId])
+  @@map("webhooks")
+}
+
 enum RolesEnum {
   CUSTOMER
   SUPER_ADMIN

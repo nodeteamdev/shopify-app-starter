@@ -4,12 +4,16 @@ import { mailerConfig } from '@config/mailer.config';
 import { ngrokConfig } from '@config/ngrok.config';
 import { RedisConfig, redisConfig } from '@config/redis.config';
 import { sentryConfig } from '@config/sentry.config';
+import { shopifyConfig } from '@config/shopify.config';
 import { swaggerConfig } from '@config/swagger.config';
 import { AppController } from '@modules/app/app.controller';
 import { AppService } from '@modules/app/app.service';
 import { AuthModule } from '@modules/auth/auth.module';
 import { EmailService } from '@modules/email/email.service';
+import { MandatoryWebhookModule } from '@modules/mandatory-webhook/mandatory-webhook.module';
+import { ShopifyAppInstallModule } from '@modules/shopify-app-install/shopify-app-install.module';
 import { UserModule } from '@modules/user/user.module';
+import { WebhookModule } from '@modules/webhook/webhook.module';
 import { Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
@@ -34,6 +38,7 @@ const logger: Logger = new Logger('AppModule');
         swaggerConfig,
         mailerConfig,
         jwtConfig,
+        shopifyConfig,
       ],
     }),
     PrismaModule,
@@ -84,6 +89,9 @@ const logger: Logger = new Logger('AppModule');
       global: true,
     }),
     UserModule,
+    WebhookModule,
+    ShopifyAppInstallModule,
+    MandatoryWebhookModule,
   ],
   controllers: [AppController],
   providers: [AppService, EmailService],
