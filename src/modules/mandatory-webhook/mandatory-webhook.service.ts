@@ -1,10 +1,10 @@
+import { randomUUID } from 'node:crypto';
 import { EmailService } from '@modules/email/email.service';
 import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-app-install.service';
 import { WebhookService } from '@modules/webhook/webhook.service';
 import { Injectable, Logger, RawBodyRequest, UnauthorizedException } from '@nestjs/common';
 import { Webhook } from '@prisma/client';
 import { Request } from 'express';
-import { randomUUID } from 'node:crypto';
 
 @Injectable()
 export class MandatoryWebhookService {
@@ -141,18 +141,12 @@ export class MandatoryWebhookService {
   }
 
   private saveWebhook(req: RawBodyRequest<Request>): Promise<Webhook> {
-    const expiredAt = new Date();
-
-    // Add 6 months
-    expiredAt.setMonth(expiredAt.getMonth() + 6);
-
     return this.webhookService.create({
       id: randomUUID(),
       webhookId: req.headers['x-shopify-webhook-id']?.toString(),
       body: req.body,
       headers: req.headers,
       topic: req.headers['x-shopify-topic']?.toString(),
-      expiredAt,
     });
   }
 

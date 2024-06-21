@@ -4,7 +4,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { ShopifyAppInstallService } from "@modules/shopify-app-install/shopify-app-install.service";
 import { ConfigService } from "@nestjs/config";
 import { AppConfig } from "@config/app.config";
-import { Cookies, CookiesType } from "src/decorators/cookies.decorator";
+import { Cookies, CookiesType } from "@decorators/cookies.decorator";
 
 @ApiTags('Shopify')
 @Controller('shopify')

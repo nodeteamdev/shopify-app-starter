@@ -34,11 +34,9 @@ model Webhook {
   topic             String
   body              Json
   headers           Json
-  expiredAt         DateTime
   createdAt         DateTime               @default(now())
 
   @@index([webhookId])
-  @@index([expiredAt])
   @@map("webhooks")
 }
 

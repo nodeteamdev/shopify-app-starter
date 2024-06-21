@@ -1,8 +1,8 @@
-import { Injectable, RawBodyRequest, UnauthorizedException } from '@nestjs/common';
 import { createHmac } from 'node:crypto';
 import { Request, Response } from 'express';
-import { ShopifyAppInstallRepository } from './shopify-app-install.repository';
-import { ShopifyRequestQuery } from './types/shopify-request-query-type';
+import { Injectable, RawBodyRequest, UnauthorizedException } from '@nestjs/common';
+import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopify-app-install.repository';
+import { ShopifyRequestQuery } from '@modules/shopify-app-install/types/shopify-request-query-type';
 import { WebhookValidation } from '@shopify/shopify-api';
 
 
