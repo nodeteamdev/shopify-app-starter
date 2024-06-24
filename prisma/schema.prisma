@@ -29,15 +29,30 @@ model User {
 }
 
 model Webhook {
-  id                String                 @id(map: "pk_Webhook") @db.Uuid
-  webhookId         String
-  topic             String
-  body              Json
-  headers           Json
-  createdAt         DateTime               @default(now())
+  id        String   @id(map: "pk_Webhook") @db.Uuid
+  webhookId String
+  topic     String
+  body      Json
+  headers   Json
+  createdAt DateTime @default(now())
 
   @@index([webhookId])
   @@map("webhooks")
+}
+
+model ShopifyActiveStore {
+  shop     String   @id @unique
+  isActive Boolean? @default(false)
+
+  @@map("shopify_active_stores")
+}
+
+model ShopifySession {
+  id      String  @id
+  content String?
+  shop    String?
+
+  @@map("shopify_sessions")
 }
 
 enum RolesEnum {

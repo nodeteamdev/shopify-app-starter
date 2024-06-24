@@ -12,6 +12,7 @@ import { AuthModule } from '@modules/auth/auth.module';
 import { EmailService } from '@modules/email/email.service';
 import { MandatoryWebhookModule } from '@modules/mandatory-webhook/mandatory-webhook.module';
 import { ShopifyAppInstallModule } from '@modules/shopify-app-install/shopify-app-install.module';
+import { ShopifyAuthModule } from '@modules/shopify-auth/shopify-auth.module';
 import { UserModule } from '@modules/user/user.module';
 import { WebhookModule } from '@modules/webhook/webhook.module';
 import { Logger, Module } from '@nestjs/common';
@@ -92,6 +93,7 @@ const logger: Logger = new Logger('AppModule');
     WebhookModule,
     ShopifyAppInstallModule,
     MandatoryWebhookModule,
+    ShopifyAuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, EmailService],
