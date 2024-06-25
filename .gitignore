@@ -4,6 +4,8 @@
 /build
 ./apps/*/dist
 ./apps/*/node_modules
+./apps/server/dist
+./apps/server/node_modules
 
 
 # Logs
