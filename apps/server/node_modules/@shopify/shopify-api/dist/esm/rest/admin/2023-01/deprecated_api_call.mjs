@@ -1,0 +1,33 @@
+import { Base } from '../../base.mjs';
+import { ApiVersion } from '../../../lib/types.mjs';
+
+/***********************************************************************************************************************
+* This file is auto-generated. If you have an issue, please create a GitHub issue.                                     *
+***********************************************************************************************************************/
+class DeprecatedApiCall extends Base {
+    static apiVersion = ApiVersion.January23;
+    static hasOne = {};
+    static hasMany = {};
+    static paths = [
+        { "http_method": "get", "operation": "get", "ids": [], "path": "deprecated_api_calls.json" }
+    ];
+    static resourceNames = [
+        {
+            "singular": "deprecated_api_call",
+            "plural": "deprecated_api_calls"
+        }
+    ];
+    static async all({ session, ...otherArgs }) {
+        const response = await this.baseFind({
+            session: session,
+            urlIds: {},
+            params: { ...otherArgs },
+        });
+        return response;
+    }
+    data_updated_at;
+    deprecated_api_calls;
+}
+
+export { DeprecatedApiCall };
+//# sourceMappingURL=deprecated_api_call.mjs.map

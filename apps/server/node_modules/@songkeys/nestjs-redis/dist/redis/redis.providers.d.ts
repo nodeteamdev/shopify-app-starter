@@ -1,0 +1,10 @@
+import { Provider, FactoryProvider, ValueProvider } from '@nestjs/common';
+import type { Redis } from 'ioredis';
+import { RedisModuleOptions, RedisModuleAsyncOptions, RedisOptionsFactory, RedisClients } from './interfaces';
+export declare const createOptionsProvider: (options: RedisModuleOptions) => ValueProvider<RedisModuleOptions>;
+export declare const createAsyncProviders: (options: RedisModuleAsyncOptions) => Provider[];
+export declare const createAsyncOptions: (optionsFactory: RedisOptionsFactory) => Promise<RedisModuleOptions>;
+export declare const createAsyncOptionsProvider: (options: RedisModuleAsyncOptions) => Provider;
+export declare const createRedisClientProviders: () => FactoryProvider<Redis>[];
+export declare const redisClientsProvider: FactoryProvider<RedisClients>;
+export declare const mergedOptionsProvider: FactoryProvider<RedisModuleOptions>;

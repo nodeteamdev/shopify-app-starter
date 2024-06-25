@@ -1,0 +1,30 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FileMimeTypesEnum = void 0;
+var FileMimeTypesEnum;
+(function (FileMimeTypesEnum) {
+    FileMimeTypesEnum["PPTX"] = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+    FileMimeTypesEnum["BMP"] = "image/bmp";
+    FileMimeTypesEnum["CSV"] = "text/csv";
+    FileMimeTypesEnum["DOC"] = "application/msword";
+    FileMimeTypesEnum["DOCX"] = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    FileMimeTypesEnum["JPEG"] = "image/jpeg";
+    FileMimeTypesEnum["JPG"] = "image/jpeg";
+    FileMimeTypesEnum["ODP"] = "application/vnd.oasis.opendocument.presentation";
+    FileMimeTypesEnum["ODS"] = "application/vnd.oasis.opendocument.spreadsheet";
+    FileMimeTypesEnum["ODT"] = "application/vnd.oasis.opendocument.text";
+    FileMimeTypesEnum["PNG"] = "image/png";
+    FileMimeTypesEnum["PDF"] = "application/pdf";
+    FileMimeTypesEnum["PPT"] = "application/vnd.ms-powerpoint";
+    FileMimeTypesEnum["SVG"] = "image/svg+xml";
+    FileMimeTypesEnum["TIF"] = "image/tiff";
+    FileMimeTypesEnum["TIFF"] = "image/tiff";
+    FileMimeTypesEnum["TXT"] = "text/plain";
+    FileMimeTypesEnum["VSD"] = "application/vnd.visio";
+    FileMimeTypesEnum["WEBP"] = "image/webp";
+    FileMimeTypesEnum["XLS"] = "application/vnd.ms-excel";
+    FileMimeTypesEnum["XLSX"] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    FileMimeTypesEnum["JSON"] = "application/json";
+    FileMimeTypesEnum["BINARY"] = "application/octet-stream";
+})(FileMimeTypesEnum || (exports.FileMimeTypesEnum = FileMimeTypesEnum = {}));
+//# sourceMappingURL=file-mime-types.enum.js.map

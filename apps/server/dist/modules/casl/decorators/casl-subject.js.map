@@ -1,0 +1,1 @@
+{"version":3,"file":"casl-subject.js","sourceRoot":"","sources":["../../../../src/modules/casl/decorators/casl-subject.ts"],"names":[],"mappings":";;;AAAA,2CAAwE;AACxE,4DAAmE;AACnE,4DAAmE;AAEtD,QAAA,WAAW,GAAG,IAAA,6BAAoB,EAC7C,KAAK,EAAE,IAAa,EAAE,OAAyB,EAAE,EAAE;IACjD,OAAO,IAAI,4BAAY,CAAC,MAAM,4BAAY,CAAC,MAAM,CAAC,OAAO,CAAC,CAAC,UAAU,EAAE,CAAC,CAAC;AAC3E,CAAC,CACF,CAAC"}

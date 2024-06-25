@@ -1,0 +1,10 @@
+import { Provider, FactoryProvider, ValueProvider } from '@nestjs/common';
+import type { Cluster } from 'ioredis';
+import { ClusterModuleOptions, ClusterModuleAsyncOptions, ClusterOptionsFactory, ClusterClients } from './interfaces';
+export declare const createOptionsProvider: (options: ClusterModuleOptions) => ValueProvider<ClusterModuleOptions>;
+export declare const createAsyncProviders: (options: ClusterModuleAsyncOptions) => Provider[];
+export declare const createAsyncOptions: (optionsFactory: ClusterOptionsFactory) => Promise<ClusterModuleOptions>;
+export declare const createAsyncOptionsProvider: (options: ClusterModuleAsyncOptions) => Provider;
+export declare const createClusterClientProviders: () => FactoryProvider<Cluster>[];
+export declare const clusterClientsProvider: FactoryProvider<ClusterClients>;
+export declare const mergedOptionsProvider: FactoryProvider<ClusterModuleOptions>;

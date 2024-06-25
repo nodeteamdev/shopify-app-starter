@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String    @id(map: "pk_User") @db.Uuid
+  email           String?   @unique
+  isEmailVerified Boolean   @default(false)
+  firstName       String
+  lastName        String
+  avatarUrl       String?
+  password        String?
+  role            RolesEnum
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("users")
+}
+
+model Webhook {
+  id        String   @id(map: "pk_Webhook") @db.Uuid
+  webhookId String
+  topic     String
+  body      Json
+  headers   Json
+  createdAt DateTime @default(now())
+
+  @@index([webhookId])
+  @@map("webhooks")
+}
+
+model ShopifyAuthActiveStore {
+  shopName  String   @id(map: "pk_ShopifyAuthActiveStore")
+  isActive  Boolean? @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("shopify_auth_active_stores")
+}
+
+model ShopifyAuthSession {
+  id        String   @id(map: "pk_ShopifyAuthSession")
+  content   String?
+  shop      String?
+  createdAt DateTime @default(now())
+
+  @@map("shopify_auth_sessions")
+}
+
+enum RolesEnum {
+  CUSTOMER
+  SUPER_ADMIN
+}
