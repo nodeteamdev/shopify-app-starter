@@ -143,7 +143,6 @@ export class MandatoryWebhookService {
   private saveWebhook(req: RawBodyRequest<Request>): Promise<Webhook> {
     return this.webhookService.create({
       id: randomUUID(),
-      webhookId: req.headers['x-shopify-webhook-id']?.toString(),
       body: req.body,
       headers: req.headers,
       topic: req.headers['x-shopify-topic']?.toString(),

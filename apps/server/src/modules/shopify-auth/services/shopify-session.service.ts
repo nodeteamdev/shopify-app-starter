@@ -1,4 +1,3 @@
-import Cryptr from 'cryptr';
 import { Session } from '@shopify/shopify-api';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ShopifyAuthSessionRepository } from '@modules/shopify-auth/repositories/shopify-session.repository';
@@ -7,16 +6,10 @@ import { SESSIONS_NOT_FOUND, SESSION_NOT_FOUND } from '@modules/common/constants
 
 @Injectable()
 export class ShopifyAuthSessionService {
-  private cryptr: Cryptr;
-
   constructor(
     private readonly shopifyAuthSessionRepository: ShopifyAuthSessionRepository,
     private readonly configService: ConfigService,
-  ) {
-    this.cryptr = new Cryptr(
-      this.configService.get<string>('shopify.encryptionString'),
-    );
-  }
+  ) {}
 
   public async storeSession(session: Session): Promise<boolean> {
     const encryptedContent = this.encrypt(
@@ -77,11 +70,15 @@ export class ShopifyAuthSessionService {
     return true;
   }
 
+  // TODO Later if we decide to encrypt session tokens
   private encrypt(data: string): string {
-    return this.cryptr.encrypt(data);
+    // return this.cryptr.encrypt(data);
+    return '';
   }
 
+  // TODO Later if we decide to encrypt session tokens
   private decrypt(encryptedData: string): string {
-    return this.cryptr.decrypt(encryptedData);
+    // return this.cryptr.decrypt(encryptedData);
+    return '';
   }
 }

@@ -1,6 +1,7 @@
 -- CreateTable
-CREATE TABLE "shopify_auth_active_stores" (
+CREATE TABLE "stores" (
     "shopName" TEXT NOT NULL,
+    "shopId" TEXT NOT NULL,
     "isActive" BOOLEAN DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -8,7 +9,7 @@ CREATE TABLE "shopify_auth_active_stores" (
 );
 
 -- CreateTable
-CREATE TABLE "shopify_auth_sessions" (
+CREATE TABLE "sessions" (
     "id" TEXT NOT NULL,
     "content" TEXT,
     "shop" TEXT,

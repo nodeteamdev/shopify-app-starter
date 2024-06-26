@@ -3,12 +3,14 @@ import { Injectable } from '@nestjs/common';
 import { ShopifyAuthActiveStoreRepository } from '@modules/shopify-auth/repositories/shopify-active-store.repository';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-session.service';
 import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopify-app-install.repository';
+import { ShopService } from '@modules/shop/shop.service';
 
 @Injectable()
 export class ShopifyAuthService {
   constructor(
     private readonly shopifyAuthActiveStoreRepository: ShopifyAuthActiveStoreRepository,
     private readonly shopifyAuthSessionService: ShopifyAuthSessionService,
+    private readonly shopService: ShopService,
   ) {}
 
   public async storeOfflineToken(req: Request, res: Response): Promise<void> {
@@ -46,9 +48,11 @@ export class ShopifyAuthService {
 
     await this.shopifyAuthSessionService.storeSession(session);
 
+    const { id: shopId } = await this.shopService.getShopInfo(session);
+
     const { shop } = session;
 
-    await this.shopifyAuthActiveStoreRepository.upsertShopifyActiveStore(shop);
+    await this.shopifyAuthActiveStoreRepository.upsertShopifyActiveStore(shop, shopId);
 
     return shop;
   }

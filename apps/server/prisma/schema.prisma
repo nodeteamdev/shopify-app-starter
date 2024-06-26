@@ -13,6 +13,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Store {
+  shopName  String   @id(map: "pk_ShopifyAuthActiveStore")
+  shopId    String
+  isActive  Boolean? @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("stores")
+}
+
+model Session {
+  id        String   @id(map: "pk_ShopifyAuthSession")
+  content   String?
+  shop      String?
+  createdAt DateTime @default(now())
+
+  @@map("sessions")
+}
+
 model User {
   id              String    @id(map: "pk_User") @db.Uuid
   email           String?   @unique
@@ -29,32 +47,13 @@ model User {
 }
 
 model Webhook {
-  id        String   @id(map: "pk_Webhook") @db.Uuid
-  webhookId String
+  id        String   @id(map: "pk_Webhook")
   topic     String
   body      Json
   headers   Json
   createdAt DateTime @default(now())
 
-  @@index([webhookId])
   @@map("webhooks")
-}
-
-model ShopifyAuthActiveStore {
-  shopName  String   @id(map: "pk_ShopifyAuthActiveStore")
-  isActive  Boolean? @default(false)
-  createdAt DateTime @default(now())
-
-  @@map("shopify_auth_active_stores")
-}
-
-model ShopifyAuthSession {
-  id        String   @id(map: "pk_ShopifyAuthSession")
-  content   String?
-  shop      String?
-  createdAt DateTime @default(now())
-
-  @@map("shopify_auth_sessions")
 }
 
 enum RolesEnum {

@@ -7,9 +7,10 @@ import { ShopifyAuthActiveStoreRepository } from '@modules/shopify-auth/reposito
 import { ShopifyAuthRedirectService } from '@modules/shopify-auth/services/shopify-auth-redirect.service';
 import { ShopifyAuthSessionRepository } from '@modules/shopify-auth/repositories/shopify-session.repository';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-session.service';
+import { ShopModule } from '@modules/shop/shop.module';
 
 @Module({
-  imports: [PrismaModule, ShopifyAppInstallModule, ShopifyAppInstallModule],
+  imports: [PrismaModule, ShopifyAppInstallModule, ShopifyAppInstallModule, ShopModule],
   providers: [
     ShopifyAuthService,
     ShopifyAuthActiveStoreRepository,

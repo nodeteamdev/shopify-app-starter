@@ -1,14 +1,14 @@
 import { PrismaService } from "@modules/common/providers/prisma";
 import { Session } from '@shopify/shopify-api';
 import { Injectable } from "@nestjs/common";
-import { Prisma, ShopifyAuthSession } from "@prisma/client";
+import { Prisma, Session as ShopifySession } from "@prisma/client";
 
 @Injectable()
 export class ShopifyAuthSessionRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
-  public upsert(session: Session, encryptedContent: string): Promise<ShopifyAuthSession> {
-    return this.prismaService.shopifyAuthSession.upsert({
+  public upsert(session: Session, encryptedContent: string): Promise<ShopifySession> {
+    return this.prismaService.session.upsert({
       where: { id: session.id },
       update: {
         content: encryptedContent,
@@ -22,19 +22,19 @@ export class ShopifyAuthSessionRepository {
     });
   }
 
-  public findUnique(id: string): Promise<ShopifyAuthSession | null> {
-    return this.prismaService.shopifyAuthSession.findUnique({
+  public findUnique(id: string): Promise<ShopifySession | null> {
+    return this.prismaService.session.findUnique({
       where: { id },
     });
   }
 
-  public findMany(id: string): Promise<ShopifyAuthSession[]> {
-   return this.prismaService.shopifyAuthSession.findMany({
+  public findMany(id: string): Promise<ShopifySession[]> {
+   return this.prismaService.session.findMany({
       where: { shop: id },
     });
   }
 
   public deleteMany(id: string): Promise<Prisma.BatchPayload> {
-    return this.prismaService.shopifyAuthSession.deleteMany({ where: { id } });
+    return this.prismaService.session.deleteMany({ where: { id } });
   }
 }
