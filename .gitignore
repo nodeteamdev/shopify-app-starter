@@ -6,6 +6,8 @@
 ./apps/*/node_modules
 ./apps/server/dist
 ./apps/server/node_modules
+dist/
+node_modules/
 
 
 # Logs
