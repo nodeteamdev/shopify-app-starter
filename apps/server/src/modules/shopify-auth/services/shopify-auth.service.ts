@@ -1,14 +1,15 @@
 import { Request, Response } from 'express';
-import { Injectable } from '@nestjs/common';
-import { ShopifyAuthActiveStoreRepository } from '@modules/shopify-auth/repositories/shopify-active-store.repository';
-import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-session.service';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopify-app-install.repository';
+import { ShopifyAuthStoreRepository } from '@modules/shopify-auth/repositories/shopify-auth-store.repository';
+import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 import { ShopService } from '@modules/shop/shop.service';
+import { SHOP_NOT_FOUND } from '@modules/common/constants/errors.constants';
 
 @Injectable()
 export class ShopifyAuthService {
   constructor(
-    private readonly shopifyAuthActiveStoreRepository: ShopifyAuthActiveStoreRepository,
+    private readonly shopifyAuthStoreRepository: ShopifyAuthStoreRepository,
     private readonly shopifyAuthSessionService: ShopifyAuthSessionService,
     private readonly shopService: ShopService,
   ) {}
@@ -21,7 +22,7 @@ export class ShopifyAuthService {
 
     const { session } = callbackResponse;
 
-    await this.shopifyAuthSessionService.storeSession(session);
+    await this.shopifyAuthSessionService.save(session);
 
     const webhookRegisterResponse = await ShopifyAppInstallRepository.shopify.webhooks.register({
       session,
@@ -46,14 +47,14 @@ export class ShopifyAuthService {
 
     const { session } = callbackResponse;
 
-    await this.shopifyAuthSessionService.storeSession(session);
+    await this.shopifyAuthSessionService.save(session);
 
     const { id: shopId } = await this.shopService.getShopInfo(session);
 
-    const { shop } = session;
+    const { shop: shopName } = session;
 
-    await this.shopifyAuthActiveStoreRepository.upsertShopifyActiveStore(shop, shopId);
+    await this.shopifyAuthStoreRepository.save(shopName, shopId);
 
-    return shop;
+    return shopName;
   }
 }

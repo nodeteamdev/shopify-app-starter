@@ -7,17 +7,17 @@ import { Prisma, Session as ShopifySession } from "@prisma/client";
 export class ShopifyAuthSessionRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
-  public upsert(session: Session, encryptedContent: string): Promise<ShopifySession> {
+  public upsert(session: Session): Promise<ShopifySession> {
     return this.prismaService.session.upsert({
       where: { id: session.id },
       update: {
-        content: encryptedContent,
-        shop: session.shop,
+        content: JSON.stringify(session),
+        shopName: session.shop,
       },
       create: {
         id: session.id,
-        content: encryptedContent,
-        shop: session.shop,
+        content: JSON.stringify(session),
+        shopName: session.shop,
       },
     });
   }
@@ -28,13 +28,13 @@ export class ShopifyAuthSessionRepository {
     });
   }
 
-  public findMany(id: string): Promise<ShopifySession[]> {
+  public findManyByShopName(shopName: string): Promise<ShopifySession[]> {
    return this.prismaService.session.findMany({
-      where: { shop: id },
+      where: { shopName },
     });
   }
 
-  public deleteMany(id: string): Promise<Prisma.BatchPayload> {
-    return this.prismaService.session.deleteMany({ where: { id } });
+  public deleteManyByShopName(shopName: string): Promise<Prisma.BatchPayload> {
+    return this.prismaService.session.deleteMany({ where: { shopName } });
   }
 }

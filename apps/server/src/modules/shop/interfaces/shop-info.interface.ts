@@ -1,6 +1,6 @@
 import { GlobalIdType } from '@modules/shop/types/global-id.type';
 
-export interface IShopInfo {
+export interface ShopInfo {
   readonly id: GlobalIdType;
   readonly name: string;
   readonly email: string;

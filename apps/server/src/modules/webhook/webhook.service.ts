@@ -12,7 +12,7 @@ export class WebhookService {
   }
 
   public async  getOneByWebhookId(webhookId: string): Promise<Webhook | null> {
-    const webhook = await this.webhookRepository.findOneByWebhookId(webhookId);
+    const webhook = await this.webhookRepository.findOne(webhookId);
 
     if (!webhook) {
       throw new NotFoundException(WEBHOOK_NOT_FOUND);

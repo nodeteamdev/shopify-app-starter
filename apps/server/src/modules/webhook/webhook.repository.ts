@@ -10,7 +10,7 @@ export class WebhookRepository {
     return this.prisma.webhook.create({ data });
   }
 
-  public findOneByWebhookId(id: string): Promise<Webhook | null> {
+  public findOne(id: string): Promise<Webhook | null> {
     return this.prisma.webhook.findFirst({ where: { id } });
   }
 }

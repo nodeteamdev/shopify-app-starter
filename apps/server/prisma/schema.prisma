@@ -14,18 +14,17 @@ datasource db {
 }
 
 model Store {
-  shopName  String   @id(map: "pk_ShopifyAuthActiveStore")
-  shopId    String
-  isActive  Boolean? @default(false)
+  name      String   @id(map: "pk_Store")
+  id        String
   createdAt DateTime @default(now())
 
   @@map("stores")
 }
 
 model Session {
-  id        String   @id(map: "pk_ShopifyAuthSession")
-  content   String?
-  shop      String?
+  id        String   @id(map: "pk_Session")
+  content   Json
+  shopName  String
   createdAt DateTime @default(now())
 
   @@map("sessions")

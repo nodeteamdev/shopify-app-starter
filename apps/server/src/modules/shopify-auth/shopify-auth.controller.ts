@@ -6,7 +6,7 @@ import { ShopifyAuthRedirectService } from '@modules/shopify-auth/services/shopi
 @Controller('shopify-auth')
 export class ShopifyAuthController {
   constructor(
-    private shopifyAuthRedirectService: ShopifyAuthRedirectService,
+    private readonly shopifyAuthRedirectService: ShopifyAuthRedirectService,
     private readonly shopifyAuthService: ShopifyAuthService,
   ) {}
 

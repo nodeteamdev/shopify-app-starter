@@ -1,3 +1,3 @@
-export interface IGraphqlBody<T> {
+export interface GraphQlBody<T> {
   readonly data: T;
 }
