@@ -3,6 +3,8 @@ import { Session } from '@shopify/shopify-api';
 import { ProductRepository } from '@modules/product/product.repository';
 import { ProductDto } from '@modules/product/dtos/product.dto';
 import { Product } from '@modules/product/interfaces/product.interface';
+import { ProductsQueryDto } from '@modules/product/dtos/products.query.dto';
+import { ProductsDto } from '@modules/product/dtos/products.dto';
 
 @Injectable()
 export class ProductService {
@@ -36,7 +38,7 @@ export class ProductService {
     };
   }
 
-  public async getProduct(
+  public async getOne(
     session: Session,
     productId: string,
   ): Promise<ProductDto | null> {
@@ -44,24 +46,24 @@ export class ProductService {
       body: {
         data: { product },
       },
-    } = await this.productRepository.getProduct(session, productId);
+    } = await this.productRepository.findOne(session, productId);
 
     return product
       ? ProductService.mapProduct(product)
       : null;
   }
 
-  public async getProducts(
+  public async getMany(
     session: Session,
-    query: any,
-  ): Promise<any> {
+    query: ProductsQueryDto,
+  ): Promise<ProductsDto> {
     const {
       body: {
         data: {
           products: { nodes, pageInfo },
         },
       },
-    } = await this.productRepository.getProducts(session, query);
+    } = await this.productRepository.findMany(session, query);
 
     return {
       products: nodes.map(ProductService.mapProduct),

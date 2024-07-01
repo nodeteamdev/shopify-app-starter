@@ -1,8 +1,9 @@
-import { ShopifyConfig } from '@config/shopify.config';
-import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopify-app-install.repository';
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { RequestReturn, Session } from '@shopify/shopify-api';
+import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopify-app-install.repository';
+import { ProductsQueryDto } from '@modules/product/dtos/products.query.dto';
+import { Product } from '@modules/product/interfaces/product.interface';
+import { ProductsWithPageInfo } from '@modules/product/interfaces/products-with-page-info.interface';
 
 
 export interface GraphqlBody<T> {
@@ -11,13 +12,11 @@ export interface GraphqlBody<T> {
 
 @Injectable()
 export class ProductRepository {
-  constructor(private readonly configService: ConfigService) {}
-
-  public getProduct(
+  public findOne(
     session: Session,
     productId: string,
   ): Promise<
-    RequestReturn<GraphqlBody<{ readonly product: any }>>
+    RequestReturn<GraphqlBody<{ readonly product: Product }>>
   > {
     const client = new ShopifyAppInstallRepository.shopify.clients.Graphql({
       session: new Session(session),
@@ -65,10 +64,10 @@ export class ProductRepository {
     });
   }
 
-  public getProducts(
+  public findMany(
     session: Session,
-    reqQuery: any,
-  ): Promise<RequestReturn<GraphqlBody<any>>> {
+    reqQuery: ProductsQueryDto,
+  ): Promise<RequestReturn<GraphqlBody<ProductsWithPageInfo>>> {
     const client = new ShopifyAppInstallRepository.shopify.clients.Graphql({
       session: new Session(session),
     });
