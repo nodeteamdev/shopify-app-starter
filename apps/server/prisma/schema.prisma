@@ -13,6 +13,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Store {
+  id        String   @id(map: "pk_Store")
+  name      String
+  createdAt DateTime @default(now())
+
+  @@map("stores")
+}
+
+model Session {
+  id        String   @id(map: "pk_Session")
+  content   Json
+  shopName  String
+  createdAt DateTime @default(now())
+
+  @@map("sessions")
+}
+
 model User {
   id              String    @id(map: "pk_User") @db.Uuid
   email           String?   @unique
@@ -29,14 +46,12 @@ model User {
 }
 
 model Webhook {
-  id                String                 @id(map: "pk_Webhook") @db.Uuid
-  webhookId         String
-  topic             String
-  body              Json
-  headers           Json
-  createdAt         DateTime               @default(now())
+  id        String   @id(map: "pk_Webhook")
+  topic     String
+  body      Json
+  headers   Json
+  createdAt DateTime @default(now())
 
-  @@index([webhookId])
   @@map("webhooks")
 }
 

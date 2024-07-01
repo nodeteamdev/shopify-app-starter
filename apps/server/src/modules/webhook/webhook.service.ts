@@ -1,6 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Prisma, Webhook } from '@prisma/client';
 import { WebhookRepository } from '@modules/webhook/webhook.repository';
+import { WEBHOOK_NOT_FOUND } from '@modules/common/constants/errors.constants';
 
 @Injectable()
 export class WebhookService {
@@ -11,10 +12,10 @@ export class WebhookService {
   }
 
   public async  getOneByWebhookId(webhookId: string): Promise<Webhook | null> {
-    const webhook = await this.webhookRepository.findOneByWebhookId(webhookId);
+    const webhook = await this.webhookRepository.findOne(webhookId);
 
     if (!webhook) {
-      throw new NotFoundException('Webhook not found');
+      throw new NotFoundException(WEBHOOK_NOT_FOUND);
     }
 
     return webhook;

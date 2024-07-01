@@ -6,6 +6,6 @@ import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopif
 @Module({
   controllers: [ShopifyAppInstallController],
   providers: [ShopifyAppInstallService, ShopifyAppInstallRepository],
-  exports: [ShopifyAppInstallService]
+  exports: [ShopifyAppInstallService, ShopifyAppInstallRepository]
 })
 export class ShopifyAppInstallModule {}
