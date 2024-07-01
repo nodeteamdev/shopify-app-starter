@@ -1,10 +1,10 @@
 -- CreateTable
 CREATE TABLE "stores" (
-    "name" TEXT NOT NULL,
     "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "pk_Store" PRIMARY KEY ("name")
+    CONSTRAINT "pk_Store" PRIMARY KEY ("id")
 );
 
 -- CreateTable

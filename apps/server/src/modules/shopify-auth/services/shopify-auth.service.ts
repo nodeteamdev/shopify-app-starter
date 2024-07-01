@@ -24,11 +24,9 @@ export class ShopifyAuthService {
 
     await this.shopifyAuthSessionService.save(session);
 
-    const webhookRegisterResponse = await ShopifyAppInstallRepository.shopify.webhooks.register({
+    await ShopifyAppInstallRepository.shopify.webhooks.register({
       session,
     });
-
-    console.dir(webhookRegisterResponse, { depth: null });
 
     return await ShopifyAppInstallRepository.shopify.auth.begin({
       shop: session.shop,

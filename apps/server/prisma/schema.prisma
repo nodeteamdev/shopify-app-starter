@@ -14,8 +14,8 @@ datasource db {
 }
 
 model Store {
-  name      String   @id(map: "pk_Store")
-  id        String
+  id        String   @id(map: "pk_Store")
+  name      String
   createdAt DateTime @default(now())
 
   @@map("stores")
