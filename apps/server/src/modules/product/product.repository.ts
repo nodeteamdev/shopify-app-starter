@@ -13,7 +13,7 @@ export interface GraphqlBody<T> {
 export class ProductRepository {
   constructor(private readonly configService: ConfigService) {}
 
-  public getOneProduct(
+  public getProduct(
     session: Session,
     productId: string,
   ): Promise<
@@ -26,33 +26,34 @@ export class ProductRepository {
     const query: string = `
       #graphql
       query ($id: ID!) {
-          product(id: $id) {
-              legacyResourceId
-              title
-              createdAt
-              productCategory {
-                  productTaxonomyNode {
-                      name
-                  }
-              }
-              priceRangeV2 {
-                  maxVariantPrice {
-                      amount
-                      currencyCode
-                  }
-                  minVariantPrice {
-                      amount
-                      currencyCode
-                  }
-              }
-              productType
-              featuredImage {
-                  url
-                  altText
-              }
+        product(id: $id) {
+          legacyResourceId
+          title
+          createdAt
+          productCategory {
+            productTaxonomyNode {
+              name
+            }
           }
+          priceRangeV2 {
+            maxVariantPrice {
+              amount
+              currencyCode
+            }
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+          productType
+          featuredImage {
+            url
+            altText
+          }
+        }
       }
     `;
+  
 
     return client.query({
       data: {
@@ -61,7 +62,6 @@ export class ProductRepository {
           id: `gid://shopify/Product/${productId}`,
         },
       },
-      tries: this.getMaxTries(),
     });
   }
 
@@ -74,42 +74,43 @@ export class ProductRepository {
     });
 
     const query: string = `
-        #graphql
-        query ($first: Int, $after: String, $reverse: Boolean, $sortKey: ProductSortKeys, $query: String) {
-            products(first: $first, after: $after, reverse: $reverse, sortKey: $sortKey, query: $query) {
-                nodes {
-                    legacyResourceId
-                    title
-                    createdAt
-                    status
-                    productCategory {
-                        productTaxonomyNode {
-                            name
-                        }
-                    }
-                    priceRangeV2 {
-                        maxVariantPrice {
-                            amount
-                            currencyCode
-                        }
-                        minVariantPrice {
-                            amount
-                            currencyCode
-                        }
-                    }
-                    productType
-                    featuredImage {
-                        url
-                        altText
-                    }
-                }
-                pageInfo {
-                    endCursor
-                    hasNextPage
-                }
+      #graphql
+      query ($first: Int, $after: String, $reverse: Boolean, $sortKey: ProductSortKeys, $query: String) {
+        products(first: $first, after: $after, reverse: $reverse, sortKey: $sortKey, query: $query) {
+          nodes {
+            legacyResourceId
+            title
+            createdAt
+            status
+            productCategory {
+              productTaxonomyNode {
+                name
+              }
             }
+            priceRangeV2 {
+              maxVariantPrice {
+                amount
+                currencyCode
+              }
+              minVariantPrice {
+                amount
+                currencyCode
+              }
+            }
+            productType
+            featuredImage {
+              url
+              altText
+            }
+          }
+          pageInfo {
+            endCursor
+            hasNextPage
+          }
         }
+      }
     `;
+
 
     return client.query({
       data: {
@@ -118,11 +119,6 @@ export class ProductRepository {
           ...reqQuery,
         },
       },
-      tries: this.getMaxTries(),
     });
-  }
-
-  private getMaxTries(): number {
-    return this.configService.get<ShopifyConfig>('shopify').maxTries;
   }
 }
