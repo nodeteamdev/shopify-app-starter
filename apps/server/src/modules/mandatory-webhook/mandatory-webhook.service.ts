@@ -1,10 +1,9 @@
-import { randomUUID } from 'node:crypto';
+import { Request } from 'express';
+import { Injectable, Logger, RawBodyRequest, UnauthorizedException } from '@nestjs/common';
+import { Webhook } from '@prisma/client';
 import { EmailService } from '@modules/email/email.service';
 import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-app-install.service';
 import { WebhookService } from '@modules/webhook/webhook.service';
-import { Injectable, Logger, RawBodyRequest, UnauthorizedException } from '@nestjs/common';
-import { Webhook } from '@prisma/client';
-import { Request } from 'express';
 
 @Injectable()
 export class MandatoryWebhookService {
@@ -83,7 +82,7 @@ export class MandatoryWebhookService {
         `App was successfully uninstalled from the shop with id: ${shopId}`,
       );
 
-      await this.saveWebhook(req);
+      await this.saveWebhook(req, webhookId);
     } catch (error) {
       this.logger.debug(
         `An error occurs during uninstalling app from the shop with id: ${shopId}: ${JSON.stringify(
@@ -125,7 +124,7 @@ export class MandatoryWebhookService {
     );
 
     try {
-      await this.saveWebhook(req);
+      await this.saveWebhook(req, webhookId);
       await emailServiceMethod(data);
     } catch (error) {
       this.logger.debug(
@@ -140,9 +139,9 @@ export class MandatoryWebhookService {
     }
   }
 
-  private saveWebhook(req: RawBodyRequest<Request>): Promise<Webhook> {
+  private saveWebhook(req: RawBodyRequest<Request>, webhookId: string): Promise<Webhook> {
     return this.webhookService.create({
-      id: randomUUID(),
+      id: webhookId,
       body: req.body,
       headers: req.headers,
       topic: req.headers['x-shopify-topic']?.toString(),
