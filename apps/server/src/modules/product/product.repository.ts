@@ -4,6 +4,7 @@ import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopif
 import { ProductsQueryDto } from '@modules/product/dtos/products.query.dto';
 import { Product } from '@modules/product/interfaces/product.interface';
 import { ProductsWithPageInfo } from '@modules/product/interfaces/products-with-page-info.interface';
+import { ProductVariantsWithPageInfo } from '@modules/product/interfaces/product-variants-with-page-info.interface';
 
 
 export interface GraphqlBody<T> {
@@ -66,7 +67,7 @@ export class ProductRepository {
 
   public findMany(
     session: Session,
-    reqQuery: ProductsQueryDto,
+    productsQueryDto: ProductsQueryDto,
   ): Promise<RequestReturn<GraphqlBody<ProductsWithPageInfo>>> {
     const client = new ShopifyAppInstallRepository.shopify.clients.Graphql({
       session: new Session(session),
@@ -115,7 +116,50 @@ export class ProductRepository {
       data: {
         query,
         variables: {
-          ...reqQuery,
+          ...productsQueryDto,
+        },
+      },
+    });
+  }
+
+  public findProductVariants(
+    session: Session,
+    reqQuery: ProductsQueryDto,
+    productId: string,
+  ): Promise<RequestReturn<GraphqlBody<ProductVariantsWithPageInfo>>> {
+    const client = new ShopifyAppInstallRepository.shopify.clients.Graphql({
+      session: new Session(session),
+    });
+
+    const query: string = `
+    #graphql
+    query GeVariantsForOneProduct($first: Int!, $after: String,  $query: String) {
+      productVariants(first: $first, after: $after, query: $query) {
+        nodes {
+          id
+          title
+          price
+          displayName
+          image {
+            altText
+              url
+            }
+          }
+          pageInfo {
+            endCursor
+            hasNextPage
+          }
+        }
+      }
+    `;
+
+    return client.query({
+      data: {
+        query,
+        variables: {
+          first: reqQuery.first,
+          after: reqQuery.after,
+          query: `product_id:${productId}`,
         },
       },
     });

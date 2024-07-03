@@ -11,6 +11,7 @@ import { AppService } from '@modules/app/app.service';
 import { AuthModule } from '@modules/auth/auth.module';
 import { EmailService } from '@modules/email/email.service';
 import { MandatoryWebhookModule } from '@modules/mandatory-webhook/mandatory-webhook.module';
+import { ProductModule } from '@modules/product/product.module';
 import { ShopModule } from '@modules/shop/shop.module';
 import { ShopifyAppInstallModule } from '@modules/shopify-app-install/shopify-app-install.module';
 import { ShopifyAuthModule } from '@modules/shopify-auth/shopify-auth.module';
@@ -96,6 +97,7 @@ const logger: Logger = new Logger('AppModule');
     MandatoryWebhookModule,
     ShopifyAuthModule,
     ShopModule,
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [AppService, EmailService],
