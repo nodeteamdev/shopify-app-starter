@@ -16,6 +16,7 @@ export class ProductVariantImageDto {
   })
   readonly altText: string | null;
 }
+
 export class ProductVariantDto {
   @ApiProperty({ type: String, example: '8523536367741' })
   readonly id: string;
