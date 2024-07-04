@@ -47,7 +47,7 @@ export class ShopifyAuthSessionService {
     );
 
     if (filteredSessions.length > 0) {
-      const sessionData = filteredSessions[0].content as SessionParams;
+      const sessionData: SessionParams = JSON.parse(filteredSessions[0].content as string) as SessionParams;
 
       return new Session(sessionData);
     }
