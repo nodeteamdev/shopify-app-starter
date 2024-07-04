@@ -19,6 +19,7 @@ import { ShopModule } from '@modules/shop/shop.module';
     ShopifyAuthSessionService,
     ShopifyAuthRedirectService,
   ],
-  controllers: [ShopifyAuthController]
+  controllers: [ShopifyAuthController],
+  exports: [ShopifyAuthSessionService]
 })
 export class ShopifyAuthModule {}
