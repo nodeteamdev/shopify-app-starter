@@ -29,7 +29,7 @@ export class ShopifyAuthSessionRepository {
   }
 
   public findManyByShopName(shopName: string): Promise<ShopifySession[]> {
-   return this.prismaService.session.findMany({
+    return this.prismaService.session.findMany({
       where: { shopName },
     });
   }
