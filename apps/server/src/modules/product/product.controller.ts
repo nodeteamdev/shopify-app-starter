@@ -1,12 +1,12 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ProductService } from '@modules/product/product.service';
-import { ProductsQueryDto } from '@modules/product/dtos/products.query.dto';
-import { ProductsDto } from '@modules/product/dtos/products.dto';
+import { ApiNotFoundBaseResponse } from '@modules/common/decorators/api-base-responses.decorator';
 import { ApiOkBaseResponse } from '@modules/common/decorators/api-ok-base-response.decorator';
-import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import { ProductVariantsDto } from '@modules/product/dtos/product-variants.dto';
 import { ProductDto } from '@modules/product/dtos/product.dto';
-import { ApiNotFoundBaseResponse } from '@modules/common/decorators/api-base-responses.decorator';
+import { ProductsDto } from '@modules/product/dtos/products.dto';
+import { ProductsQueryDto } from '@modules/product/dtos/products.query.dto';
+import { ProductService } from '@modules/product/product.service';
+import { Controller, Get, Param, Query } from '@nestjs/common';
+import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Products')
 @ApiExtraModels(ProductsDto, ProductVariantsDto, ProductDto)
@@ -20,6 +20,7 @@ export class ProductController {
     @Param('shopName') shopName: string,
     @Param('productId') productId: string,
   ): Promise<ProductDto> {
+    console.log('shopName: ', shopName);
     return this.productService.getOne(shopName, productId);
   }
 
@@ -29,6 +30,7 @@ export class ProductController {
     @Param('shopName') shopName: string,
     @Query() productsQueryDto: ProductsQueryDto,
   ): Promise<ProductsDto> {
+    console.log('shopName: ', shopName);
     return this.productService.getMany(shopName, productsQueryDto);
   }
 
@@ -40,6 +42,11 @@ export class ProductController {
     @Param('productId') productId: string,
     @Query() productsQueryDto: ProductsQueryDto,
   ): Promise<ProductVariantsDto> {
-    return this.productService.getProductVariants(shopName, productId, productsQueryDto);
+    console.log('shopName: ', shopName);
+    return this.productService.getProductVariants(
+      shopName,
+      productId,
+      productsQueryDto,
+    );
   }
 }

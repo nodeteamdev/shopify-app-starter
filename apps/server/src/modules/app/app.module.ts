@@ -1,3 +1,4 @@
+import { join } from 'path';
 import { AppConfig, appConfig } from '@config/app.config';
 import { jwtConfig } from '@config/jwt.config';
 import { mailerConfig } from '@config/mailer.config';
@@ -9,17 +10,22 @@ import { swaggerConfig } from '@config/swagger.config';
 import { AppController } from '@modules/app/app.controller';
 import { AppService } from '@modules/app/app.service';
 import { AuthModule } from '@modules/auth/auth.module';
+import { CSP } from '@modules/common/middleware/csp.middleware';
 import { EmailService } from '@modules/email/email.service';
 import { MandatoryWebhookModule } from '@modules/mandatory-webhook/mandatory-webhook.module';
 import { ProductModule } from '@modules/product/product.module';
 import { ShopModule } from '@modules/shop/shop.module';
+import { ShopifyModule } from '@modules/shopify-api/shopify.module';
 import { ShopifyAppInstallModule } from '@modules/shopify-app-install/shopify-app-install.module';
+import { ShopifyAuthSessionRepository } from '@modules/shopify-auth/repositories/shopify-auth-session.repository';
+import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 import { ShopifyAuthModule } from '@modules/shopify-auth/shopify-auth.module';
 import { UserModule } from '@modules/user/user.module';
 import { WebhookModule } from '@modules/webhook/webhook.module';
-import { Logger, Module } from '@nestjs/common';
+import { Logger, MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { PrismaModule } from '@providers/prisma';
 import { RedisThrottlerStorageService } from '@providers/redis/redis-throttler-storage.service';
@@ -31,6 +37,9 @@ const logger: Logger = new Logger('AppModule');
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '../../', 'client', 'dist'),
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [
@@ -97,9 +106,28 @@ const logger: Logger = new Logger('AppModule');
     MandatoryWebhookModule,
     ShopifyAuthModule,
     ShopModule,
+    ShopifyModule,
     ProductModule,
   ],
   controllers: [AppController],
-  providers: [AppService, EmailService],
+  providers: [
+    AppService,
+    EmailService,
+    ShopifyAuthSessionService,
+    ShopifyAuthSessionRepository,
+  ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(CSP)
+      .exclude(
+        'shopify-auth',
+        'shopify-auth/(.*)',
+        'webhooks',
+        'webhooks/(.*)',
+        'graphql',
+      )
+      .forRoutes('*');
+  }
+}

@@ -1,10 +1,10 @@
-import { Controller, Get, Logger, Query, Req, Res } from "@nestjs/common";
-import { Request, Response } from 'express';
+import { AppConfig } from '@config/app.config';
+import { Cookies, CookiesType } from '@decorators/cookies.decorator';
+import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-app-install.service';
+import { Controller, Get, Logger, Query, Req, Res } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { ApiTags } from '@nestjs/swagger';
-import { ShopifyAppInstallService } from "@modules/shopify-app-install/shopify-app-install.service";
-import { ConfigService } from "@nestjs/config";
-import { AppConfig } from "@config/app.config";
-import { Cookies, CookiesType } from "@decorators/cookies.decorator";
+import { Request, Response } from 'express';
 
 @ApiTags('Shopify')
 @Controller('shopify')
@@ -22,6 +22,8 @@ export class ShopifyAppInstallController {
     @Req() req: Request,
     @Res() res: Response,
   ): Promise<void> {
+    console.log('hello from install');
+    console.log('=======================', req.query);
     this.shopifyAppInstallService.validateHmac(req.query);
 
     const { session } = req.query;

@@ -1,7 +1,7 @@
-import { Request, Response } from 'express';
-import { Controller, Get, Req, Res } from '@nestjs/common';
-import { ShopifyAuthService } from '@modules/shopify-auth/services/shopify-auth.service';
 import { ShopifyAuthRedirectService } from '@modules/shopify-auth/services/shopify-auth-redirect.service';
+import { ShopifyAuthService } from '@modules/shopify-auth/services/shopify-auth.service';
+import { Controller, Get, Req, Res } from '@nestjs/common';
+import { Request, Response } from 'express';
 
 @Controller('shopify-auth')
 export class ShopifyAuthController {
@@ -11,17 +11,26 @@ export class ShopifyAuthController {
   ) {}
 
   @Get()
-  public authMiddleware(@Req() req: Request, @Res() res: Response): Promise<void> {
+  public authMiddleware(
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<void> {
+    console.log('=================111', req.query);
     return this.shopifyAuthRedirectService.redirect(req, res);
   }
 
   @Get('/offline')
   public authOffline(@Req() req: Request, @Res() res: Response): Promise<void> {
+    console.log('=================222', req.query);
     return this.shopifyAuthService.storeOfflineToken(req, res);
   }
 
   @Get('/online')
-  public async authOnline(@Req() req: Request, @Res() res: Response): Promise<void> {
+  public async authOnline(
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<void> {
+    console.log('=================333', req.query);
     const shop = await this.shopifyAuthService.storeOnlineToken(req, res);
 
     res.status(200).redirect(`/?shop=${shop}&host=${req.query.host}`);
