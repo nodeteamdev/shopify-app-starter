@@ -67,7 +67,7 @@ export class ShopifyAppInstallService {
   ): Promise<WebhookConfig[]> {
     const apiHost = this.configService.getOrThrow<ShopifyConfig>('shopify').hostName;
 
-    const baseUrl = `https://${apiHost}/api/v1/shopify/webhooks`;
+    const baseUrl = `https://${apiHost}/api/v1/webhook`;
 
     const webhookConfigs: WebhookConfig[] = [
       {
@@ -78,11 +78,6 @@ export class ShopifyAppInstallService {
       {
         topic: WebhookTopicsEnum.APP_UNINSTALLED,
         callbackUrl: `${baseUrl}/uninstall-app`,
-        deliveryMethod: 'http',
-      },
-      {
-        topic: WebhookTopicsEnum.APP_PURCHASES_ONE_TIME_UPDATE,
-        callbackUrl: `${baseUrl}/app-purchases-one-time-update`,
         deliveryMethod: 'http',
       },
     ];

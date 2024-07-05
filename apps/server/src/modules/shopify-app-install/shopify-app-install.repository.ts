@@ -29,7 +29,7 @@ export class ShopifyAppInstallRepository {
         <string>req.query.shop,
         true,
       ),
-      callbackPath: '/api/v1/shopify/callback',
+      callbackPath: '/api/v1/shopify-app-install/callback',
       isOnline: false,
       rawRequest: req,
       rawResponse: res,
