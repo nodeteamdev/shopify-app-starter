@@ -15,13 +15,11 @@ export class ShopifyAuthController {
     @Req() req: Request,
     @Res() res: Response,
   ): Promise<void> {
-    console.log('=================111', req.query);
     return this.shopifyAuthRedirectService.redirect(req, res);
   }
 
   @Get('/offline')
   public authOffline(@Req() req: Request, @Res() res: Response): Promise<void> {
-    console.log('=================222', req.query);
     return this.shopifyAuthService.storeOfflineToken(req, res);
   }
 
@@ -30,7 +28,6 @@ export class ShopifyAuthController {
     @Req() req: Request,
     @Res() res: Response,
   ): Promise<void> {
-    console.log('=================333', req.query);
     const shop = await this.shopifyAuthService.storeOnlineToken(req, res);
 
     res.status(200).redirect(`/?shop=${shop}&host=${req.query.host}`);

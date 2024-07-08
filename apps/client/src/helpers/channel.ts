@@ -1,5 +1,5 @@
 const broadcast = new BroadcastChannel('shopify-app-bridge');
-console.log('broadcast: ', broadcast);
+
 class Channel {
     broadcast: BroadcastChannel;
 

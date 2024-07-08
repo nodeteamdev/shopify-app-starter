@@ -5,7 +5,7 @@ import react from "@vitejs/plugin-react-swc";
 dotenv.config({ path: ".env" });
 
 const proxyOptions = {
-  target: `http://127.0.0.1:${process.env.SERVER_PORT}`,
+  target: `http://localhost:${process.env.SERVER_PORT}`,
   changeOrigin: false,
   secure: true,
   ws: false,
@@ -15,7 +15,6 @@ const host = process.env.SHOPIFY_APP_URL
   ? process.env.SHOPIFY_APP_URL.replace(/https?:\/\//, "")
   : "localhost";
 
-console.log("Host: ", host);
 let hmrConfig: Object;
 
 if (host === "localhost") {
@@ -33,7 +32,6 @@ if (host === "localhost") {
     clientPort: 443,
   };
 }
-console.log("HMR Config: ", hmrConfig);
 
 export default defineConfig({
   plugins: [react()],
@@ -54,15 +52,18 @@ export default defineConfig({
     port: parseInt(process.env.CLIENT_PORT),
     hmr: hmrConfig,
     proxy: {
-      "^/api/v1/shopify-auth(/|(\\?.*)?$)": proxyOptions,
-      // "^/apps(/|(\\?.*)?$)": proxyOptions,
-      // "^/graphql(/|(\\?.*)?$)": proxyOptions,
-      // "^/webhooks(/|(\\?.*)?$)": proxyOptions,
-      // "^/gdpr(/|(\\?.*)?$)": proxyOptions,
-      "^/api/v1/product(/|(\\?.*)?$)": proxyOptions,
-      // "^/api/v1/shopify(/|(\\?.*)?$)": proxyOptions,
-      "^/api/v1/mandatory-webhook/(/|(\\?.*)?$)": proxyOptions,
+      // "^/api/v1/shopify-auth(/|(\\?.*)?$)": proxyOptions,
+      // // "^/apps(/|(\\?.*)?$)": proxyOptions,
+      // // "^/graphql(/|(\\?.*)?$)": proxyOptions,
+      // // "^/webhooks(/|(\\?.*)?$)": proxyOptions,
+      // // "^/gdpr(/|(\\?.*)?$)": proxyOptions,
+      // "^/api/v1/product(/|(\\?.*)?$)": proxyOptions,
+      // // "^/api/v1/shopify(/|(\\?.*)?$)": proxyOptions,
+      // "^/api/v1/mandatory-webhook/(/|(\\?.*)?$)": proxyOptions,
       "^/docs": proxyOptions,
+      '^/api/v1': {
+        ...proxyOptions
+      }
     },
   },
 });

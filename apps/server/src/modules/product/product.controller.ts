@@ -20,7 +20,6 @@ export class ProductController {
     @Param('shopName') shopName: string,
     @Param('productId') productId: string,
   ): Promise<ProductDto> {
-    console.log('shopName: ', shopName);
     return this.productService.getOne(shopName, productId);
   }
 
@@ -30,7 +29,6 @@ export class ProductController {
     @Param('shopName') shopName: string,
     @Query() productsQueryDto: ProductsQueryDto,
   ): Promise<ProductsDto> {
-    console.log('shopName: ', shopName);
     return this.productService.getMany(shopName, productsQueryDto);
   }
 
@@ -42,7 +40,6 @@ export class ProductController {
     @Param('productId') productId: string,
     @Query() productsQueryDto: ProductsQueryDto,
   ): Promise<ProductVariantsDto> {
-    console.log('shopName: ', shopName);
     return this.productService.getProductVariants(
       shopName,
       productId,

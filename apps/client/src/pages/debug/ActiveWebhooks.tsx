@@ -4,12 +4,9 @@ import { Redirect } from "@shopify/app-bridge/actions";
 import { DataTable, Frame, LegacyCard, Loading, Page } from "@shopify/polaris";
 import { navigate } from "raviger";
 
-console.log("Hello from ActiveWebhooks.tsx");
 const ActiveWebhooks = () => {
-  console.log("Hello from", ActiveWebhooks.name);
   const app = useAppBridge();
 
-  console.log("app", app);
   const redirect = Redirect.create(app);
   const getInstalledWebhooks = gql`
     {
@@ -30,11 +27,9 @@ const ActiveWebhooks = () => {
   `;
 
   const { loading, error, data } = useQuery(getInstalledWebhooks);
-  console.log("data", data);
   let rows = [];
 
   if (loading) {
-    console.log("loading", loading);
   }
 
   if (data) {

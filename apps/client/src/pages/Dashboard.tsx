@@ -5,8 +5,6 @@ import { ResourcePicker, useAppBridge } from '@shopify/app-bridge-react';
 const DashboardPage = () => {
   const [products, setProducts] = useState([]);
   const [open, setOpen] = useState(false);
-  const app = useAppBridge();
-  console.log('app', app);
 
   useEffect(() => {
     fetchProducts();
@@ -15,7 +13,7 @@ const DashboardPage = () => {
   const fetchProducts = async () => {
     try {
       const shop = new URLSearchParams(location.search).get("shop");
-      console.log('================= >>>>> shop: ', shop);
+
       const response: any = await fetch(`/api/v1/product/${shop}/products`).then((res) => res).catch((error) => console.error('Error fetching products:', error));
       setProducts(response.data.products);
     } catch (error) {
@@ -23,9 +21,8 @@ const DashboardPage = () => {
     }
   };
 
-  const handleSelection = (resources) => {
+  const handleSelection = (resources: any) => {
     setOpen(false);
-    console.log('Selected resources:', resources);
   };
 
   return (

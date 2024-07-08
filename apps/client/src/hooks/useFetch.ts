@@ -11,7 +11,7 @@ function useFetch() {
   const host = useStore((state) => state.host);
 
   return async (uri: string, options?: RequestInit | undefined) => {
-    console.log(process.env.SHOPIFY_APP_ORIGIN);
+
     const response = await fetchFunction(
       `https://${process.env.SHOPIFY_APP_ORIGIN}${uri}?embedded=${embedded}&shop=${shop}&host=${host}`,
       options
@@ -26,7 +26,6 @@ function useFetch() {
 
       const redirect = Redirect.create(app);
       redirect.dispatch(Redirect.Action.APP, authUrlHeader || `/exitframe`);
-      console.log(redirect)
       return null;
     }
 

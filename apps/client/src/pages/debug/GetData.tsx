@@ -68,7 +68,7 @@ const GetData = () => {
   async function fetchContentGQL() {
     setResponseDataGQL("loading...");
     const res = await fetch("/api/v1/app",);
-    console.log(res);
+
     const response = await res?.json();
     redirectToExitframe(res);
     setResponseDataGQL(response.body.data.shop.name);

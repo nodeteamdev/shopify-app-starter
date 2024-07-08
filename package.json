@@ -1,0 +1,26 @@
+{
+  "name": "shopify-app-starter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "ngrok": "ngrok http 5173",
+    "ngrok:prod": "ngrok http 3000",
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "start": "node apps/server/dist/main",
+    "shopify": "shopify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nodeteamdev/shopify-app-starter.git"
+  },
+  "private": true,
+  "dependencies": {
+    "turbo": "^2.0.6"
+  },
+  "workspaces": [
+    "apps/*"
+  ],
+  "packageManager": "npm@10.5.1"
+}

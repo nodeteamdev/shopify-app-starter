@@ -6,11 +6,10 @@ import { AppBridgeProviderProps } from "@/types";
 import { useStore } from "@/stores";
 
 export function AppBridgeProvider({ children }: AppBridgeProviderProps) {
-  console.log("Hello from AppBridgeProvider");
   const navigate = useNavigate();
   const location = usePath();
   const [query] = useQueryParams();
-  console.log("query", query);
+
   const changeEmbedded = useStore((state: any) => state.changeEmbedded);
   const changeShop = useStore((state: any) => state.changeShop);
   const changeHost = useStore((state: any) => state.changeHost);

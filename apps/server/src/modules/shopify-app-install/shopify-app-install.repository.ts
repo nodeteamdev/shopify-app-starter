@@ -1,20 +1,17 @@
 import '@shopify/shopify-api/adapters/node';
 import { ShopifyConfig } from '@config/shopify.config';
+import { WebhookConfig } from '@modules/shopify-app-install/interfaces/webhook-config.interface';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
   ApiVersion,
   BeginParams,
+  Session,
   Shopify,
   shopifyApi,
-  Session,
 } from '@shopify/shopify-api';
 import { restResources } from '@shopify/shopify-api/rest/admin/2023-07';
 import { Request, Response } from 'express';
-import { restResources } from '@shopify/shopify-api/rest/admin/2023-07';
-import { ConfigService } from '@nestjs/config';
-import { ShopifyConfig } from '@config/shopify.config';
-import { WebhookConfig } from '@modules/shopify-app-install/interfaces/webhook-config.interface';
 
 @Injectable()
 export class ShopifyAppInstallRepository {
@@ -27,7 +24,6 @@ export class ShopifyAppInstallRepository {
   }
 
   public beginAuth(req: Request, res: Response): Promise<string> {
-    console.log(req.query.shop);
     const beginParams: BeginParams = {
       shop: ShopifyAppInstallRepository.shopify.utils.sanitizeShop(
         <string>req.query.shop,
@@ -38,7 +34,6 @@ export class ShopifyAppInstallRepository {
       rawRequest: req,
       rawResponse: res,
     };
-    console.log('begin params', beginParams);
     return ShopifyAppInstallRepository.shopify.auth.begin(beginParams);
   }
 

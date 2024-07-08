@@ -88,7 +88,6 @@ const ActiveSubscriptions = () => {
 
   let rows: any[] = [];
   if (loading) {
-    console.log("loading", loading);
     return (
       <>
         <Frame>
@@ -102,7 +101,6 @@ const ActiveSubscriptions = () => {
     if (activeSubscriptions.length === 0) {
       rows.push(["No Plan", "N/A", "N/A", "USD 0.00"]);
     } else {
-      console.log("Rendering Data", activeSubscriptions);
       activeSubscriptions.forEach((subscription: any) => {
         const price = subscription.lineItems[0].plan.pricingDetails.price;
         rows.push([

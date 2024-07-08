@@ -5,7 +5,6 @@ import { NextFunction, Request, Response } from 'express';
 export class IsShopActive implements NestMiddleware {
   async use(req: Request, _res: Response, next: NextFunction) {
     const shop = req.query.shop;
-    console.log('shop----: ', shop);
     if (!shop) {
       next();
       return;

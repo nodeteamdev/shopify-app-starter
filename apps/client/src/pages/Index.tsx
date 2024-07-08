@@ -7,11 +7,10 @@ import useFetch from '@/hooks/useFetch.ts';
 
 const HomePage = () => {
   const app = useAppBridge();
-  console.log("app", app);
+
   const redirect = Redirect.create(app);
-  console.log("redirect", redirect);
+
   const fetch = useFetch();
-  console.log("fetch", fetch);
 
   const PRODUCTS_QUERY = `query {
     products(first: 10) {
@@ -31,9 +30,9 @@ const HomePage = () => {
       }
     }
   }`;
-  console.log(PRODUCTS_QUERY);
+
   async function fetchProducts() {
-    console.log("fetching products");
+
     const response = await fetch("/api/v1/graphql", {
       headers: {
         Accept: "application/json",
@@ -42,7 +41,6 @@ const HomePage = () => {
       method: "POST",
       body: JSON.stringify({ query: PRODUCTS_QUERY }),
     });
-    console.log(await response?.json());
   }
   useEffect(() => {
     fetchProducts();

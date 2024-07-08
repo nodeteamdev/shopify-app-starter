@@ -10,9 +10,8 @@ export class CSP implements NestMiddleware {
 
   use(req: Request, res: Response, next: NextFunction) {
     const shopifyApi = this.shopifyService.shopifyApi;
-    console.log('shopifyApi: ', shopifyApi.config.isEmbeddedApp);
+
     const shop = req.query.shop;
-    console.log('shop: ', shop);
 
     if (shopifyApi.config.isEmbeddedApp && shop) {
       res.setHeader(

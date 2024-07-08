@@ -22,23 +22,12 @@ export class VerifyRequest implements NestMiddleware {
   async use(req: Request, res: Response, next: NextFunction) {
     try {
       const { host, referer, origin } = req.headers;
-      console.log('host: ', host);
-      console.log('referer: ', referer);
-      console.log('origin: ', origin);
       let shop = origin
         ? parse(origin?.split('?')[1])
         : new URL(referer)?.searchParams.get('shop');
 
       if (host && (referer || origin)) {
         const shopify = this.shopifyService.shopifyApi;
-        console.log(
-          'shopify: ',
-          await shopify.session.getCurrentId({
-            isOnline: true,
-            rawRequest: req,
-            rawResponse: res,
-          }),
-        );
         const sessionId = await shopify.session.getCurrentId({
           isOnline: true,
           rawRequest: req,
@@ -46,7 +35,6 @@ export class VerifyRequest implements NestMiddleware {
         });
 
         const session = await this.sessionService.getSession(sessionId);
-        console.log('session: ', session);
 
         shop = session?.shop;
 

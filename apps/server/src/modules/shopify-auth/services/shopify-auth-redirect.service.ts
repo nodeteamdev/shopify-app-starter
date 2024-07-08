@@ -22,14 +22,12 @@ export class ShopifyAuthRedirectService {
     const shop = ShopifyAppInstallRepository.shopify.utils.sanitizeShop(
       <string>req.query.shop,
     );
-    console.log('shop', req.query);
     if (req.query.embedded === '1') {
       const queryParams = new URLSearchParams({
         ...req.query,
         shop,
         redirectUri: `https://${hostName}/api/v1/shopify-auth?shop=${shop}&host=${req.query.host}`,
       }).toString();
-      console.log('queryParams', queryParams);
       return res.redirect(`/exitframe?${queryParams}`);
     }
 
