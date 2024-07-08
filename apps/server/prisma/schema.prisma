@@ -13,12 +13,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Store {
-  id        String   @id(map: "pk_Store")
-  name      String
-  createdAt DateTime @default(now())
+model Shop {
+  id              String   @id(map: "pk_Shop")
+  name            String
+  email           String
+  contactEmail    String
+  myshopifyDomain String
+  primaryDomain   String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  @@map("stores")
+  @@map("shops")
 }
 
 model Session {

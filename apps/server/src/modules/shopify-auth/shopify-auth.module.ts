@@ -2,6 +2,8 @@ import { PrismaModule } from '@modules/common/providers/prisma';
 import { ShopModule } from '@modules/shop/shop.module';
 import { ShopifyService } from '@modules/shopify-api/services/shopify.service';
 import { ShopifyAppInstallModule } from '@modules/shopify-app-install/shopify-app-install.module';
+import { ShopifyAuthRedirectService } from '@modules/shopify-auth/services/shopify-auth-redirect.service';
+import { ShopifyAuthShopRepository } from '@modules/shopify-auth/repositories/shopify-auth-shop.repository';
 import { ShopifyAuthSessionRepository } from '@modules/shopify-auth/repositories/shopify-auth-session.repository';
 import { ShopifyAuthStoreRepository } from '@modules/shopify-auth/repositories/shopify-auth-store.repository';
 import { ShopifyAuthRedirectService } from '@modules/shopify-auth/services/shopify-auth-redirect.service';
@@ -14,7 +16,7 @@ import { Module } from '@nestjs/common';
   imports: [PrismaModule, ShopifyAppInstallModule, ShopModule],
   providers: [
     ShopifyAuthService,
-    ShopifyAuthStoreRepository,
+    ShopifyAuthShopRepository,
     ShopifyAuthRedirectService,
     ShopifyAuthSessionRepository,
     ShopifyAuthSessionService,

@@ -3,12 +3,19 @@ import { Request, Response } from 'express';
 import { Injectable, RawBodyRequest, UnauthorizedException } from '@nestjs/common';
 import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopify-app-install.repository';
 import { ShopifyRequestQuery } from '@modules/shopify-app-install/types/shopify-request-query-type';
-import { WebhookValidation } from '@shopify/shopify-api';
+import { Session, WebhookValidation } from '@shopify/shopify-api';
+import { WebhookConfig } from '@modules/shopify-app-install/interfaces/webhook-config.interface';
+import { ConfigService } from '@nestjs/config';
+import { ShopifyConfig } from '@config/shopify.config';
+import { WebhookTopicsEnum } from '@modules/shopify-app-install/enums/webhook-topics.enum';
 
 
 @Injectable()
 export class ShopifyAppInstallService {
-  constructor(private readonly shopifyAppInstallRepository: ShopifyAppInstallRepository) {}
+  constructor(
+    private readonly shopifyAppInstallRepository: ShopifyAppInstallRepository,
+    private readonly configService: ConfigService,
+  ) {}
 
   public validateHmac(queryParams: ShopifyRequestQuery): boolean {
     const sharedSecret = process.env.SHOPIFY_API_SECRET;
@@ -51,8 +58,49 @@ export class ShopifyAppInstallService {
     });
   }
 
-  // TODO change 
-  public finishAuth(req: Request, res: Response): Promise<any> {
+  public finishAuth(req: Request, res: Response): Promise<{ session: Session }> {
     return this.shopifyAppInstallRepository.finishAuth(req, res);
+  }
+
+  public async setupWebhooks(
+    session: Session,
+  ): Promise<WebhookConfig[]> {
+    const apiHost = this.configService.getOrThrow<ShopifyConfig>('shopify').hostName;
+
+    const baseUrl = `https://${apiHost}/api/v1/webhook`;
+
+    const webhookConfigs: WebhookConfig[] = [
+      {
+        topic: WebhookTopicsEnum.SHOP_UPDATE,
+        callbackUrl: `${baseUrl}/update-shop`,
+        deliveryMethod: 'http',
+      },
+      {
+        topic: WebhookTopicsEnum.APP_UNINSTALLED,
+        callbackUrl: `${baseUrl}/uninstall-app`,
+        deliveryMethod: 'http',
+      },
+    ];
+
+    await Promise.all(
+      webhookConfigs.map(
+        (config: WebhookConfig): Promise<void> =>
+          this.createWebhook(session, config),
+      ),
+    );
+
+    return webhookConfigs;
+  }
+
+  public createWebhook(
+    session: Session,
+    webhookConfig: WebhookConfig,
+    includeFields: string[] = null,
+  ): Promise<void> {
+    return this.shopifyAppInstallRepository.createWebHook(
+      session,
+      webhookConfig,
+      includeFields,
+    );
   }
 }

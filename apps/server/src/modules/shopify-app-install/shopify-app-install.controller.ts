@@ -4,10 +4,16 @@ import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-a
 import { Controller, Get, Logger, Query, Req, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApiTags } from '@nestjs/swagger';
+import { ShopifyAppInstallService } from "@modules/shopify-app-install/shopify-app-install.service";
+import { ConfigService } from "@nestjs/config";
+import { AppConfig } from "@config/app.config";
+import { Cookies, CookiesType } from "@decorators/cookies.decorator";
+import { Session } from "@shopify/shopify-api";
+import { WebhookConfig } from '@modules/shopify-app-install/interfaces/webhook-config.interface';
 import { Request, Response } from 'express';
 
-@ApiTags('Shopify')
-@Controller('shopify')
+@ApiTags('Shopify App Install')
+@Controller('shopify-app-install')
 export class ShopifyAppInstallController {
   constructor(
     private readonly shopifyAppInstallService: ShopifyAppInstallService,
@@ -46,66 +52,45 @@ export class ShopifyAppInstallController {
     await this.shopifyAppInstallService.beginAuth(req, res);
   }
 
-  // TODO Callback should be added later when webshop logic is ready
+  @Get('/callback')
+  public async callback(
+    @Query('shop') shop: string,
+    @Cookies()
+    { userId, webShopId }: CookiesType,
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<void> {
+    this.shopifyAppInstallService.validateHmac(req.query);
 
-  // @Get('/callback')
-  // async callback(
-  //   @Query('shop') shop: string,
-  //   @Cookies()
-  //   { userId, webShopId }: CookiesType,
-  //   @Req() req: Request,
-  //   @Res() res: Response,
-  // ): Promise<void> {
-  //   this.shopifyAppInstallService.validateHmac(req.query);
+    Logger.debug(
+      `App install callback for the shop: ${shop}, userId: ${
+        userId || 'none'
+      }, webShopId: ${webShopId || 'none'}`,
+    );
 
-  //   Logger.debug(
-  //     `App install callback for the shop: ${shop}, userId: ${
-  //       userId || 'none'
-  //     }, webShopId: ${webShopId || 'none'}`,
-  //   );
+    const { session }: { session: Session } =
+      await this.shopifyAppInstallService.finishAuth(req, res);
 
-  //   const { session }: ShopifyInstallAppCallback =
-  //     await this.shopifyAppInstallService.finishAuth(req, res);
+    Logger.debug(
+      `Offline Session has been retrieved for the shop: ${shop}: ${JSON.stringify(
+        { session },
+        null,
+        2,
+      )}`,
+    );
 
-  //   Logger.debug(
-  //     `Offline Session has been retrieved for the shop: ${shop}: ${JSON.stringify(
-  //       { session },
-  //       null,
-  //       2,
-  //     )}`,
-  //   );
+    const webhookConfigs: WebhookConfig[] =
+      await this.shopifyAppInstallService.setupWebhooks(session);
 
-  //   const webShop = await this.shopifyService.setupShop(
-  //     session,
-  //     userId,
-  //     webShopId,
-  //   );
+    Logger.debug(
+      `Webhooks have been setup successfully for shop: ${shop}: ${JSON.stringify(
+        { webhookConfigs },
+        null,
+        2,
+      )}`,
+    );
 
-  //   Logger.debug(
-  //     `Web Shop has been setup successfully for shop: ${shop}: ${JSON.stringify(
-  //       webShop,
-  //       null,
-  //       2,
-  //     )}`,
-  //   );
-
-  //   const webhookConfigs: WebhookConfig[] =
-  //     await this.shopifyWebhookService.setupWebhooks(session);
-
-  //   Logger.debug(
-  //     `Webhooks have been setup successfully for shop: ${shop}: ${JSON.stringify(
-  //       { webhookConfigs },
-  //       null,
-  //       2,
-  //     )}`,
-  //   );
-
-  //   await this.shopifyService.syncShopOrders(webShop);
-
-  //   const redirectUrl = await this.shopifyService.getRedirectUrlAfterInstall(
-  //     webShop,
-  //   );
-
-  //   res.redirect(redirectUrl);
-  // }
+    // TODO change redirect to the dashboard when it's ready
+    res.redirect('https://google.com');
+  }
 }
