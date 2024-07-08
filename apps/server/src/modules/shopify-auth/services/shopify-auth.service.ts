@@ -1,15 +1,14 @@
 import { Request, Response } from 'express';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopify-app-install.repository';
-import { ShopifyAuthStoreRepository } from '@modules/shopify-auth/repositories/shopify-auth-store.repository';
+import { ShopifyAuthShopRepository } from '@modules/shopify-auth/repositories/shopify-auth-shop.repository';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 import { ShopService } from '@modules/shop/shop.service';
-import { SHOP_NOT_FOUND } from '@modules/common/constants/errors.constants';
 
 @Injectable()
 export class ShopifyAuthService {
   constructor(
-    private readonly shopifyAuthStoreRepository: ShopifyAuthStoreRepository,
+    private readonly shopifyAuthShopRepository: ShopifyAuthShopRepository,
     private readonly shopifyAuthSessionService: ShopifyAuthSessionService,
     private readonly shopService: ShopService,
   ) {}
@@ -47,12 +46,15 @@ export class ShopifyAuthService {
 
     await this.shopifyAuthSessionService.save(session);
 
-    const { id: shopId } = await this.shopService.getShopInfo(session);
+    const shop = await this.shopService.getShopInfo(session);
 
-    const { shop: shopName } = session;
+    const shopCreateInput = {
+      ...shop,
+      primaryDomain: shop.primaryDomain.host
+    };
 
-    await this.shopifyAuthStoreRepository.save(shopName, shopId);
+    await this.shopifyAuthShopRepository.save(shopCreateInput);
 
-    return shopName;
+    return shop.name;
   }
 }

@@ -4,7 +4,7 @@ import { ShopifyAuthService } from '@modules/shopify-auth/services/shopify-auth.
 import { ShopifyAuthController } from '@modules/shopify-auth/shopify-auth.controller';
 import { ShopifyAppInstallModule } from '@modules/shopify-app-install/shopify-app-install.module';
 import { ShopifyAuthRedirectService } from '@modules/shopify-auth/services/shopify-auth-redirect.service';
-import { ShopifyAuthStoreRepository } from '@modules/shopify-auth/repositories/shopify-auth-store.repository';
+import { ShopifyAuthShopRepository } from '@modules/shopify-auth/repositories/shopify-auth-shop.repository';
 import { ShopifyAuthSessionRepository } from '@modules/shopify-auth/repositories/shopify-auth-session.repository';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 import { ShopModule } from '@modules/shop/shop.module';
@@ -13,7 +13,7 @@ import { ShopModule } from '@modules/shop/shop.module';
   imports: [PrismaModule, ShopifyAppInstallModule, ShopModule],
   providers: [
     ShopifyAuthService,
-    ShopifyAuthStoreRepository,
+    ShopifyAuthShopRepository,
     ShopifyAuthRedirectService,
     ShopifyAuthSessionRepository,
     ShopifyAuthSessionService,

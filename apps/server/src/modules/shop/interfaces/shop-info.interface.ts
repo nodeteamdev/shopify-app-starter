@@ -6,7 +6,6 @@ export interface ShopInfo {
   readonly email: string;
   readonly contactEmail: string;
   readonly myshopifyDomain: string;
-  readonly currencyCode: string;
   readonly primaryDomain: {
     readonly host: string;
   };
