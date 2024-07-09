@@ -15,7 +15,7 @@ import { ProductModule } from '@modules/product/product.module';
 import { ShopModule } from '@modules/shop/shop.module';
 import { ShopifyAppInstallModule } from '@modules/shopify-app-install/shopify-app-install.module';
 import { ShopifyAuthModule } from '@modules/shopify-auth/shopify-auth.module';
-import { SubscriptionModule } from '@modules/subscription/subscription.module';
+import { AppSubscriptionModule } from '@modules/app-subscription/app-subscription.module';
 import { UserModule } from '@modules/user/user.module';
 import { WebhookModule } from '@modules/webhook/webhook.module';
 import { Logger, Module } from '@nestjs/common';
@@ -98,7 +98,7 @@ const logger: Logger = new Logger('AppModule');
     MandatoryWebhookModule,
     ShopifyAuthModule,
     ShopModule,
-    SubscriptionModule,
+    AppSubscriptionModule,
     ProductModule,
   ],
   controllers: [AppController],
