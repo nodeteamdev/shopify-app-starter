@@ -1,6 +1,6 @@
 import { createHmac } from 'node:crypto';
 import { Request, Response } from 'express';
-import { Injectable, RawBodyRequest, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, RawBodyRequest, UnauthorizedException } from '@nestjs/common';
 import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopify-app-install.repository';
 import { ShopifyRequestQuery } from '@modules/shopify-app-install/types/shopify-request-query-type';
 import { Session, WebhookValidation } from '@shopify/shopify-api';
@@ -8,13 +8,18 @@ import { WebhookConfig } from '@modules/shopify-app-install/interfaces/webhook-c
 import { ConfigService } from '@nestjs/config';
 import { ShopifyConfig } from '@config/shopify.config';
 import { WebhookTopicsEnum } from '@modules/shopify-app-install/enums/webhook-topics.enum';
+import { ShopService } from '@modules/shop/shop.service';
+import { Shop } from '@prisma/client';
 
 
 @Injectable()
 export class ShopifyAppInstallService {
+  private readonly logger: Logger = new Logger(ShopifyAppInstallService.name);
+
   constructor(
     private readonly shopifyAppInstallRepository: ShopifyAppInstallRepository,
     private readonly configService: ConfigService,
+    private readonly shopService: ShopService,
   ) {}
 
   public validateHmac(queryParams: ShopifyRequestQuery): boolean {
@@ -107,5 +112,30 @@ export class ShopifyAppInstallService {
       webhookConfig,
       includeFields,
     );
+  }
+
+  public async setupShop(session: Session): Promise<Shop> {
+    const shopInfo = await this.shopService.getShopInfo(session);
+
+    const previouslyCreatedShop = await this.shopService.findOne(shopInfo.id);
+
+    if (previouslyCreatedShop) {
+      this.logger.debug(
+        `The shop was installed before. Shop info: ${JSON.stringify(
+          previouslyCreatedShop,
+          null,
+          2,
+        )}`,
+      );
+
+      return previouslyCreatedShop;
+    }
+
+    const shopCreateInput = {
+      ...shopInfo,
+      primaryDomain: shopInfo.primaryDomain.host
+    };
+
+    return this.shopService.create(shopCreateInput);
   }
 }
