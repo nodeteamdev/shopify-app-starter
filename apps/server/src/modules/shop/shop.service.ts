@@ -4,7 +4,7 @@ import { ShopRepository } from '@modules/shop/shop.repository';
 import { ShopInfo } from '@modules/shop/interfaces/shop-info.interface';
 import { Prisma, Shop } from '@prisma/client';
 import { SHOP_NOT_FOUND } from '@modules/common/constants/errors.constants';
-import { CreateShop } from './interfaces/create-shop.interface';
+import { CreateShop } from '@modules/shop/interfaces/create-shop.interface';
 
 @Injectable()
 export class ShopService {
