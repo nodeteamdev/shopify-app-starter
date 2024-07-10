@@ -10,6 +10,19 @@ import { Prisma, Shop } from '@prisma/client';
 export class ShopRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
+  public save(data: Prisma.ShopCreateInput): Promise<Shop> {
+    return this.prismaService.shop.create({
+      data: {
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        contactEmail: data.contactEmail,
+        myshopifyDomain: data.myshopifyDomain,
+        primaryDomain: data.primaryDomain,
+      }
+    });
+  }
+
   public findOne(id: string): Promise<Shop> {
     return this.prismaService.shop.findFirst({ where: { id } });
   }
@@ -48,5 +61,9 @@ export class ShopRepository {
     return client.query({
       data,
     });
+  }
+
+  public findOneByName(name: string): Promise<Shop> {
+    return this.prismaService.shop.findFirst({ where: { name } })
   }
 }

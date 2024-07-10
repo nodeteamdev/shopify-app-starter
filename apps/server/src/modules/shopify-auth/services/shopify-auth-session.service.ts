@@ -1,7 +1,7 @@
 import { Session, SessionParams } from '@shopify/shopify-api';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { SESSIONS_NOT_FOUND, SESSION_NOT_FOUND } from '@modules/common/constants/errors.constants';
-import { ShopifyAuthSessionRepository } from '@modules/shopify-auth/repositories/shopify-auth-session.repository';
+import { ShopifyAuthSessionRepository } from '@modules/shopify-auth/shopify-auth-session.repository';
 
 @Injectable()
 export class ShopifyAuthSessionService {
