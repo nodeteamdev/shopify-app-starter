@@ -22,11 +22,8 @@ export class WebhookController {
 
   @Post('/update-app-subscription')
   public async updateAppSubscription(@Req() req: RawBodyRequest<Request>): Promise<void> {
-    console.log(1);
     await this.webhookService.validateWebHook(req);
 
-    console.log(2);
-
-    await this.webhookService.handleUpdateAppSubscription(req);
+    this.webhookService.handleUpdateAppSubscription(req);
   }
 }

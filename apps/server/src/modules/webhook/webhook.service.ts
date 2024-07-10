@@ -8,7 +8,7 @@ import { ShopService } from '@modules/shop/shop.service';
 import { getGlobalId } from '@modules/common/helpers/get-global-id.helper';
 import { GraphQlTypesEnum } from '@modules/shop/enums/graphql-types.enum';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
-import { OneTimePurchase } from '@shopify/shopify-api';
+import { AppSubscription, OneTimePurchase } from '@shopify/shopify-api';
 import { AppSubscriptionService } from '@modules/app-subscription/app-subscription.service';
 
 @Injectable()
@@ -27,12 +27,12 @@ export class WebhookService {
     return this.webhookRepository.create(data);
   }
 
-  public async getOneByWebhookId(webhookId: string): Promise<Webhook | null> {
+  public findOne(webhookId: string): Promise<Webhook | null> {
     return this.webhookRepository.findOne(webhookId);
   }
 
   public async isDuplicate(webhookId: string): Promise<boolean> {
-    const webhook: Webhook | null = await this.getOneByWebhookId(webhookId);
+    const webhook: Webhook | null = await this.findOne(webhookId);
 
     if (webhook) {
       Logger.debug(
@@ -48,8 +48,6 @@ export class WebhookService {
   public async validateWebHook(req: RawBodyRequest<Request>): Promise<boolean> {
     const { valid } = await this.shopifyAppInstallService.validateWebhook(req);
 
-    console.log('valid => ', valid);
-
     this.logger.debug(
       `WebHook received for the topic: ${req?.headers['x-shopify-topic']}`,
     );
@@ -63,8 +61,6 @@ export class WebhookService {
         `WebHook validation has failed for the WebHook with topic: ${req?.headers['x-shopify-topic']}`,
       );
     }
-
-    console.log('valid => ', valid);
 
     return valid;
   }
@@ -158,16 +154,12 @@ export class WebhookService {
   }
 
   public async handleUpdateAppSubscription(req: RawBodyRequest<Request>): Promise<void> {
-    console.log(3);
     const webhookId = req.headers['x-shopify-webhook-id'] as string;
 
     if (await this.isDuplicate(webhookId)) return;
 
-    console.log(4);
-
-    const { id: shopId, app_subscription: appSubscription } = req.body;
-
-    console.log(5);
+    const { app_subscription: appSubscription } = req.body;
+    const { admin_graphql_api_shop_id: shopId } = appSubscription
 
     Logger.debug(
       `Webhook for updating app subscription from the shop with id: ${shopId}. ${JSON.stringify(
@@ -179,17 +171,13 @@ export class WebhookService {
     );
 
     try {
-      console.log(6);
       await this.updateAppSubscription(shopId, appSubscription);
-
-      console.log(7);
 
       Logger.debug(
         `App subscription was successfully updated from the shop with id: ${shopId}`,
       );
 
       await this.saveWebhook(req);
-      console.log(8);
     } catch (error) {
       Logger.debug(
         `An error occurs during updating app subscription from the shop with id: ${shopId}: ${JSON.stringify(
@@ -203,10 +191,8 @@ export class WebhookService {
     }
   }
 
-  private async updateAppSubscription(shopId: string, appSubscription: OneTimePurchase): Promise<void> {
-    const shop = await this.shopService.findOne(
-      getGlobalId(GraphQlTypesEnum.SHOP, shopId),
-    );
+  private async updateAppSubscription(shopId: string, appSubscription): Promise<void> {
+    const shop = await this.shopService.findOne(shopId);
 
     if (!shop) {
       return Logger.debug(
@@ -214,19 +200,17 @@ export class WebhookService {
       );
     }
 
-    console.log('appSubscription => ', JSON.stringify(appSubscription, null, 2))
-
-    const { id, status } = appSubscription;
+    const { admin_graphql_api_id: appSubscriptionId, status } = appSubscription;
 
     switch (status) {
       case AppSubscriptionStatusesEnum.ACTIVE:
-        await this.appSubscriptionService.update(id, AppSubscriptionStatusesEnum.ACTIVE);
+        await this.appSubscriptionService.update(appSubscriptionId, AppSubscriptionStatusesEnum.ACTIVE);
         break;
       case AppSubscriptionStatusesEnum.CANCELLED:
-        await this.appSubscriptionService.update(id, AppSubscriptionStatusesEnum.CANCELLED); 
+        await this.appSubscriptionService.update(appSubscriptionId, AppSubscriptionStatusesEnum.CANCELLED); 
         break;
       case AppSubscriptionStatusesEnum.DECLINED:
-        await this.appSubscriptionService.update(id, AppSubscriptionStatusesEnum.DECLINED); 
+        await this.appSubscriptionService.update(appSubscriptionId, AppSubscriptionStatusesEnum.DECLINED); 
         break;
       default:
         Logger.debug(`Unhandled app subscription status: ${status}`);
