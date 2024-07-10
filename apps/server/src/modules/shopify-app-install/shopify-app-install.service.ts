@@ -80,6 +80,11 @@ export class ShopifyAppInstallService {
         callbackUrl: `${baseUrl}/uninstall-app`,
         deliveryMethod: 'http',
       },
+      {
+        topic: WebhookTopicsEnum.APP_SUBSCRIPTIONS_UPDATE,
+        callbackUrl: `${baseUrl}/update-app-subscription`,
+        deliveryMethod: 'http',
+      },
     ];
 
     await Promise.all(

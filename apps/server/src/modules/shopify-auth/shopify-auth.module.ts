@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { PrismaModule } from '@modules/common/providers/prisma';
 import { ShopifyAuthService } from '@modules/shopify-auth/services/shopify-auth.service';
 import { ShopifyAuthController } from '@modules/shopify-auth/shopify-auth.controller';
@@ -10,7 +10,7 @@ import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopif
 import { ShopModule } from '@modules/shop/shop.module';
 
 @Module({
-  imports: [PrismaModule, ShopifyAppInstallModule, ShopModule],
+  imports: [PrismaModule, forwardRef(() => ShopifyAppInstallModule), ShopModule],
   providers: [
     ShopifyAuthService,
     ShopifyAuthShopRepository,

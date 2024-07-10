@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
-import { Controller, Get, Req, Res } from '@nestjs/common';
+import { Controller, Get, Req, Res, UseFilters } from '@nestjs/common';
 import { ShopifyAuthService } from '@modules/shopify-auth/services/shopify-auth.service';
 import { ShopifyAuthRedirectService } from '@modules/shopify-auth/services/shopify-auth-redirect.service';
+import { ShopifyAuthException } from '@modules/shopify-auth/services/shopify-auth-exception.service';
 
 @Controller('shopify-auth')
 export class ShopifyAuthController {
@@ -11,6 +12,7 @@ export class ShopifyAuthController {
   ) {}
 
   @Get()
+  @UseFilters(ShopifyAuthException)
   public authMiddleware(@Req() req: Request, @Res() res: Response): Promise<void> {
     return this.shopifyAuthRedirectService.redirect(req, res);
   }

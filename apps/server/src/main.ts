@@ -27,7 +27,11 @@ async function bootstrap(): Promise<{
   appConfig: AppConfig;
   ngrokConfig: NgrokConfig;
 }> {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    cors: true,
+    bodyParser: true,
+    rawBody: true,
+  });
 
   app.use(cookieParser());
 

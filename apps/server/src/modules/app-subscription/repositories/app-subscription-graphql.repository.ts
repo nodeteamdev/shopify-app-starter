@@ -17,6 +17,7 @@ export class AppSubscriptionGraphqlRepository {
 
     const { name, returnUrl, amount, currencyCode } = createAppSubscriptionDto
   
+    // TODO currency it's only for a test purpose due to test flag
     const queryData = `
       #graphql
       mutation appSubscriptionCreate($name: String!, $returnUrl: URL!, $amount: Decimal!, $currencyCode: CurrencyCode!) {

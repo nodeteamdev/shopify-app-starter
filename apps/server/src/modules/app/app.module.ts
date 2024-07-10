@@ -18,7 +18,7 @@ import { ShopifyAuthModule } from '@modules/shopify-auth/shopify-auth.module';
 import { AppSubscriptionModule } from '@modules/app-subscription/app-subscription.module';
 import { UserModule } from '@modules/user/user.module';
 import { WebhookModule } from '@modules/webhook/webhook.module';
-import { Logger, Module } from '@nestjs/common';
+import { Logger, MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { ThrottlerModule } from '@nestjs/throttler';
@@ -27,6 +27,7 @@ import { RedisThrottlerStorageService } from '@providers/redis/redis-throttler-s
 import { RedisModule } from '@providers/redis/redis.module';
 import { RedisModule as NestRedisModule } from '@songkeys/nestjs-redis';
 import { Redis } from 'ioredis';
+import { CSP } from '@modules/shopify-auth/middlewares/csp.middleware';
 
 const logger: Logger = new Logger('AppModule');
 
@@ -104,4 +105,11 @@ const logger: Logger = new Logger('AppModule');
   controllers: [AppController],
   providers: [AppService, EmailService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(CSP)
+      .exclude('shopify-auth')
+      .forRoutes('*');
+  }
+}

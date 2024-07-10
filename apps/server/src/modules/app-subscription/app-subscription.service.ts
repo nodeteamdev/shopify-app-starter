@@ -1,11 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { AppSubscription } from '@prisma/client';
+import { AppSubscription, AppSubscriptionStatusesEnum } from '@prisma/client';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 import { CreateAppSubscriptionDto } from '@modules/app-subscription/dtos/create-app-subscription.dto';
 import { CreatedAppSubscription } from '@modules/app-subscription/interfaces/created-app-subscription.interface';
 import { AppSubscriptionGraphqlRepository } from '@modules/app-subscription/repositories/app-subscription-graphql.repository';
 import { AppSubscriptionRepository } from '@modules/app-subscription/repositories/app-subscription.repository';
 import { APP_SUBSCRIPTION_NOT_FOUND } from '@modules/common/constants/errors.constants';
+import { Session } from '@shopify/shopify-api';
 
 @Injectable()
 export class AppSubscriptionService {
@@ -32,9 +33,7 @@ export class AppSubscriptionService {
     }
   }
 
-  public async create(shopName: string, createAppSubscriptionDto: CreateAppSubscriptionDto): Promise<AppSubscription> {
-    const session = await this.shopifyAuthSessionService.getSessionByShopName(shopName);
-
+  public async create(session: Session, createAppSubscriptionDto: CreateAppSubscriptionDto): Promise<AppSubscription> {
     const {
       body: {
         data: { appSubscriptionCreate },
@@ -60,5 +59,11 @@ export class AppSubscriptionService {
     }
 
     return appSubscription;
+  }
+
+  public async update(id: string, status: AppSubscriptionStatusesEnum): Promise<AppSubscription> {
+    await this.getOne(id);
+
+    return this.appSubscriptionRepository.update(id, status);
   }
 }
