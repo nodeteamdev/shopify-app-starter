@@ -25,7 +25,7 @@
     "db:generate": "prisma generate",
     "db:format": "prisma format",
     "db:seed": "ts-node --compiler-options {\\\"module\\\":\\\"CommonJS\\\"} prisma/seed.ts",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "dependencies": {
     "@casl/ability": "^6.7.1",
@@ -53,6 +53,7 @@
     "cookie-parser": "^1.4.6",
     "express-basic-auth": "^1.2.1",
     "helmet": "^7.1.0",
+    "husky": "^9.0.11",
     "ioredis": "^5.4.1",
     "nodemailer-sendgrid": "^1.0.3",
     "reflect-metadata": "^0.2.0",
@@ -77,7 +78,6 @@
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
-    "husky": "^8.0.3",
     "jest": "^29.5.0",
     "prettier": "^3.0.0",
     "prisma": "^5.14.0",
