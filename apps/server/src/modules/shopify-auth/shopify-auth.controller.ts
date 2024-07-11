@@ -17,12 +17,6 @@ export class ShopifyAuthController {
     return this.shopifyAuthRedirectService.redirect(req, res);
   }
 
-  @Get('/offline')
-  @UseFilters(ShopifyAuthException)
-  public authOffline(@Req() req: Request, @Res() res: Response): Promise<void> {
-    return this.shopifyAuthService.storeOfflineToken(req, res);
-  }
-
   @Get('/online')
   @UseFilters(ShopifyAuthException)
   public async authOnline(@Req() req: Request, @Res() res: Response): Promise<void> {
