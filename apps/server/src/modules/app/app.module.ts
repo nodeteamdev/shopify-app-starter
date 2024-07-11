@@ -10,7 +10,6 @@ import { swaggerConfig } from '@config/swagger.config';
 import { AppController } from '@modules/app/app.controller';
 import { AppService } from '@modules/app/app.service';
 import { AuthModule } from '@modules/auth/auth.module';
-import { CSP } from '@modules/common/middleware/csp.middleware';
 import { EmailService } from '@modules/email/email.service';
 import { MandatoryWebhookModule } from '@modules/mandatory-webhook/mandatory-webhook.module';
 import { ProductModule } from '@modules/product/product.module';
@@ -20,6 +19,7 @@ import { ShopifyAppInstallModule } from '@modules/shopify-app-install/shopify-ap
 import { ShopifyAuthSessionRepository } from '@modules/shopify-auth/repositories/shopify-auth-session.repository';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 import { ShopifyAuthModule } from '@modules/shopify-auth/shopify-auth.module';
+import { AppSubscriptionModule } from '@modules/app-subscription/app-subscription.module';
 import { UserModule } from '@modules/user/user.module';
 import { WebhookModule } from '@modules/webhook/webhook.module';
 import { Logger, MiddlewareConsumer, Module } from '@nestjs/common';
@@ -32,6 +32,7 @@ import { RedisThrottlerStorageService } from '@providers/redis/redis-throttler-s
 import { RedisModule } from '@providers/redis/redis.module';
 import { RedisModule as NestRedisModule } from '@songkeys/nestjs-redis';
 import { Redis } from 'ioredis';
+import { CSP } from '@modules/shopify-auth/middlewares/csp.middleware';
 
 const logger: Logger = new Logger('AppModule');
 
@@ -106,6 +107,7 @@ const logger: Logger = new Logger('AppModule');
     MandatoryWebhookModule,
     ShopifyAuthModule,
     ShopModule,
+    AppSubscriptionModule,
     ShopifyModule,
     ProductModule,
   ],

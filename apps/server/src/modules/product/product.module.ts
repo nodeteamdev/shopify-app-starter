@@ -11,8 +11,4 @@ import { Module } from '@nestjs/common';
   providers: [ProductService, ProductRepository, ShopifyService],
   controllers: [ProductController],
 })
-export class ProductModule {
-  // configure(consumer: MiddlewareConsumer) {
-  //   consumer.apply(VerifyRequest).forRoutes(ProductController);
-  // }
-}
+export class ProductModule {}
