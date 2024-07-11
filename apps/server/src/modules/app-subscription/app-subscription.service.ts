@@ -6,7 +6,7 @@ import { CreatedAppSubscription } from '@modules/app-subscription/interfaces/cre
 import { AppSubscriptionGraphqlRepository } from '@modules/app-subscription/repositories/app-subscription-graphql.repository';
 import { AppSubscriptionRepository } from '@modules/app-subscription/repositories/app-subscription.repository';
 import { APP_SUBSCRIPTION_NOT_FOUND } from '@modules/common/constants/errors.constants';
-import { Session } from '@shopify/shopify-api';
+import { Session, SubscriptionResponse } from '@shopify/shopify-api';
 
 @Injectable()
 export class AppSubscriptionService {
@@ -45,7 +45,7 @@ export class AppSubscriptionService {
     return this.appSubscriptionRepository.create(appSubscription);
   }
 
-  public async getAll(shopName: string) {
+  public async getAll(shopName: string): Promise<SubscriptionResponse> {
     const session = await this.shopifyAuthSessionService.getSessionByShopName(shopName);
 
     return this.appSubscriptionGraphqlRepository.findAll(session);

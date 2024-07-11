@@ -1,15 +1,14 @@
 import { Request } from 'express';
-import { Injectable, Logger, NotFoundException, RawBodyRequest, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, RawBodyRequest, UnauthorizedException } from '@nestjs/common';
 import { AppSubscriptionStatusesEnum, Prisma, Webhook } from '@prisma/client';
 import { WebhookRepository } from '@modules/webhook/webhook.repository';
-import { WEBHOOK_NOT_FOUND } from '@modules/common/constants/errors.constants';
 import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-app-install.service';
 import { ShopService } from '@modules/shop/shop.service';
 import { getGlobalId } from '@modules/common/helpers/get-global-id.helper';
 import { GraphQlTypesEnum } from '@modules/shop/enums/graphql-types.enum';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
-import { AppSubscription, OneTimePurchase } from '@shopify/shopify-api';
 import { AppSubscriptionService } from '@modules/app-subscription/app-subscription.service';
+import { AppSubscriptionRequest } from '@modules/webhook/interfaces/app-subscription-request';
 
 @Injectable()
 export class WebhookService {
@@ -158,7 +157,7 @@ export class WebhookService {
 
     if (await this.isDuplicate(webhookId)) return;
 
-    const { app_subscription: appSubscription } = req.body;
+    const { app_subscription: appSubscription }: { app_subscription: AppSubscriptionRequest } = req.body;
     const { admin_graphql_api_shop_id: shopId } = appSubscription
 
     Logger.debug(
@@ -191,7 +190,7 @@ export class WebhookService {
     }
   }
 
-  private async updateAppSubscription(shopId: string, appSubscription): Promise<void> {
+  private async updateAppSubscription(shopId: string, appSubscription: AppSubscriptionRequest): Promise<void> {
     const shop = await this.shopService.findOne(shopId);
 
     if (!shop) {

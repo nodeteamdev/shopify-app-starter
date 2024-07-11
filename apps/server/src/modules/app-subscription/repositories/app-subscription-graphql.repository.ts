@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RequestReturn, Session, SubscriptionResponse } from '@shopify/shopify-api';
 import { CreateAppSubscriptionDto } from '@modules/app-subscription/dtos/create-app-subscription.dto';
-import { GraphqlBody } from '@modules/product/product.repository';
+import { GraphqlBody } from '@modules/product/shopify-product.repository';
 import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopify-app-install.repository';
 import { CreatedAppSubscription } from '@modules/app-subscription/interfaces/created-app-subscription.interface';
 

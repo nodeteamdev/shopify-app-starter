@@ -12,7 +12,7 @@ export interface GraphqlBody<T> {
 }
 
 @Injectable()
-export class ProductRepository {
+export class ShopifyProductRepository {
   public findOne(
     session: Session,
     productId: string,

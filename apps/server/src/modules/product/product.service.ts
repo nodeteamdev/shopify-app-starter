@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ProductRepository } from '@modules/product/product.repository';
+import { ShopifyProductRepository } from '@modules/product/shopify-product.repository';
 import { ProductDto } from '@modules/product/dtos/product.dto';
 import { Product } from '@modules/product/interfaces/product.interface';
 import { ProductsQueryDto } from '@modules/product/dtos/products.query.dto';
@@ -11,7 +11,7 @@ import { PRODUCT_NOT_FOUND } from '@modules/common/constants/errors.constants';
 @Injectable()
 export class ProductService {
   constructor(
-    private readonly productRepository: ProductRepository,
+    private readonly shopifyProductRepository: ShopifyProductRepository,
     private readonly shopifyAuthSessionService: ShopifyAuthSessionService,
   ) {}
 
@@ -53,7 +53,7 @@ export class ProductService {
       body: {
         data: { product },
       },
-    } = await this.productRepository.findOne(session, productId);
+    } = await this.shopifyProductRepository.findOne(session, productId);
 
     if (!product) {
       throw new NotFoundException(PRODUCT_NOT_FOUND)
@@ -74,7 +74,7 @@ export class ProductService {
           products: { nodes, pageInfo },
         },
       },
-    } = await this.productRepository.findMany(session, productsQueryDto);
+    } = await this.shopifyProductRepository.findMany(session, productsQueryDto);
 
     return {
       products: nodes.map(ProductService.mapProduct),
@@ -95,7 +95,7 @@ export class ProductService {
           productVariants: { nodes, pageInfo },
         },
       },
-    } = await this.productRepository.findProductVariants(
+    } = await this.shopifyProductRepository.findProductVariants(
       session,
       query,
       productId,
