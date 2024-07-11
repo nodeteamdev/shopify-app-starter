@@ -20,10 +20,6 @@ export class ShopifyAuthService {
 
     const { session } = callbackResponse;
 
-    await ShopifyAppInstallRepository.shopify.webhooks.register({
-      session,
-    });
-
     return await ShopifyAppInstallRepository.shopify.auth.begin({
       shop: session.shop,
       callbackPath: '/api/v1/shopify-auth/online',
