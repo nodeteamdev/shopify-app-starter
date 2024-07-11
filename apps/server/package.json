@@ -25,7 +25,7 @@
     "db:generate": "prisma generate",
     "db:format": "prisma format",
     "db:seed": "ts-node --compiler-options {\\\"module\\\":\\\"CommonJS\\\"} prisma/seed.ts",
-    "prepare": "husky"
+    "prepare": "husky prepare"
   },
   "dependencies": {
     "@casl/ability": "^6.7.1",
