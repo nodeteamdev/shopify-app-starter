@@ -1,13 +1,14 @@
 import { Request } from 'express';
-import { Injectable, Logger, NotFoundException, RawBodyRequest, UnauthorizedException } from '@nestjs/common';
-import { Prisma, Webhook } from '@prisma/client';
+import { Injectable, Logger, RawBodyRequest, UnauthorizedException } from '@nestjs/common';
+import { AppSubscriptionStatusesEnum, Prisma, Webhook } from '@prisma/client';
 import { WebhookRepository } from '@modules/webhook/webhook.repository';
-import { WEBHOOK_NOT_FOUND } from '@modules/common/constants/errors.constants';
 import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-app-install.service';
 import { ShopService } from '@modules/shop/shop.service';
 import { getGlobalId } from '@modules/common/helpers/get-global-id.helper';
 import { GraphQlTypesEnum } from '@modules/shop/enums/graphql-types.enum';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
+import { AppSubscriptionService } from '@modules/app-subscription/app-subscription.service';
+import { AppSubscriptionRequest } from '@modules/webhook/interfaces/app-subscription-request';
 
 @Injectable()
 export class WebhookService {
@@ -17,25 +18,20 @@ export class WebhookService {
     private readonly webhookRepository: WebhookRepository,
     private readonly shopifyAppInstallService: ShopifyAppInstallService,
     private readonly shopService: ShopService,
-    private readonly shopifyAuthSessionService: ShopifyAuthSessionService
+    private readonly shopifyAuthSessionService: ShopifyAuthSessionService,
+    private readonly appSubscriptionService: AppSubscriptionService,
   ) {}
 
   public create(data: Prisma.WebhookCreateInput): Promise<Webhook> {
     return this.webhookRepository.create(data);
   }
 
-  public async getOneByWebhookId(webhookId: string): Promise<Webhook | null> {
-    const webhook = await this.webhookRepository.findOne(webhookId);
-
-    if (!webhook) {
-      throw new NotFoundException(WEBHOOK_NOT_FOUND);
-    }
-
-    return webhook;
+  public findOne(webhookId: string): Promise<Webhook | null> {
+    return this.webhookRepository.findOne(webhookId);
   }
 
   public async isDuplicate(webhookId: string): Promise<boolean> {
-    const webhook: Webhook | null = await this.getOneByWebhookId(webhookId);
+    const webhook: Webhook | null = await this.findOne(webhookId);
 
     if (webhook) {
       Logger.debug(
@@ -154,6 +150,70 @@ export class WebhookService {
     }
 
     await this.shopService.delete(shop.id);
+  }
+
+  public async handleUpdateAppSubscription(req: RawBodyRequest<Request>): Promise<void> {
+    const webhookId = req.headers['x-shopify-webhook-id'] as string;
+
+    if (await this.isDuplicate(webhookId)) return;
+
+    const { app_subscription: appSubscription }: { app_subscription: AppSubscriptionRequest } = req.body;
+    const { admin_graphql_api_shop_id: shopId } = appSubscription
+
+    Logger.debug(
+      `Webhook for updating app subscription from the shop with id: ${shopId}. ${JSON.stringify(
+        {
+          body: req.body,
+          headers: req.headers,
+        },
+      )}`,
+    );
+
+    try {
+      await this.updateAppSubscription(shopId, appSubscription);
+
+      Logger.debug(
+        `App subscription was successfully updated from the shop with id: ${shopId}`,
+      );
+
+      await this.saveWebhook(req);
+    } catch (error) {
+      Logger.debug(
+        `An error occurs during updating app subscription from the shop with id: ${shopId}: ${JSON.stringify(
+          {
+            error,
+          },
+          null,
+          2,
+        )}`,
+      );
+    }
+  }
+
+  private async updateAppSubscription(shopId: string, appSubscription: AppSubscriptionRequest): Promise<void> {
+    const shop = await this.shopService.findOne(shopId);
+
+    if (!shop) {
+      return Logger.debug(
+        `App subscription update webhook tried to update unexisting shop with id: ${shopId}`,
+      );
+    }
+
+    const { admin_graphql_api_id: appSubscriptionId, status } = appSubscription;
+
+    switch (status) {
+      case AppSubscriptionStatusesEnum.ACTIVE:
+        await this.appSubscriptionService.update(appSubscriptionId, AppSubscriptionStatusesEnum.ACTIVE);
+        break;
+      case AppSubscriptionStatusesEnum.CANCELLED:
+        await this.appSubscriptionService.update(appSubscriptionId, AppSubscriptionStatusesEnum.CANCELLED); 
+        break;
+      case AppSubscriptionStatusesEnum.DECLINED:
+        await this.appSubscriptionService.update(appSubscriptionId, AppSubscriptionStatusesEnum.DECLINED); 
+        break;
+      default:
+        Logger.debug(`Unhandled app subscription status: ${status}`);
+    }
   }
 
   private async updateShop(shopId: string): Promise<void> {

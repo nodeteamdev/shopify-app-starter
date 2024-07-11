@@ -31,7 +31,7 @@ export const shopifyConfig = registerAs('shopify', (): ShopifyConfig => {
   const config: ShopifyConfig = {
     apiKey: process.env.SHOPIFY_API_KEY,
     apiSecret: process.env.SHOPIFY_API_SECRET,
-    requiredScopes: ['read_products', 'read_orders', 'write_discounts', 'read_product_listings'],
+    requiredScopes: ['read_products', 'read_orders', 'write_discounts'],
     hostName: process.env.API_HOST_NAME,
     shopifyRedirectUri: process.env.SHOPIFY_REDIRECT_URI,
     encryptionString: process.env.SHOPIFY_ENCRYPTION_STRING,

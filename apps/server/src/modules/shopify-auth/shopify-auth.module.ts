@@ -18,6 +18,6 @@ import { ShopModule } from '@modules/shop/shop.module';
     ShopifyAuthRedirectService,
   ],
   controllers: [ShopifyAuthController],
-  exports: [ShopifyAuthSessionService]
+  exports: [ShopifyAuthSessionService],
 })
 export class ShopifyAuthModule {}

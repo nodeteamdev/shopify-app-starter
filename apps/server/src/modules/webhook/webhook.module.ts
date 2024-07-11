@@ -6,9 +6,16 @@ import { WebhookController } from '@modules/webhook/webhook.controller';
 import { ShopifyAppInstallModule } from '@modules/shopify-app-install/shopify-app-install.module';
 import { ShopModule } from '@modules/shop/shop.module';
 import { ShopifyAuthModule } from '@modules/shopify-auth/shopify-auth.module';
+import { AppSubscriptionModule } from '@modules/app-subscription/app-subscription.module';
 
 @Module({
-  imports: [PrismaModule, ShopifyAppInstallModule, ShopModule, ShopifyAuthModule],
+  imports: [
+    PrismaModule,
+    ShopifyAppInstallModule,
+    ShopModule,
+    ShopifyAuthModule,
+    AppSubscriptionModule,
+  ],
   providers: [WebhookService, WebhookRepository],
   exports: [WebhookService],
   controllers: [WebhookController],

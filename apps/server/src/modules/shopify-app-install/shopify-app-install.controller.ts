@@ -7,6 +7,7 @@ import { AppConfig } from "@config/app.config";
 import { Cookies, CookiesType } from "@decorators/cookies.decorator";
 import { Session } from "@shopify/shopify-api";
 import { WebhookConfig } from '@modules/shopify-app-install/interfaces/webhook-config.interface';
+import { AppSubscriptionService } from "@modules/app-subscription/app-subscription.service";
 import { ShopifyAuthSessionService } from "@modules/shopify-auth/services/shopify-auth-session.service";
 
 @ApiTags('Shopify App Install')
@@ -17,6 +18,7 @@ export class ShopifyAppInstallController {
   constructor(
     private readonly shopifyAppInstallService: ShopifyAppInstallService,
     private readonly configService: ConfigService,
+    private readonly appSubscriptionService: AppSubscriptionService,
     private readonly shopifyAuthSessionService: ShopifyAuthSessionService,
   ) {}
 
@@ -88,8 +90,17 @@ export class ShopifyAppInstallController {
       )}`,
     );
 
-    const webhookConfigs: WebhookConfig[] =
-      await this.shopifyAppInstallService.setupWebhooks(session);
+    const { confirmationUrl } = await this.appSubscriptionService.create(session, {
+      name: 'sub-test',
+      returnUrl: 'https://return-url.com',
+      amount: 10,
+      currencyCode: 'USD',
+    })
+
+    // TODO should redirect user to confirmation url from appSubscription where he can purchase subscription
+    this.logger.log(`Subscription url: ${confirmationUrl}`);
+
+    const webhookConfigs: WebhookConfig[] = await this.shopifyAppInstallService.setupWebhooks(session);
 
     this.logger.debug(
       `Webhooks have been setup successfully for shop: ${shop}: ${JSON.stringify(

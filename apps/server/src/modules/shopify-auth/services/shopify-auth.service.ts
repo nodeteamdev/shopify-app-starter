@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
-import { Injectable, UseFilters } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopify-app-install.repository';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 import { ShopService } from '@modules/shop/shop.service';
-import { ShopifyAuthException } from '@modules/shopify-auth/exceptions/shopify-auth.exception';
 
 @Injectable()
 export class ShopifyAuthService {
@@ -12,29 +11,6 @@ export class ShopifyAuthService {
     private readonly shopService: ShopService,
   ) {}
 
-  @UseFilters(ShopifyAuthException)
-  public async storeOfflineToken(req: Request, res: Response): Promise<void> {
-    const callbackResponse = await ShopifyAppInstallRepository.shopify.auth.callback({
-      rawRequest: req,
-      rawResponse: res,
-    });
-
-    const { session } = callbackResponse;
-
-    await ShopifyAppInstallRepository.shopify.webhooks.register({
-      session,
-    });
-
-    return await ShopifyAppInstallRepository.shopify.auth.begin({
-      shop: session.shop,
-      callbackPath: '/api/v1/shopify-auth/online',
-      isOnline: true,
-      rawRequest: req,
-      rawResponse: res,
-    });
-  }
-
-  @UseFilters(ShopifyAuthException)
   public async storeOnlineToken(req: Request, res: Response): Promise<string> {
     const callbackResponse = await ShopifyAppInstallRepository.shopify.auth.callback({
       rawRequest: req,
