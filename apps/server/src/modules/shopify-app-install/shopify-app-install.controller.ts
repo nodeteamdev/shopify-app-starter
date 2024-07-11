@@ -90,7 +90,7 @@ export class ShopifyAppInstallController {
       )}`,
     );
 
-    await this.appSubscriptionService.create(session, {
+    const { confirmationUrl } = await this.appSubscriptionService.create(session, {
       name: 'sub-test',
       returnUrl: 'https://return-url.com',
       amount: 10,
@@ -98,9 +98,9 @@ export class ShopifyAppInstallController {
     })
 
     // TODO should redirect user to confirmation url from appSubscription where he can purchase subscription
+    this.logger.log(`Subscription url: ${confirmationUrl}`);
 
-    const webhookConfigs: WebhookConfig[] =
-      await this.shopifyAppInstallService.setupWebhooks(session);
+    const webhookConfigs: WebhookConfig[] = await this.shopifyAppInstallService.setupWebhooks(session);
 
     this.logger.debug(
       `Webhooks have been setup successfully for shop: ${shop}: ${JSON.stringify(
