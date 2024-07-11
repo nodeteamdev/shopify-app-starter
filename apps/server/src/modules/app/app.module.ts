@@ -7,18 +7,20 @@ import { RedisConfig, redisConfig } from '@config/redis.config';
 import { sentryConfig } from '@config/sentry.config';
 import { shopifyConfig } from '@config/shopify.config';
 import { swaggerConfig } from '@config/swagger.config';
+import { AppSubscriptionModule } from '@modules/app-subscription/app-subscription.module';
 import { AppController } from '@modules/app/app.controller';
 import { AppService } from '@modules/app/app.service';
 import { AuthModule } from '@modules/auth/auth.module';
-import { CSP } from '@modules/common/middleware/csp.middleware';
 import { EmailService } from '@modules/email/email.service';
+import { GraphqlModule } from '@modules/graphql/graphql.module';
 import { MandatoryWebhookModule } from '@modules/mandatory-webhook/mandatory-webhook.module';
 import { ProductModule } from '@modules/product/product.module';
 import { ShopModule } from '@modules/shop/shop.module';
 import { ShopifyModule } from '@modules/shopify-api/shopify.module';
 import { ShopifyAppInstallModule } from '@modules/shopify-app-install/shopify-app-install.module';
-import { ShopifyAuthSessionRepository } from '@modules/shopify-auth/repositories/shopify-auth-session.repository';
+import { CSP } from '@modules/shopify-auth/middlewares/csp.middleware';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
+import { ShopifyAuthSessionRepository } from '@modules/shopify-auth/shopify-auth-session.repository';
 import { ShopifyAuthModule } from '@modules/shopify-auth/shopify-auth.module';
 import { UserModule } from '@modules/user/user.module';
 import { WebhookModule } from '@modules/webhook/webhook.module';
@@ -106,8 +108,10 @@ const logger: Logger = new Logger('AppModule');
     MandatoryWebhookModule,
     ShopifyAuthModule,
     ShopModule,
+    AppSubscriptionModule,
     ShopifyModule,
     ProductModule,
+    GraphqlModule,
   ],
   controllers: [AppController],
   providers: [

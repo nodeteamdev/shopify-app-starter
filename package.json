@@ -9,7 +9,9 @@
     "dev": "turbo run dev",
     "build": "turbo run build",
     "start": "node apps/server/dist/main",
-    "shopify": "shopify"
+    "shopify": "shopify",
+    "s:e:create": "shopify app generate extension",
+    "s:e:deploy": "shopify app deploy"
   },
   "repository": {
     "type": "git",

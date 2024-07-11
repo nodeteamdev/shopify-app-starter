@@ -14,6 +14,7 @@ export const WEBHOOK_NOT_FOUND = '404002: Webhook not found';
 export const SESSIONS_NOT_FOUND = '404003: Sessions not found';
 export const SESSION_NOT_FOUND = '404004: Session not found';
 export const PRODUCT_NOT_FOUND = '404005: Product not found';
+export const APP_SUBSCRIPTION_NOT_FOUND = '404006: App Subscription not found';
 
 export const USER_CONFLICT = '409001: User with this email already exists';
 

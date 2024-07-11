@@ -14,6 +14,14 @@ import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  @ApiNotFoundBaseResponse()
+  @Get(':shopName/products/count')
+  public async countProducts(
+    @Param('shopName') shopName: string,
+  ): Promise<{ count: number }> {
+    return this.productService.productsCount(shopName);
+  }
+
   @ApiOkBaseResponse({ dto: ProductDto })
   @Get(':shopName/products/:productId')
   public getOne(

@@ -2,8 +2,6 @@ import { ShopifyService } from '@modules/shopify-api/services/shopify.service';
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
 
-/* ShoifyServices */
-
 @Injectable()
 export class CSP implements NestMiddleware {
   constructor(private readonly shopifyService: ShopifyService) {}

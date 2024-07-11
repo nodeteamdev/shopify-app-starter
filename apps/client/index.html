@@ -1,16 +1,22 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Staging Bundles</title>
-  <meta name="shopify-api-key" content="%VITE_SHOPIFY_API_KEY%" />
-  <meta name="robots" content="noindex, nofollow">
-  <script src="https://cdn.shopify.com/shopifycloud/app-bridge.js"></script>
-</head>
-<body>
-<div id="beforeRoot"></div>
-<div id="root"></div>
-<script type="module" src="./src/Index.tsx"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+
+    <!-- Ensures that the UI is properly scaled in the Shopify Mobile app -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script type="module">
+      if (!import.meta.env || !import.meta.env.PROD) {
+        const script = document.createElement('script');
+        script.setAttribute('type', "module");
+        script.setAttribute('src', "./dev_embed.js");
+        document.getElementsByTagName('head')[0].append(script);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="app"><!--index.jsx injects App.jsx here--></div>
+    <script type="module" src="./index.jsx"></script>
+  </body>
 </html>

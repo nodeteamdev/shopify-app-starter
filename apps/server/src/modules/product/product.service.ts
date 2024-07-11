@@ -1,23 +1,21 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { ProductRepository } from '@modules/product/product.repository';
-import { ProductDto } from '@modules/product/dtos/product.dto';
-import { Product } from '@modules/product/interfaces/product.interface';
-import { ProductsQueryDto } from '@modules/product/dtos/products.query.dto';
-import { ProductsDto } from '@modules/product/dtos/products.dto';
-import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
-import { ProductVariantsDto } from '@modules/product/dtos/product-variants.dto';
 import { PRODUCT_NOT_FOUND } from '@modules/common/constants/errors.constants';
+import { ProductVariantsDto } from '@modules/product/dtos/product-variants.dto';
+import { ProductDto } from '@modules/product/dtos/product.dto';
+import { ProductsDto } from '@modules/product/dtos/products.dto';
+import { ProductsQueryDto } from '@modules/product/dtos/products.query.dto';
+import { Product } from '@modules/product/interfaces/product.interface';
+import { ShopifyProductRepository } from '@modules/product/shopify-product.repository';
+import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class ProductService {
   constructor(
-    private readonly productRepository: ProductRepository,
+    private readonly shopifyProductRepository: ShopifyProductRepository,
     private readonly shopifyAuthSessionService: ShopifyAuthSessionService,
   ) {}
 
-  public static mapProduct(
-    product: Product,
-  ): ProductDto {
+  public static mapProduct(product: Product): ProductDto {
     const {
       legacyResourceId,
       title,
@@ -47,16 +45,17 @@ export class ProductService {
     shopName: string,
     productId: string,
   ): Promise<ProductDto> {
-    const session = await this.shopifyAuthSessionService.getSessionByShopName(shopName)
+    const session =
+      await this.shopifyAuthSessionService.getSessionByShopName(shopName);
 
     const {
       body: {
         data: { product },
       },
-    } = await this.productRepository.findOne(session, productId);
+    } = await this.shopifyProductRepository.findOne(session, productId);
 
     if (!product) {
-      throw new NotFoundException(PRODUCT_NOT_FOUND)
+      throw new NotFoundException(PRODUCT_NOT_FOUND);
     }
 
     return ProductService.mapProduct(product);
@@ -66,7 +65,8 @@ export class ProductService {
     shopName: string,
     productsQueryDto: ProductsQueryDto,
   ): Promise<ProductsDto> {
-    const session = await this.shopifyAuthSessionService.getSessionByShopName(shopName)
+    const session =
+      await this.shopifyAuthSessionService.getSessionByShopName(shopName);
 
     const {
       body: {
@@ -74,7 +74,7 @@ export class ProductService {
           products: { nodes, pageInfo },
         },
       },
-    } = await this.productRepository.findMany(session, productsQueryDto);
+    } = await this.shopifyProductRepository.findMany(session, productsQueryDto);
 
     return {
       products: nodes.map(ProductService.mapProduct),
@@ -82,12 +82,21 @@ export class ProductService {
     };
   }
 
+  public async productsCount(shopName: string): Promise<{ count: number }> {
+    const session =
+      await this.shopifyAuthSessionService.getSessionByShopName(shopName);
+
+    const data: any = await this.shopifyProductRepository.count(session);
+    return { count: data.body.data.productsCount.count };
+  }
+
   public async getProductVariants(
     shopName: string,
     productId: string,
     query: ProductsQueryDto,
   ): Promise<ProductVariantsDto> {
-    const session = await this.shopifyAuthSessionService.getSessionByShopName(shopName)
+    const session =
+      await this.shopifyAuthSessionService.getSessionByShopName(shopName);
 
     const {
       body: {
@@ -95,7 +104,7 @@ export class ProductService {
           productVariants: { nodes, pageInfo },
         },
       },
-    } = await this.productRepository.findProductVariants(
+    } = await this.shopifyProductRepository.findProductVariants(
       session,
       query,
       productId,

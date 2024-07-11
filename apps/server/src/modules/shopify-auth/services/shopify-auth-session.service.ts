@@ -1,11 +1,14 @@
-import { Session, SessionParams } from '@shopify/shopify-api';
+import { SESSION_NOT_FOUND } from '@modules/common/constants/errors.constants';
+import { SESSIONS_NOT_FOUND } from '@modules/common/constants/errors.constants';
+import { ShopifyAuthSessionRepository } from '@modules/shopify-auth/shopify-auth-session.repository';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { SESSIONS_NOT_FOUND, SESSION_NOT_FOUND } from '@modules/common/constants/errors.constants';
-import { ShopifyAuthSessionRepository } from '@modules/shopify-auth/repositories/shopify-auth-session.repository';
+import { Session, SessionParams } from '@shopify/shopify-api';
 
 @Injectable()
 export class ShopifyAuthSessionService {
-  constructor(private readonly shopifyAuthSessionRepository: ShopifyAuthSessionRepository) {}
+  constructor(
+    private readonly shopifyAuthSessionRepository: ShopifyAuthSessionRepository,
+  ) {}
 
   public async save(session: Session): Promise<boolean> {
     // TODO if we decide to encrypt session token
@@ -25,8 +28,10 @@ export class ShopifyAuthSessionService {
       throw new NotFoundException(SESSION_NOT_FOUND);
     }
 
-    if (!session.content) {
-      const sessionData: SessionParams = JSON.parse(session.content as string) as SessionParams;
+    if (session.content) {
+      const sessionData: SessionParams = JSON.parse(
+        session.content as string,
+      ) as SessionParams;
 
       return new Session(sessionData);
     }
@@ -35,10 +40,11 @@ export class ShopifyAuthSessionService {
   }
 
   public async getSessionByShopName(shopName: string): Promise<Session> {
-    const sessions = await this.shopifyAuthSessionRepository.findManyByShopName(shopName);
+    const sessions =
+      await this.shopifyAuthSessionRepository.findManyByShopName(shopName);
 
     if (!sessions.length) {
-      throw new NotFoundException(SESSIONS_NOT_FOUND)
+      throw new NotFoundException(SESSIONS_NOT_FOUND);
     }
 
     const filteredSessions = sessions.filter(
@@ -46,7 +52,9 @@ export class ShopifyAuthSessionService {
     );
 
     if (filteredSessions.length > 0) {
-      const sessionData: SessionParams = JSON.parse(filteredSessions[0].content as string) as SessionParams;
+      const sessionData: SessionParams = JSON.parse(
+        filteredSessions[0].content as string,
+      ) as SessionParams;
 
       return new Session(sessionData);
     }

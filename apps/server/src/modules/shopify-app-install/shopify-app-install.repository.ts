@@ -4,8 +4,8 @@ import { WebhookConfig } from '@modules/shopify-app-install/interfaces/webhook-c
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
-  ApiVersion,
   BeginParams,
+  LATEST_API_VERSION,
   Session,
   Shopify,
   shopifyApi,
@@ -39,16 +39,19 @@ export class ShopifyAppInstallRepository {
 
   public initShopifyApi(shopifyConfig: ShopifyConfig): void {
     if (ShopifyAppInstallRepository.shopify !== null) return;
-
     ShopifyAppInstallRepository.shopify = shopifyApi({
       restResources,
       apiKey: shopifyConfig.apiKey,
       apiSecretKey: shopifyConfig.apiSecret,
       scopes: shopifyConfig.requiredScopes,
       hostName: shopifyConfig.hostName,
-      apiVersion: ApiVersion.July23,
+      apiVersion: LATEST_API_VERSION,
       isEmbeddedApp: shopifyConfig.isEmbeddedApp,
       isCustomStoreApp: false,
+      future: {
+        lineItemBilling: true,
+        customerAddressDefaultFix: true,
+      },
     });
   }
 

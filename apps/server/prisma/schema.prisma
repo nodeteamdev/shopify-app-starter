@@ -60,7 +60,30 @@ model Webhook {
   @@map("webhooks")
 }
 
+model AppSubscription {
+  id              String                      @id(map: "pk_AppSubscription")
+  name            String
+  returnUrl       String
+  confirmationUrl String
+  amount          Int
+  currencyCode    String
+  status          AppSubscriptionStatusesEnum
+  createdAt       DateTime                    @default(now())
+  updatedAt       DateTime                    @updatedAt
+
+  @@map("app_subscriptions")
+}
+
 enum RolesEnum {
   CUSTOMER
   SUPER_ADMIN
+}
+
+enum AppSubscriptionStatusesEnum {
+  ACTIVE
+  CANCELLED
+  DECLINED
+  EXPIRED
+  FROZEN
+  PENDING
 }

@@ -1,4 +1,3 @@
-import { parse } from 'node:querystring';
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
 
@@ -21,12 +20,11 @@ export class VerifyRequest implements NestMiddleware {
   ) {}
   async use(req: Request, res: Response, next: NextFunction) {
     try {
-      const { host, referer, origin } = req.headers;
-      let shop = origin
-        ? parse(origin?.split('?')[1])
-        : new URL(referer)?.searchParams.get('shop');
+      const { host } = req.headers;
 
-      if (host && (referer || origin)) {
+      let shop = req.params.shopName;
+
+      if (host) {
         const shopify = this.shopifyService.shopifyApi;
         const sessionId = await shopify.session.getCurrentId({
           isOnline: true,
@@ -35,7 +33,6 @@ export class VerifyRequest implements NestMiddleware {
         });
 
         const session = await this.sessionService.getSession(sessionId);
-
         shop = session?.shop;
 
         if (new Date(session?.expires) > new Date()) {

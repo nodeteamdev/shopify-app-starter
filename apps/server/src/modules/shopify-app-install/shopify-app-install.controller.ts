@@ -1,6 +1,8 @@
 import { AppConfig } from '@config/app.config';
 import { Cookies, CookiesType } from '@decorators/cookies.decorator';
 import { WebhookConfig } from '@modules/shopify-app-install/interfaces/webhook-config.interface';
+import { AppSubscriptionService } from "@modules/app-subscription/app-subscription.service";
+import { ShopifyAuthSessionService } from "@modules/shopify-auth/services/shopify-auth-session.service";
 import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-app-install.service';
 import { Controller, Get, Logger, Query, Req, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -11,9 +13,13 @@ import { Request, Response } from 'express';
 @ApiTags('Shopify App Install')
 @Controller('shopify-app-install')
 export class ShopifyAppInstallController {
+  private readonly logger: Logger = new Logger(ShopifyAppInstallController.name);
+
   constructor(
     private readonly shopifyAppInstallService: ShopifyAppInstallService,
     private readonly configService: ConfigService,
+    private readonly appSubscriptionService: AppSubscriptionService,
+    private readonly shopifyAuthSessionService: ShopifyAuthSessionService,
   ) {}
 
   @Get('/install')
@@ -30,14 +36,14 @@ export class ShopifyAppInstallController {
     const { clientHost } = this.configService.get<AppConfig>('app');
 
     if (shop && session) {
-      Logger.log(
+      this.logger.log(
         `The app has been open for the shop: ${shop}. The request will be redirected to the host: ${clientHost}`,
       );
 
       return res.redirect(`https://${clientHost}`);
     }
 
-    Logger.debug(
+    this.logger.debug(
       `Install app for shop: ${shop}, userId: ${userId || 'none'}, webShopId: ${
         webShopId || 'none'
       }`,
@@ -56,16 +62,17 @@ export class ShopifyAppInstallController {
   ): Promise<void> {
     this.shopifyAppInstallService.validateHmac(req.query);
 
-    Logger.debug(
+    this.logger.debug(
       `App install callback for the shop: ${shop}, userId: ${
         userId || 'none'
       }, webShopId: ${webShopId || 'none'}`,
     );
 
-    const { session }: { session: Session } =
-      await this.shopifyAppInstallService.finishAuth(req, res);
+    const { session }: { session: Session } = await this.shopifyAppInstallService.finishAuth(req, res);
 
-    Logger.debug(
+    await this.shopifyAuthSessionService.save(session);
+
+    this.logger.debug(
       `Offline Session has been retrieved for the shop: ${shop}: ${JSON.stringify(
         { session },
         null,
@@ -73,10 +80,29 @@ export class ShopifyAppInstallController {
       )}`,
     );
 
-    const webhookConfigs: WebhookConfig[] =
-      await this.shopifyAppInstallService.setupWebhooks(session);
+    const createdShop = await this.shopifyAppInstallService.setupShop(session);
 
-    Logger.debug(
+    this.logger.debug(
+      `Shop has been successfully setup for the shop: ${shop}: ${JSON.stringify(
+        createdShop,
+        null,
+        2,
+      )}`,
+    );
+
+    const { confirmationUrl } = await this.appSubscriptionService.create(session, {
+      name: 'sub-test',
+      returnUrl: 'https://return-url.com',
+      amount: 10,
+      currencyCode: 'USD',
+    })
+
+    // TODO should redirect user to confirmation url from appSubscription where he can purchase subscription
+    this.logger.log(`Subscription url: ${confirmationUrl}`);
+
+    const webhookConfigs: WebhookConfig[] = await this.shopifyAppInstallService.setupWebhooks(session);
+
+    this.logger.debug(
       `Webhooks have been setup successfully for shop: ${shop}: ${JSON.stringify(
         { webhookConfigs },
         null,
