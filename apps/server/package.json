@@ -24,7 +24,8 @@
     "db:reset:force": "prisma migrate reset --force",
     "db:generate": "prisma generate",
     "db:format": "prisma format",
-    "db:seed": "ts-node --compiler-options {\\\"module\\\":\\\"CommonJS\\\"} prisma/seed.ts"
+    "db:seed": "ts-node --compiler-options {\\\"module\\\":\\\"CommonJS\\\"} prisma/seed.ts",
+    "prepare": "husky"
   },
   "dependencies": {
     "@casl/ability": "^6.7.1",
@@ -52,6 +53,7 @@
     "cookie-parser": "^1.4.6",
     "express-basic-auth": "^1.2.1",
     "helmet": "^7.1.0",
+    "husky": "^9.0.11",
     "ioredis": "^5.4.1",
     "nodemailer-sendgrid": "^1.0.3",
     "reflect-metadata": "^0.2.0",
