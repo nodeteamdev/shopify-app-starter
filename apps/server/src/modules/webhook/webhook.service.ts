@@ -1,5 +1,10 @@
 import { Request } from 'express';
-import { Injectable, Logger, RawBodyRequest, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  RawBodyRequest,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AppSubscriptionStatusesEnum, Prisma, Webhook } from '@prisma/client';
 import { WebhookRepository } from '@modules/webhook/webhook.repository';
 import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-app-install.service';
@@ -152,13 +157,17 @@ export class WebhookService {
     await this.shopService.delete(shop.id);
   }
 
-  public async handleUpdateAppSubscription(req: RawBodyRequest<Request>): Promise<void> {
+  public async handleUpdateAppSubscription(
+    req: RawBodyRequest<Request>,
+  ): Promise<void> {
     const webhookId = req.headers['x-shopify-webhook-id'] as string;
 
     if (await this.isDuplicate(webhookId)) return;
 
-    const { app_subscription: appSubscription }: { app_subscription: AppSubscriptionRequest } = req.body;
-    const { admin_graphql_api_shop_id: shopId } = appSubscription
+    const {
+      app_subscription: appSubscription,
+    }: { app_subscription: AppSubscriptionRequest } = req.body;
+    const { admin_graphql_api_shop_id: shopId } = appSubscription;
 
     Logger.debug(
       `Webhook for updating app subscription from the shop with id: ${shopId}. ${JSON.stringify(
@@ -190,7 +199,10 @@ export class WebhookService {
     }
   }
 
-  private async updateAppSubscription(shopId: string, appSubscription: AppSubscriptionRequest): Promise<void> {
+  private async updateAppSubscription(
+    shopId: string,
+    appSubscription: AppSubscriptionRequest,
+  ): Promise<void> {
     const shop = await this.shopService.findOne(shopId);
 
     if (!shop) {
@@ -203,13 +215,22 @@ export class WebhookService {
 
     switch (status) {
       case AppSubscriptionStatusesEnum.ACTIVE:
-        await this.appSubscriptionService.update(appSubscriptionId, AppSubscriptionStatusesEnum.ACTIVE);
+        await this.appSubscriptionService.update(
+          appSubscriptionId,
+          AppSubscriptionStatusesEnum.ACTIVE,
+        );
         break;
       case AppSubscriptionStatusesEnum.CANCELLED:
-        await this.appSubscriptionService.update(appSubscriptionId, AppSubscriptionStatusesEnum.CANCELLED); 
+        await this.appSubscriptionService.update(
+          appSubscriptionId,
+          AppSubscriptionStatusesEnum.CANCELLED,
+        );
         break;
       case AppSubscriptionStatusesEnum.DECLINED:
-        await this.appSubscriptionService.update(appSubscriptionId, AppSubscriptionStatusesEnum.DECLINED); 
+        await this.appSubscriptionService.update(
+          appSubscriptionId,
+          AppSubscriptionStatusesEnum.DECLINED,
+        );
         break;
       default:
         Logger.debug(`Unhandled app subscription status: ${status}`);
@@ -227,13 +248,15 @@ export class WebhookService {
       );
     }
 
-    const session = await this.shopifyAuthSessionService.getSessionByShopName(shop.name);
+    const session = await this.shopifyAuthSessionService.getSessionByShopName(
+      shop.name,
+    );
 
     const shopInfo = await this.shopService.getShopInfo(session);
 
     const shopUpdateInput = {
       ...shop,
-      primaryDomain: shopInfo.primaryDomain.host
+      primaryDomain: shopInfo.primaryDomain.host,
     };
 
     await this.shopService.update(shop.id, {

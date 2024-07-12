@@ -6,7 +6,9 @@ import { MandatoryWebhookService } from '@modules/mandatory-webhook/mandatory-we
 @ApiTags('Mandatory Webhook')
 @Controller('mandatory-webhook')
 export class MandatoryWebhookController {
-  constructor(private readonly mandatoryWebhookService: MandatoryWebhookService) {}
+  constructor(
+    private readonly mandatoryWebhookService: MandatoryWebhookService,
+  ) {}
 
   @Post('/customers/data-request')
   public async customerDataRequest(

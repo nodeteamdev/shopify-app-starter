@@ -13,13 +13,19 @@ export class ShopifyAuthController {
 
   @Get()
   @UseFilters(ShopifyAuthException)
-  public authMiddleware(@Req() req: Request, @Res() res: Response): Promise<void> {
+  public authMiddleware(
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<void> {
     return this.shopifyAuthRedirectService.redirect(req, res);
   }
 
   @Get('/online')
   @UseFilters(ShopifyAuthException)
-  public async authOnline(@Req() req: Request, @Res() res: Response): Promise<void> {
+  public async authOnline(
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<void> {
     const shop = await this.shopifyAuthService.storeOnlineToken(req, res);
 
     res.status(200).redirect(`/?shop=${shop}&host=${req.query.host}`);

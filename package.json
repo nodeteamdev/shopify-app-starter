@@ -1,0 +1,26 @@
+{
+  "name": "shopify-app-starter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "biome lint ./apps/server/src",
+    "format": "biome format --write ./apps/server/src",
+    "prepare": "husky install"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^9.0.11"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "dependencies": {
+    "@biomejs/biome": "^1.8.3"
+  }
+}

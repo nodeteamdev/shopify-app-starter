@@ -1,6 +1,11 @@
 import { createHmac } from 'node:crypto';
 import { Request, Response } from 'express';
-import { Injectable, Logger, RawBodyRequest, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  RawBodyRequest,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopify-app-install.repository';
 import { ShopifyRequestQuery } from '@modules/shopify-app-install/types/shopify-request-query-type';
 import { Session, WebhookValidation } from '@shopify/shopify-api';
@@ -10,7 +15,6 @@ import { ShopifyConfig } from '@config/shopify.config';
 import { WebhookTopicsEnum } from '@modules/shopify-app-install/enums/webhook-topics.enum';
 import { ShopService } from '@modules/shop/shop.service';
 import { Shop } from '@prisma/client';
-
 
 @Injectable()
 export class ShopifyAppInstallService {
@@ -56,21 +60,25 @@ export class ShopifyAppInstallService {
     return this.shopifyAppInstallRepository.beginAuth(req, res);
   }
 
-  public validateWebhook(req: RawBodyRequest<Request>): Promise<WebhookValidation> {
+  public validateWebhook(
+    req: RawBodyRequest<Request>,
+  ): Promise<WebhookValidation> {
     return ShopifyAppInstallRepository.shopify.webhooks.validate({
       rawBody: req?.rawBody?.toString() || '',
       rawRequest: req,
     });
   }
 
-  public finishAuth(req: Request, res: Response): Promise<{ session: Session }> {
+  public finishAuth(
+    req: Request,
+    res: Response,
+  ): Promise<{ session: Session }> {
     return this.shopifyAppInstallRepository.finishAuth(req, res);
   }
 
-  public async setupWebhooks(
-    session: Session,
-  ): Promise<WebhookConfig[]> {
-    const apiHost = this.configService.getOrThrow<ShopifyConfig>('shopify').hostName;
+  public async setupWebhooks(session: Session): Promise<WebhookConfig[]> {
+    const apiHost =
+      this.configService.getOrThrow<ShopifyConfig>('shopify').hostName;
 
     const baseUrl = `https://${apiHost}/api/v1/webhook`;
 
@@ -133,7 +141,7 @@ export class ShopifyAppInstallService {
 
     const shopCreateInput = {
       ...shopInfo,
-      primaryDomain: shopInfo.primaryDomain.host
+      primaryDomain: shopInfo.primaryDomain.host,
     };
 
     return this.shopService.create(shopCreateInput);

@@ -1,5 +1,5 @@
 import '@shopify/shopify-api/adapters/node';
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 import {
   shopifyApi,
   ApiVersion,

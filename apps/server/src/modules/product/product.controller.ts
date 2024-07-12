@@ -40,6 +40,10 @@ export class ProductController {
     @Param('productId') productId: string,
     @Query() productsQueryDto: ProductsQueryDto,
   ): Promise<ProductVariantsDto> {
-    return this.productService.getProductVariants(shopName, productId, productsQueryDto);
+    return this.productService.getProductVariants(
+      shopName,
+      productId,
+      productsQueryDto,
+    );
   }
 }

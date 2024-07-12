@@ -8,6 +8,6 @@ import { ShopifyShopRepository } from '@modules/shop/repositories/shopify-shop.r
 @Module({
   imports: [PrismaModule, forwardRef(() => ShopifyAppInstallModule)],
   providers: [ShopService, ShopRepository, ShopifyShopRepository],
-  exports: [ShopService]
+  exports: [ShopService],
 })
 export class ShopModule {}
