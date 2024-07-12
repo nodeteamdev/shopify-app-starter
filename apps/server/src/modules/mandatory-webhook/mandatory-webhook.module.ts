@@ -10,6 +10,6 @@ import { ShopModule } from '@modules/shop/shop.module';
   imports: [EmailModule, WebhookModule, ShopifyAppInstallModule, ShopModule],
   providers: [MandatoryWebhookService],
   controllers: [MandatoryWebhookController],
-  exports: [MandatoryWebhookService]
+  exports: [MandatoryWebhookService],
 })
 export class MandatoryWebhookModule {}

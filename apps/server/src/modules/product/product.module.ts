@@ -8,6 +8,6 @@ import { ShopifyAuthModule } from '@modules/shopify-auth/shopify-auth.module';
 @Module({
   imports: [ShopifyAppInstallModule, ShopifyAuthModule],
   providers: [ProductService, ShopifyProductRepository],
-  controllers: [ProductController]
+  controllers: [ProductController],
 })
 export class ProductModule {}

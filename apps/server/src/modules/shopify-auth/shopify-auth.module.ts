@@ -9,7 +9,11 @@ import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopif
 import { ShopModule } from '@modules/shop/shop.module';
 
 @Module({
-  imports: [PrismaModule, forwardRef(() => ShopifyAppInstallModule), ShopModule],
+  imports: [
+    PrismaModule,
+    forwardRef(() => ShopifyAppInstallModule),
+    ShopModule,
+  ],
   providers: [
     ShopifyAuthService,
     ShopifyAuthRedirectService,

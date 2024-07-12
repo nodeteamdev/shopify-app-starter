@@ -7,8 +7,16 @@ import { AppSubscriptionGraphqlRepository } from '@modules/app-subscription/repo
 import { PrismaModule } from '@modules/common/providers/prisma';
 
 @Module({
-  imports: [forwardRef(() => ShopifyAppInstallModule), ShopifyAuthModule, PrismaModule],
-  providers: [AppSubscriptionService, AppSubscriptionRepository, AppSubscriptionGraphqlRepository],
-  exports: [AppSubscriptionService]
+  imports: [
+    forwardRef(() => ShopifyAppInstallModule),
+    ShopifyAuthModule,
+    PrismaModule,
+  ],
+  providers: [
+    AppSubscriptionService,
+    AppSubscriptionRepository,
+    AppSubscriptionGraphqlRepository,
+  ],
+  exports: [AppSubscriptionService],
 })
 export class AppSubscriptionModule {}

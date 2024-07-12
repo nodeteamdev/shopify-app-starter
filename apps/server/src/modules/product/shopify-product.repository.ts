@@ -6,7 +6,6 @@ import { Product } from '@modules/product/interfaces/product.interface';
 import { ProductsWithPageInfo } from '@modules/product/interfaces/products-with-page-info.interface';
 import { ProductVariantsWithPageInfo } from '@modules/product/interfaces/product-variants-with-page-info.interface';
 
-
 export interface GraphqlBody<T> {
   readonly data: T;
 }
@@ -16,9 +15,7 @@ export class ShopifyProductRepository {
   public findOne(
     session: Session,
     productId: string,
-  ): Promise<
-    RequestReturn<GraphqlBody<{ readonly product: Product }>>
-  > {
+  ): Promise<RequestReturn<GraphqlBody<{ readonly product: Product }>>> {
     const client = new ShopifyAppInstallRepository.shopify.clients.Graphql({
       session: new Session(session),
     });
@@ -53,7 +50,6 @@ export class ShopifyProductRepository {
         }
       }
     `;
-  
 
     return client.query({
       data: {
@@ -110,7 +106,6 @@ export class ShopifyProductRepository {
         }
       }
     `;
-
 
     return client.query({
       data: {

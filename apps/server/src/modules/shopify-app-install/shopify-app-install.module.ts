@@ -10,6 +10,6 @@ import { ShopModule } from '@modules/shop/shop.module';
   imports: [ShopifyAuthModule, ShopModule, AppSubscriptionModule],
   controllers: [ShopifyAppInstallController],
   providers: [ShopifyAppInstallService, ShopifyAppInstallRepository],
-  exports: [ShopifyAppInstallService, ShopifyAppInstallRepository]
+  exports: [ShopifyAppInstallService, ShopifyAppInstallRepository],
 })
 export class ShopifyAppInstallModule {}

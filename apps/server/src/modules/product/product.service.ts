@@ -15,9 +15,7 @@ export class ProductService {
     private readonly shopifyAuthSessionService: ShopifyAuthSessionService,
   ) {}
 
-  public static mapProduct(
-    product: Product,
-  ): ProductDto {
+  public static mapProduct(product: Product): ProductDto {
     const {
       legacyResourceId,
       title,
@@ -47,7 +45,8 @@ export class ProductService {
     shopName: string,
     productId: string,
   ): Promise<ProductDto> {
-    const session = await this.shopifyAuthSessionService.getSessionByShopName(shopName)
+    const session =
+      await this.shopifyAuthSessionService.getSessionByShopName(shopName);
 
     const {
       body: {
@@ -56,7 +55,7 @@ export class ProductService {
     } = await this.shopifyProductRepository.findOne(session, productId);
 
     if (!product) {
-      throw new NotFoundException(PRODUCT_NOT_FOUND)
+      throw new NotFoundException(PRODUCT_NOT_FOUND);
     }
 
     return ProductService.mapProduct(product);
@@ -66,7 +65,8 @@ export class ProductService {
     shopName: string,
     productsQueryDto: ProductsQueryDto,
   ): Promise<ProductsDto> {
-    const session = await this.shopifyAuthSessionService.getSessionByShopName(shopName)
+    const session =
+      await this.shopifyAuthSessionService.getSessionByShopName(shopName);
 
     const {
       body: {
@@ -87,7 +87,8 @@ export class ProductService {
     productId: string,
     query: ProductsQueryDto,
   ): Promise<ProductVariantsDto> {
-    const session = await this.shopifyAuthSessionService.getSessionByShopName(shopName)
+    const session =
+      await this.shopifyAuthSessionService.getSessionByShopName(shopName);
 
     const {
       body: {
