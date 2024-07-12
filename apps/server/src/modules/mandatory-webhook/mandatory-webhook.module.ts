@@ -4,9 +4,10 @@ import { MandatoryWebhookController } from '@modules/mandatory-webhook/mandatory
 import { EmailModule } from '@modules/email/email.module';
 import { WebhookModule } from '@modules/webhook/webhook.module';
 import { ShopifyAppInstallModule } from '@modules/shopify-app-install/shopify-app-install.module';
+import { ShopModule } from '@modules/shop/shop.module';
 
 @Module({
-  imports: [EmailModule, WebhookModule, ShopifyAppInstallModule],
+  imports: [EmailModule, WebhookModule, ShopifyAppInstallModule, ShopModule],
   providers: [MandatoryWebhookService],
   controllers: [MandatoryWebhookController],
   exports: [MandatoryWebhookService]
