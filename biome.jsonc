@@ -24,7 +24,6 @@
 				"noUnusedImports": "error"
 			},
 			"style": {
-				"noNamespace": "error",
 				"useAsConstAssertion": "error",
 				"useBlockStatements": "off"
 			},
