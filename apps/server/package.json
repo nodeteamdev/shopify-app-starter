@@ -7,12 +7,10 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "format": "biome format --write src",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "lint": "biome lint src",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
