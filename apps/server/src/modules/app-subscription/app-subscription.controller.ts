@@ -9,7 +9,9 @@ import { ApiCreatedBaseResponse } from '@modules/common/decorators/api-ok-base-r
 @ApiTags('App Subscription')
 @ApiExtraModels(AppSubscriptionDto)
 export class AppSubscriptionController {
-  constructor(private readonly appSubscriptionService: AppSubscriptionService) {}
+  constructor(
+    private readonly appSubscriptionService: AppSubscriptionService,
+  ) {}
 
   @ApiCreatedBaseResponse({ dto: AppSubscriptionDto })
   @Post(':shopName')
@@ -17,12 +19,17 @@ export class AppSubscriptionController {
     @Param('shopName') shopName: string,
     @Body() createAppSubscriptionDto: CreateAppSubscriptionDto,
   ): Promise<AppSubscriptionDto> {
-    return this.appSubscriptionService.createByShopName(shopName, createAppSubscriptionDto);
+    return this.appSubscriptionService.createByShopName(
+      shopName,
+      createAppSubscriptionDto,
+    );
   }
 
   @ApiCreatedBaseResponse({ dto: AppSubscriptionDto, isArray: true })
   @Get(':shopName')
-  public getManyByShopName(@Param('shopName') shopName: string): Promise<AppSubscriptionDto[]> {
+  public getManyByShopName(
+    @Param('shopName') shopName: string,
+  ): Promise<AppSubscriptionDto[]> {
     return this.appSubscriptionService.getManyByShopName(shopName);
   }
 
@@ -31,6 +38,6 @@ export class AppSubscriptionController {
     @Param('id') id: string,
     @Param('shopName') shopName: string,
   ): Promise<void> {
-    return this.appSubscriptionService.delete(id, shopName)
+    return this.appSubscriptionService.delete(id, shopName);
   }
 }

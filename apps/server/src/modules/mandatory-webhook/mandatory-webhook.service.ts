@@ -169,7 +169,7 @@ export class MandatoryWebhookService {
 
   public async uninstallApp(shopId: string): Promise<void> {
     const shop = await this.shopService.findOne(
-      getGlobalId(GraphQlTypesEnum.SHOP, shopId)
+      getGlobalId(GraphQlTypesEnum.SHOP, shopId),
     );
 
     if (!shop) {

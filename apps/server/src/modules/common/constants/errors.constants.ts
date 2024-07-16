@@ -1,5 +1,6 @@
 export const BAD_REQUEST = '400000: Bad request';
-export const APP_SUBSCRIPTION_INVALID_STATUS = '400001: App subscription cannot be canceled or removed due to the invalid status';
+export const APP_SUBSCRIPTION_INVALID_STATUS =
+  '400001: App subscription cannot be canceled or removed due to the invalid status';
 
 export const EMAIL_IS_VERIFIED = '400003: Email is verified';
 

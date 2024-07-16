@@ -248,7 +248,10 @@ export class WebhookService {
       );
     }
 
-    const shopifySession = await this.shopifyAuthSessionService.getShopifySessionByShopName(shop.name);
+    const shopifySession =
+      await this.shopifyAuthSessionService.getShopifySessionByShopName(
+        shop.name,
+      );
 
     const shopInfo = await this.shopService.getShopInfo(shopifySession);
 

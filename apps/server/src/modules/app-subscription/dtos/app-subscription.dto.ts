@@ -1,8 +1,11 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { AppSubscription, AppSubscriptionStatusesEnum } from "@prisma/client";
+import { ApiProperty } from '@nestjs/swagger';
+import { AppSubscription, AppSubscriptionStatusesEnum } from '@prisma/client';
 
 export class AppSubscriptionDto implements AppSubscription {
-  @ApiProperty({ type: String, example: 'gid://shopify/AppSubscription/28342550780' })
+  @ApiProperty({
+    type: String,
+    example: 'gid://shopify/AppSubscription/28342550780',
+  })
   readonly id: string;
 
   @ApiProperty({ type: String, example: 'Super Subscription' })
@@ -20,7 +23,10 @@ export class AppSubscriptionDto implements AppSubscription {
   @ApiProperty({ type: String, example: 'USD' })
   readonly currencyCode: string;
 
-  @ApiProperty({ enum: AppSubscriptionStatusesEnum, example: AppSubscriptionStatusesEnum.ACTIVE })
+  @ApiProperty({
+    enum: AppSubscriptionStatusesEnum,
+    example: AppSubscriptionStatusesEnum.ACTIVE,
+  })
   readonly status: AppSubscriptionStatusesEnum;
 
   @ApiProperty({ type: String })

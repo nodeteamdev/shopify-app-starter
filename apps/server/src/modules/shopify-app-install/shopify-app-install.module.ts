@@ -9,7 +9,11 @@ import { ShopifyAuthModule } from '@modules/shopify-auth/shopify-auth.module';
 import { forwardRef, MiddlewareConsumer, Module } from '@nestjs/common';
 
 @Module({
-  imports: [ShopifyAuthModule, ShopModule, forwardRef(() => AppSubscriptionModule)],
+  imports: [
+    ShopifyAuthModule,
+    ShopModule,
+    forwardRef(() => AppSubscriptionModule),
+  ],
   controllers: [ShopifyAppInstallController],
   providers: [
     ShopifyAppInstallService,

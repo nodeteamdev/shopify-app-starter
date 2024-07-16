@@ -7,8 +7,8 @@ import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-a
 import { ConfigService } from '@nestjs/config';
 import { Session } from '@shopify/shopify-api';
 import { WebhookConfig } from '@modules/shopify-app-install/interfaces/webhook-config.interface';
-import { AppSubscriptionService } from "@modules/app-subscription/app-subscription.service";
-import { ShopifyAuthSessionService } from "@modules/shopify-auth/services/shopify-auth-session.service";
+import { AppSubscriptionService } from '@modules/app-subscription/app-subscription.service';
+import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 
 @ApiTags('Shopify App Install')
 @Controller('shopify-app-install')

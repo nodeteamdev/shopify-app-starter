@@ -45,7 +45,10 @@ export class ProductService {
     shopName: string,
     productId: string,
   ): Promise<ProductDto> {
-    const shopifySession = await this.shopifyAuthSessionService.getShopifySessionByShopName(shopName)
+    const shopifySession =
+      await this.shopifyAuthSessionService.getShopifySessionByShopName(
+        shopName,
+      );
 
     const {
       body: {
@@ -64,7 +67,10 @@ export class ProductService {
     shopName: string,
     productsQueryDto: ProductsQueryDto,
   ): Promise<ProductsDto> {
-    const shopifySession = await this.shopifyAuthSessionService.getShopifySessionByShopName(shopName)
+    const shopifySession =
+      await this.shopifyAuthSessionService.getShopifySessionByShopName(
+        shopName,
+      );
 
     const {
       body: {
@@ -72,7 +78,10 @@ export class ProductService {
           products: { nodes, pageInfo },
         },
       },
-    } = await this.shopifyProductRepository.findMany(shopifySession, productsQueryDto);
+    } = await this.shopifyProductRepository.findMany(
+      shopifySession,
+      productsQueryDto,
+    );
 
     return {
       products: nodes.map(ProductService.mapProduct),
@@ -82,7 +91,9 @@ export class ProductService {
 
   public async productsCount(shopName: string): Promise<{ count: number }> {
     const session =
-      await this.shopifyAuthSessionService.getShopifySessionByShopName(shopName);
+      await this.shopifyAuthSessionService.getShopifySessionByShopName(
+        shopName,
+      );
 
     const data: any = await this.shopifyProductRepository.count(session);
     return { count: data.body.data.productsCount.count };
@@ -93,7 +104,10 @@ export class ProductService {
     productId: string,
     query: ProductsQueryDto,
   ): Promise<ProductVariantsDto> {
-    const shopifySession = await this.shopifyAuthSessionService.getShopifySessionByShopName(shopName)
+    const shopifySession =
+      await this.shopifyAuthSessionService.getShopifySessionByShopName(
+        shopName,
+      );
 
     const {
       body: {

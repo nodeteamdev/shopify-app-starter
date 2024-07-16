@@ -85,7 +85,14 @@ export class AppSubscriptionGraphqlRepository {
     });
   }
 
-  public cancel(session: Session, id: string): Promise<RequestReturn<GraphqlBody<{ readonly appSubscriptionCancel: CanceledAppSubscription }>>> {
+  public cancel(
+    session: Session,
+    id: string,
+  ): Promise<
+    RequestReturn<
+      GraphqlBody<{ readonly appSubscriptionCancel: CanceledAppSubscription }>
+    >
+  > {
     const client = new ShopifyAppInstallRepository.shopify.clients.Graphql({
       session: new Session(session),
     });

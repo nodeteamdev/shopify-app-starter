@@ -9,7 +9,13 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ShopModule } from '@modules/shop/shop.module';
 
 @Module({
-  imports: [EmailModule, WebhookModule, ShopifyAppInstallModule, ShopifyModule, ShopModule],
+  imports: [
+    EmailModule,
+    WebhookModule,
+    ShopifyAppInstallModule,
+    ShopifyModule,
+    ShopModule,
+  ],
   providers: [MandatoryWebhookService],
   controllers: [MandatoryWebhookController],
   exports: [MandatoryWebhookService],

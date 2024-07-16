@@ -1,7 +1,10 @@
 import { Session as ShopifySession, SessionParams } from '@shopify/shopify-api';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Session } from "@prisma/client";
-import { SESSIONS_NOT_FOUND, SESSION_NOT_FOUND } from '@modules/common/constants/errors.constants';
+import { Session } from '@prisma/client';
+import {
+  SESSIONS_NOT_FOUND,
+  SESSION_NOT_FOUND,
+} from '@modules/common/constants/errors.constants';
 import { ShopifyAuthSessionRepository } from '@modules/shopify-auth/shopify-auth-session.repository';
 
 @Injectable()
@@ -39,8 +42,11 @@ export class ShopifyAuthSessionService {
     return;
   }
 
-  public async getShopifySessionByShopName(shopName: string): Promise<ShopifySession> {
-    const sessions = await this.shopifyAuthSessionRepository.findManyByShopName(shopName);
+  public async getShopifySessionByShopName(
+    shopName: string,
+  ): Promise<ShopifySession> {
+    const sessions =
+      await this.shopifyAuthSessionRepository.findManyByShopName(shopName);
 
     if (!sessions.length) {
       throw new NotFoundException(SESSIONS_NOT_FOUND);

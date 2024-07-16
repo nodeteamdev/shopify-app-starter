@@ -9,10 +9,18 @@ import { forwardRef, Module } from '@nestjs/common';
 import { ShopifyAppInstallModule } from '@modules/shopify-app-install/shopify-app-install.module';
 
 @Module({
-  imports: [forwardRef(() => ShopifyAppInstallModule), ShopifyAuthModule, PrismaModule, ShopModule],
-  providers: [AppSubscriptionService, AppSubscriptionRepository, AppSubscriptionGraphqlRepository],
+  imports: [
+    forwardRef(() => ShopifyAppInstallModule),
+    ShopifyAuthModule,
+    PrismaModule,
+    ShopModule,
+  ],
+  providers: [
+    AppSubscriptionService,
+    AppSubscriptionRepository,
+    AppSubscriptionGraphqlRepository,
+  ],
   exports: [AppSubscriptionService],
-  controllers: [AppSubscriptionController]
+  controllers: [AppSubscriptionController],
 })
-
 export class AppSubscriptionModule {}

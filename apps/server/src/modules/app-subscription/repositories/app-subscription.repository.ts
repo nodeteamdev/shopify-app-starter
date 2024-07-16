@@ -21,7 +21,7 @@ export class AppSubscriptionRepository {
   }
 
   public findManyByShopId(shopId: string): Promise<AppSubscription[]> {
-    return this.prismaService.appSubscription.findMany({ where: { shopId } })
+    return this.prismaService.appSubscription.findMany({ where: { shopId } });
   }
 
   public update(

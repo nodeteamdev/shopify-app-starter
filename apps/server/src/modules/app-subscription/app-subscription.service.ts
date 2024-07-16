@@ -1,12 +1,22 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { Session as ShopifySession, SubscriptionResponse } from '@shopify/shopify-api';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import {
+  Session as ShopifySession,
+  SubscriptionResponse,
+} from '@shopify/shopify-api';
 import { AppSubscription, AppSubscriptionStatusesEnum } from '@prisma/client';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 import { CreateAppSubscriptionDto } from '@modules/app-subscription/dtos/create-app-subscription.dto';
 import { CreatedAppSubscription } from '@modules/app-subscription/interfaces/created-app-subscription.interface';
 import { AppSubscriptionGraphqlRepository } from '@modules/app-subscription/repositories/app-subscription-graphql.repository';
 import { AppSubscriptionRepository } from '@modules/app-subscription/repositories/app-subscription.repository';
-import { APP_SUBSCRIPTION_INVALID_STATUS, APP_SUBSCRIPTION_NOT_FOUND } from '@modules/common/constants/errors.constants';
+import {
+  APP_SUBSCRIPTION_INVALID_STATUS,
+  APP_SUBSCRIPTION_NOT_FOUND,
+} from '@modules/common/constants/errors.constants';
 import { AppSubscriptionDto } from '@modules/app-subscription/dtos/app-subscription.dto';
 import { ShopService } from '@modules/shop/shop.service';
 
@@ -47,13 +57,18 @@ export class AppSubscriptionService {
       body: {
         data: { appSubscriptionCreate },
       },
-    } = await this.appSubscriptionGraphqlRepository.create(shopifySession, createAppSubscriptionDto);
+    } = await this.appSubscriptionGraphqlRepository.create(
+      shopifySession,
+      createAppSubscriptionDto,
+    );
 
     const appSubscription = AppSubscriptionService.mapAppSubscription(
       appSubscriptionCreate,
     );
 
-    const { shopId } = await this.shopifyAuthSessionService.getSession(shopifySession.id);
+    const { shopId } = await this.shopifyAuthSessionService.getSession(
+      shopifySession.id,
+    );
 
     return this.appSubscriptionRepository.create({
       ...appSubscription,
@@ -61,14 +76,25 @@ export class AppSubscriptionService {
     });
   }
 
-  public async createByShopName(shopName: string, createAppSubscriptionDto: CreateAppSubscriptionDto): Promise<AppSubscriptionDto> {
-    const shopifySession = await this.shopifyAuthSessionService.getShopifySessionByShopName(shopName);
+  public async createByShopName(
+    shopName: string,
+    createAppSubscriptionDto: CreateAppSubscriptionDto,
+  ): Promise<AppSubscriptionDto> {
+    const shopifySession =
+      await this.shopifyAuthSessionService.getShopifySessionByShopName(
+        shopName,
+      );
 
     return this.create(shopifySession, createAppSubscriptionDto);
   }
 
-  public async getManyFromShopify(shopName: string): Promise<SubscriptionResponse> {
-    const shopifySession = await this.shopifyAuthSessionService.getShopifySessionByShopName(shopName);
+  public async getManyFromShopify(
+    shopName: string,
+  ): Promise<SubscriptionResponse> {
+    const shopifySession =
+      await this.shopifyAuthSessionService.getShopifySessionByShopName(
+        shopName,
+      );
 
     return this.appSubscriptionGraphqlRepository.findAll(shopifySession);
   }
@@ -99,12 +125,15 @@ export class AppSubscriptionService {
   }
 
   public async delete(id: string, shopName: string): Promise<void> {
-    const shopifySession = await this.shopifyAuthSessionService.getShopifySessionByShopName(shopName);
+    const shopifySession =
+      await this.shopifyAuthSessionService.getShopifySessionByShopName(
+        shopName,
+      );
 
     const { status } = await this.appSubscriptionRepository.findOne(id);
 
     if (status !== AppSubscriptionStatusesEnum.PENDING) {
-      throw new BadRequestException(APP_SUBSCRIPTION_INVALID_STATUS)
+      throw new BadRequestException(APP_SUBSCRIPTION_INVALID_STATUS);
     }
 
     await this.appSubscriptionGraphqlRepository.cancel(shopifySession, id);
