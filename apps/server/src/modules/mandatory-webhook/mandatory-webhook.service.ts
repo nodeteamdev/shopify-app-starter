@@ -1,5 +1,10 @@
 import { Request } from 'express';
-import { Injectable, Logger, RawBodyRequest, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  RawBodyRequest,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Webhook } from '@prisma/client';
 import { EmailService } from '@modules/email/email.service';
 import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-app-install.service';
@@ -144,7 +149,10 @@ export class MandatoryWebhookService {
     }
   }
 
-  private saveWebhook(req: RawBodyRequest<Request>, webhookId: string): Promise<Webhook> {
+  private saveWebhook(
+    req: RawBodyRequest<Request>,
+    webhookId: string,
+  ): Promise<Webhook> {
     return this.webhookService.create({
       id: webhookId,
       body: req.body,
@@ -153,7 +161,9 @@ export class MandatoryWebhookService {
     });
   }
 
-  public validateWebhook(req: RawBodyRequest<Request>): Promise<WebhookValidation> {
+  public validateWebhook(
+    req: RawBodyRequest<Request>,
+  ): Promise<WebhookValidation> {
     return this.shopifyAppInstallService.validateWebhook(req);
   }
 

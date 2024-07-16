@@ -1,18 +1,26 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ProductService } from '@modules/product/product.service';
-import { ProductsQueryDto } from '@modules/product/dtos/products.query.dto';
-import { ProductsDto } from '@modules/product/dtos/products.dto';
+import { ApiNotFoundBaseResponse } from '@modules/common/decorators/api-base-responses.decorator';
 import { ApiOkBaseResponse } from '@modules/common/decorators/api-ok-base-response.decorator';
-import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import { ProductVariantsDto } from '@modules/product/dtos/product-variants.dto';
 import { ProductDto } from '@modules/product/dtos/product.dto';
-import { ApiNotFoundBaseResponse } from '@modules/common/decorators/api-base-responses.decorator';
+import { ProductsDto } from '@modules/product/dtos/products.dto';
+import { ProductsQueryDto } from '@modules/product/dtos/products.query.dto';
+import { ProductService } from '@modules/product/product.service';
+import { Controller, Get, Param, Query } from '@nestjs/common';
+import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Products')
 @ApiExtraModels(ProductsDto, ProductVariantsDto, ProductDto)
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
+
+  @ApiNotFoundBaseResponse()
+  @Get(':shopName/products/count')
+  public async countProducts(
+    @Param('shopName') shopName: string,
+  ): Promise<{ count: number }> {
+    return this.productService.productsCount(shopName);
+  }
 
   @ApiOkBaseResponse({ dto: ProductDto })
   @Get(':shopName/products/:productId')
@@ -40,6 +48,10 @@ export class ProductController {
     @Param('productId') productId: string,
     @Query() productsQueryDto: ProductsQueryDto,
   ): Promise<ProductVariantsDto> {
-    return this.productService.getProductVariants(shopName, productId, productsQueryDto);
+    return this.productService.getProductVariants(
+      shopName,
+      productId,
+      productsQueryDto,
+    );
   }
 }

@@ -1,12 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { ShopifyProductRepository } from '@modules/product/shopify-product.repository';
-import { ProductDto } from '@modules/product/dtos/product.dto';
-import { Product } from '@modules/product/interfaces/product.interface';
-import { ProductsQueryDto } from '@modules/product/dtos/products.query.dto';
-import { ProductsDto } from '@modules/product/dtos/products.dto';
-import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
-import { ProductVariantsDto } from '@modules/product/dtos/product-variants.dto';
 import { PRODUCT_NOT_FOUND } from '@modules/common/constants/errors.constants';
+import { ProductVariantsDto } from '@modules/product/dtos/product-variants.dto';
+import { ProductDto } from '@modules/product/dtos/product.dto';
+import { ProductsDto } from '@modules/product/dtos/products.dto';
+import { ProductsQueryDto } from '@modules/product/dtos/products.query.dto';
+import { Product } from '@modules/product/interfaces/product.interface';
+import { ShopifyProductRepository } from '@modules/product/shopify-product.repository';
+import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class ProductService {
@@ -15,9 +15,7 @@ export class ProductService {
     private readonly shopifyAuthSessionService: ShopifyAuthSessionService,
   ) {}
 
-  public static mapProduct(
-    product: Product,
-  ): ProductDto {
+  public static mapProduct(product: Product): ProductDto {
     const {
       legacyResourceId,
       title,
@@ -56,7 +54,7 @@ export class ProductService {
     } = await this.shopifyProductRepository.findOne(shopifySession, productId);
 
     if (!product) {
-      throw new NotFoundException(PRODUCT_NOT_FOUND)
+      throw new NotFoundException(PRODUCT_NOT_FOUND);
     }
 
     return ProductService.mapProduct(product);
@@ -80,6 +78,14 @@ export class ProductService {
       products: nodes.map(ProductService.mapProduct),
       pageInfo,
     };
+  }
+
+  public async productsCount(shopName: string): Promise<{ count: number }> {
+    const session =
+      await this.shopifyAuthSessionService.getShopifySessionByShopName(shopName);
+
+    const data: any = await this.shopifyProductRepository.count(session);
+    return { count: data.body.data.productsCount.count };
   }
 
   public async getProductVariants(

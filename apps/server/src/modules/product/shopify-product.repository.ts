@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { RequestReturn, Session } from '@shopify/shopify-api';
-import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopify-app-install.repository';
 import { ProductsQueryDto } from '@modules/product/dtos/products.query.dto';
+import { ProductVariantsWithPageInfo } from '@modules/product/interfaces/product-variants-with-page-info.interface';
 import { Product } from '@modules/product/interfaces/product.interface';
 import { ProductsWithPageInfo } from '@modules/product/interfaces/products-with-page-info.interface';
-import { ProductVariantsWithPageInfo } from '@modules/product/interfaces/product-variants-with-page-info.interface';
 
+import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopify-app-install.repository';
+import { Injectable } from '@nestjs/common';
+import { RequestReturn, Session } from '@shopify/shopify-api';
 
 export interface GraphqlBody<T> {
   readonly data: T;
@@ -16,9 +16,7 @@ export class ShopifyProductRepository {
   public findOne(
     session: Session,
     productId: string,
-  ): Promise<
-    RequestReturn<GraphqlBody<{ readonly product: Product }>>
-  > {
+  ): Promise<RequestReturn<GraphqlBody<{ readonly product: Product }>>> {
     const client = new ShopifyAppInstallRepository.shopify.clients.Graphql({
       session: new Session(session),
     });
@@ -53,7 +51,6 @@ export class ShopifyProductRepository {
         }
       }
     `;
-  
 
     return client.query({
       data: {
@@ -111,7 +108,6 @@ export class ShopifyProductRepository {
       }
     `;
 
-
     return client.query({
       data: {
         query,
@@ -161,6 +157,26 @@ export class ShopifyProductRepository {
           after: reqQuery.after,
           query: `product_id:${productId}`,
         },
+      },
+    });
+  }
+
+  public async count(session: Session) {
+    const client = new ShopifyAppInstallRepository.shopify.clients.Graphql({
+      session: new Session(session),
+    });
+
+    const query: string = `
+    query {
+      productsCount {
+        count
+      }
+    }
+  `;
+
+    return client.query({
+      data: {
+        query,
       },
     });
   }

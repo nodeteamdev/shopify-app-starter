@@ -1,23 +1,27 @@
-import { Request, Response } from "express";
-import { Injectable, NotFoundException, Req, Res } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { ShopifyConfig } from "@config/shopify.config";
-import { SHOP_NOT_FOUND } from "@modules/common/constants/errors.constants";
-import { ShopifyAppInstallRepository } from "@modules/shopify-app-install/shopify-app-install.repository";
+import { ShopifyConfig } from '@config/shopify.config';
+import { SHOP_NOT_FOUND } from '@modules/common/constants/errors.constants';
+import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopify-app-install.repository';
+import { Injectable, NotFoundException, Req, Res } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Request, Response } from 'express';
 
 @Injectable()
 export class ShopifyAuthRedirectService {
   constructor(private readonly configService: ConfigService) {}
 
-  public async redirect(@Req() req: Request, @Res() res: Response): Promise<void> {
+  public async redirect(
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<void> {
     const { hostName } = this.configService.get<ShopifyConfig>('shopify');
 
     if (!req.query.shop) {
       throw new NotFoundException(SHOP_NOT_FOUND);
     }
 
-    const shop = ShopifyAppInstallRepository.shopify.utils.sanitizeShop(<string>req.query.shop);
-
+    const shop = ShopifyAppInstallRepository.shopify.utils.sanitizeShop(
+      <string>req.query.shop,
+    );
     if (req.query.embedded === '1') {
       const queryParams = new URLSearchParams({
         ...req.query,

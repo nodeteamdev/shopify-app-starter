@@ -1,7 +1,7 @@
-import { PrismaService } from "@modules/common/providers/prisma";
+import { PrismaService } from '@modules/common/providers/prisma';
 import { Session } from '@shopify/shopify-api';
-import { Injectable } from "@nestjs/common";
-import { Prisma, Session as ShopifySession } from "@prisma/client";
+import { Injectable } from '@nestjs/common';
+import { Prisma, Session as ShopifySession } from '@prisma/client';
 
 @Injectable()
 export class ShopifyAuthSessionRepository {

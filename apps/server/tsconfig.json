@@ -29,6 +29,7 @@
       "@interfaces/*": ["./src/modules/common/interfaces/*"],
       "@decorators/*": ["./src/modules/common/decorators/*"],
       "@providers/*": ["./src/modules/common/providers/*"],
+      "@middlewares/*": ["./src/modules/common/middlewares/*"],
       "@helpers/*": ["./src/modules/common/helpers/*"],
       "@types/*": ["./src/modules/common/types/*"],
       "@constants/*": ["./src/modules/common/constants/*"],

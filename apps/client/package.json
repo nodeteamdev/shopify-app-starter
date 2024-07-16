@@ -1,0 +1,45 @@
+{
+  "name": "client",
+  "version": "1.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "coverage": "vitest run --coverage"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">= 12.16"
+  },
+  "stylelint": {
+    "extends": "@shopify/stylelint-polaris"
+  },
+  "dependencies": {
+    "@formatjs/intl-locale": "^3.4.6",
+    "@formatjs/intl-localematcher": "^0.4.2",
+    "@formatjs/intl-pluralrules": "^5.2.14",
+    "@shopify/app-bridge": "^3.7.10",
+    "@shopify/app-bridge-react": "^3.7.10",
+    "@shopify/i18next-shopify": "^0.2.9",
+    "@shopify/polaris": "^10.50.1",
+    "@vitejs/plugin-react": "4.2.1",
+    "dotenv": "^16.4.5",
+    "i18next": "^23.11.5",
+    "i18next-resources-to-backend": "^1.2.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-i18next": "^13.5.0",
+    "react-query": "^3.39.3",
+    "react-router-dom": "^6.24.1",
+    "vite": "^4.5.3"
+  },
+  "devDependencies": {
+    "@shopify/stylelint-polaris": "^12.0.1",
+    "history": "^5.3.0",
+    "jsdom": "^24.1.0",
+    "prettier": "^3.3.2",
+    "stylelint": "^16.6.1",
+    "vi-fetch": "^0.6.1"
+  }
+}

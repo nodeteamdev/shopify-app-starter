@@ -19,31 +19,39 @@ export class AppSubscriptionService {
     private readonly shopService: ShopService,
   ) {}
 
-  private static mapAppSubscription(createdAppSubscription: CreatedAppSubscription) {
-    const {
-      confirmationUrl,
-      appSubscription,
-    } = createdAppSubscription;
+  private static mapAppSubscription(
+    createdAppSubscription: CreatedAppSubscription,
+  ) {
+    const { confirmationUrl, appSubscription } = createdAppSubscription;
 
     return {
       id: appSubscription.id,
       name: appSubscription.name,
       returnUrl: appSubscription.returnUrl,
       confirmationUrl,
-      amount: +appSubscription.lineItems.flatMap((lineItem) => lineItem.plan.pricingDetails.price.amount),
-      currencyCode: appSubscription.lineItems.flatMap((lineItem) => lineItem.plan.pricingDetails.price.currencyCode).toString(),
+      amount: +appSubscription.lineItems.flatMap(
+        (lineItem) => lineItem.plan.pricingDetails.price.amount,
+      ),
+      currencyCode: appSubscription.lineItems
+        .flatMap((lineItem) => lineItem.plan.pricingDetails.price.currencyCode)
+        .toString(),
       status: appSubscription.status,
-    }
+    };
   }
 
-  public async create(shopifySession: ShopifySession, createAppSubscriptionDto: CreateAppSubscriptionDto): Promise<AppSubscription> {
+  public async create(
+    shopifySession: ShopifySession,
+    createAppSubscriptionDto: CreateAppSubscriptionDto,
+  ): Promise<AppSubscription> {
     const {
       body: {
         data: { appSubscriptionCreate },
       },
     } = await this.appSubscriptionGraphqlRepository.create(shopifySession, createAppSubscriptionDto);
 
-    const appSubscription = AppSubscriptionService.mapAppSubscription(appSubscriptionCreate);
+    const appSubscription = AppSubscriptionService.mapAppSubscription(
+      appSubscriptionCreate,
+    );
 
     const { shopId } = await this.shopifyAuthSessionService.getSession(shopifySession.id);
 
@@ -81,7 +89,10 @@ export class AppSubscriptionService {
     return appSubscription;
   }
 
-  public async update(id: string, status: AppSubscriptionStatusesEnum): Promise<AppSubscription> {
+  public async update(
+    id: string,
+    status: AppSubscriptionStatusesEnum,
+  ): Promise<AppSubscription> {
     await this.getOne(id);
 
     return this.appSubscriptionRepository.update(id, status);

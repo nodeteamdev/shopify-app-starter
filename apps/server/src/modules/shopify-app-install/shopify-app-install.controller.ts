@@ -1,11 +1,11 @@
-import { Controller, Get, Logger, Query, Req, Res } from "@nestjs/common";
+import { AppConfig } from '@config/app.config';
+import { Cookies, CookiesType } from '@decorators/cookies.decorator';
+import { Controller, Get, Logger, Query, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { ApiTags } from '@nestjs/swagger';
-import { ShopifyAppInstallService } from "@modules/shopify-app-install/shopify-app-install.service";
-import { ConfigService } from "@nestjs/config";
-import { AppConfig } from "@config/app.config";
-import { Cookies, CookiesType } from "@decorators/cookies.decorator";
-import { Session } from "@shopify/shopify-api";
+import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-app-install.service';
+import { ConfigService } from '@nestjs/config';
+import { Session } from '@shopify/shopify-api';
 import { WebhookConfig } from '@modules/shopify-app-install/interfaces/webhook-config.interface';
 import { AppSubscriptionService } from "@modules/app-subscription/app-subscription.service";
 import { ShopifyAuthSessionService } from "@modules/shopify-auth/services/shopify-auth-session.service";
@@ -13,7 +13,9 @@ import { ShopifyAuthSessionService } from "@modules/shopify-auth/services/shopif
 @ApiTags('Shopify App Install')
 @Controller('shopify-app-install')
 export class ShopifyAppInstallController {
-  private readonly logger: Logger = new Logger(ShopifyAppInstallController.name);
+  private readonly logger: Logger = new Logger(
+    ShopifyAppInstallController.name,
+  );
 
   constructor(
     private readonly shopifyAppInstallService: ShopifyAppInstallService,
@@ -68,7 +70,8 @@ export class ShopifyAppInstallController {
       }, webShopId: ${webShopId || 'none'}`,
     );
 
-    const { session }: { session: Session } = await this.shopifyAppInstallService.finishAuth(req, res);
+    const { session }: { session: Session } =
+      await this.shopifyAppInstallService.finishAuth(req, res);
 
     const createdShop = await this.shopifyAppInstallService.setupShop(session);
 
@@ -90,17 +93,21 @@ export class ShopifyAppInstallController {
       )}`,
     );
 
-    const { confirmationUrl } = await this.appSubscriptionService.create(session, {
-      name: 'sub-test',
-      returnUrl: 'https://return-url.com',
-      amount: 10,
-      currencyCode: 'USD',
-    })
+    const { confirmationUrl } = await this.appSubscriptionService.create(
+      session,
+      {
+        name: 'sub-test',
+        returnUrl: 'https://return-url.com',
+        amount: 10,
+        currencyCode: 'USD',
+      },
+    );
 
     // TODO should redirect user to confirmation url from appSubscription where he can purchase subscription
     this.logger.log(`Subscription url: ${confirmationUrl}`);
 
-    const webhookConfigs: WebhookConfig[] = await this.shopifyAppInstallService.setupWebhooks(session);
+    const webhookConfigs: WebhookConfig[] =
+      await this.shopifyAppInstallService.setupWebhooks(session);
 
     this.logger.debug(
       `Webhooks have been setup successfully for shop: ${shop}: ${JSON.stringify(
