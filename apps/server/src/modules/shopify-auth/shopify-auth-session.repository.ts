@@ -7,7 +7,7 @@ import { Prisma, Session as ShopifySession } from "@prisma/client";
 export class ShopifyAuthSessionRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
-  public upsert(session: Session): Promise<ShopifySession> {
+  public upsert(session: Session, shopId: string): Promise<ShopifySession> {
     return this.prismaService.session.upsert({
       where: { id: session.id },
       update: {
@@ -18,6 +18,7 @@ export class ShopifyAuthSessionRepository {
         id: session.id,
         content: JSON.stringify(session),
         shopName: session.shop,
+        shopId,
       },
     });
   }

@@ -6,6 +6,8 @@ import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-a
 import { WebhookService } from '@modules/webhook/webhook.service';
 import { WebhookValidation } from '@shopify/shopify-api';
 import { ShopService } from '@modules/shop/shop.service';
+import { getGlobalId } from '@modules/common/helpers/get-global-id.helper';
+import { GraphQlTypesEnum } from '@modules/shop/enums/graphql-types.enum';
 
 @Injectable()
 export class MandatoryWebhookService {
@@ -156,7 +158,9 @@ export class MandatoryWebhookService {
   }
 
   public async uninstallApp(shopId: string): Promise<void> {
-    const shop = await this.shopService.findOne(shopId);
+    const shop = await this.shopService.findOne(
+      getGlobalId(GraphQlTypesEnum.SHOP, shopId)
+    );
 
     if (!shop) {
       return this.logger.debug(

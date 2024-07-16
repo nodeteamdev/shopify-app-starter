@@ -47,13 +47,13 @@ export class ProductService {
     shopName: string,
     productId: string,
   ): Promise<ProductDto> {
-    const session = await this.shopifyAuthSessionService.getSessionByShopName(shopName)
+    const shopifySession = await this.shopifyAuthSessionService.getShopifySessionByShopName(shopName)
 
     const {
       body: {
         data: { product },
       },
-    } = await this.shopifyProductRepository.findOne(session, productId);
+    } = await this.shopifyProductRepository.findOne(shopifySession, productId);
 
     if (!product) {
       throw new NotFoundException(PRODUCT_NOT_FOUND)
@@ -66,7 +66,7 @@ export class ProductService {
     shopName: string,
     productsQueryDto: ProductsQueryDto,
   ): Promise<ProductsDto> {
-    const session = await this.shopifyAuthSessionService.getSessionByShopName(shopName)
+    const shopifySession = await this.shopifyAuthSessionService.getShopifySessionByShopName(shopName)
 
     const {
       body: {
@@ -74,7 +74,7 @@ export class ProductService {
           products: { nodes, pageInfo },
         },
       },
-    } = await this.shopifyProductRepository.findMany(session, productsQueryDto);
+    } = await this.shopifyProductRepository.findMany(shopifySession, productsQueryDto);
 
     return {
       products: nodes.map(ProductService.mapProduct),
@@ -87,7 +87,7 @@ export class ProductService {
     productId: string,
     query: ProductsQueryDto,
   ): Promise<ProductVariantsDto> {
-    const session = await this.shopifyAuthSessionService.getSessionByShopName(shopName)
+    const shopifySession = await this.shopifyAuthSessionService.getShopifySessionByShopName(shopName)
 
     const {
       body: {
@@ -96,7 +96,7 @@ export class ProductService {
         },
       },
     } = await this.shopifyProductRepository.findProductVariants(
-      session,
+      shopifySession,
       query,
       productId,
     );

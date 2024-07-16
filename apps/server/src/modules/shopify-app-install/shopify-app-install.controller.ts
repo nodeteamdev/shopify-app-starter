@@ -70,21 +70,21 @@ export class ShopifyAppInstallController {
 
     const { session }: { session: Session } = await this.shopifyAppInstallService.finishAuth(req, res);
 
-    await this.shopifyAuthSessionService.save(session);
-
-    this.logger.debug(
-      `Offline Session has been retrieved for the shop: ${shop}: ${JSON.stringify(
-        { session },
-        null,
-        2,
-      )}`,
-    );
-
     const createdShop = await this.shopifyAppInstallService.setupShop(session);
 
     this.logger.debug(
       `Shop has been successfully setup for the shop: ${shop}: ${JSON.stringify(
         createdShop,
+        null,
+        2,
+      )}`,
+    );
+
+    await this.shopifyAuthSessionService.save(session, createdShop.id);
+
+    this.logger.debug(
+      `Offline Session has been retrieved for the shop: ${shop}: ${JSON.stringify(
+        { session },
         null,
         2,
       )}`,

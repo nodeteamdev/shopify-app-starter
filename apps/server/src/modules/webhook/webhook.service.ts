@@ -227,9 +227,9 @@ export class WebhookService {
       );
     }
 
-    const session = await this.shopifyAuthSessionService.getSessionByShopName(shop.name);
+    const shopifySession = await this.shopifyAuthSessionService.getShopifySessionByShopName(shop.name);
 
-    const shopInfo = await this.shopService.getShopInfo(session);
+    const shopInfo = await this.shopService.getShopInfo(shopifySession);
 
     const shopUpdateInput = {
       ...shop,

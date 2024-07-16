@@ -49,4 +49,14 @@ export class ShopService {
 
     return shop;
   }
+
+  public async getOneByName(name: string): Promise<Shop> {
+    const shop = await this.shopRepository.findOneByName(name);
+
+    if (!shop) {
+      throw new NotFoundException(SHOP_NOT_FOUND);
+    }
+
+    return shop;
+  }
 }

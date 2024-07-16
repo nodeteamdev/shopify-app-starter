@@ -1,12 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Session as ShopifySession, SubscriptionResponse } from '@shopify/shopify-api';
 import { AppSubscription, AppSubscriptionStatusesEnum } from '@prisma/client';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 import { CreateAppSubscriptionDto } from '@modules/app-subscription/dtos/create-app-subscription.dto';
 import { CreatedAppSubscription } from '@modules/app-subscription/interfaces/created-app-subscription.interface';
 import { AppSubscriptionGraphqlRepository } from '@modules/app-subscription/repositories/app-subscription-graphql.repository';
 import { AppSubscriptionRepository } from '@modules/app-subscription/repositories/app-subscription.repository';
-import { APP_SUBSCRIPTION_NOT_FOUND } from '@modules/common/constants/errors.constants';
-import { Session, SubscriptionResponse } from '@shopify/shopify-api';
+import { APP_SUBSCRIPTION_INVALID_STATUS, APP_SUBSCRIPTION_NOT_FOUND } from '@modules/common/constants/errors.constants';
+import { AppSubscriptionDto } from '@modules/app-subscription/dtos/app-subscription.dto';
+import { ShopService } from '@modules/shop/shop.service';
 
 @Injectable()
 export class AppSubscriptionService {
@@ -14,6 +16,7 @@ export class AppSubscriptionService {
     private readonly appSubscriptionGraphqlRepository: AppSubscriptionGraphqlRepository,
     private readonly shopifyAuthSessionService: ShopifyAuthSessionService,
     private readonly appSubscriptionRepository: AppSubscriptionRepository,
+    private readonly shopService: ShopService,
   ) {}
 
   private static mapAppSubscription(createdAppSubscription: CreatedAppSubscription) {
@@ -33,22 +36,39 @@ export class AppSubscriptionService {
     }
   }
 
-  public async create(session: Session, createAppSubscriptionDto: CreateAppSubscriptionDto): Promise<AppSubscription> {
+  public async create(shopifySession: ShopifySession, createAppSubscriptionDto: CreateAppSubscriptionDto): Promise<AppSubscription> {
     const {
       body: {
         data: { appSubscriptionCreate },
       },
-    } = await this.appSubscriptionGraphqlRepository.create(session, createAppSubscriptionDto);
+    } = await this.appSubscriptionGraphqlRepository.create(shopifySession, createAppSubscriptionDto);
 
     const appSubscription = AppSubscriptionService.mapAppSubscription(appSubscriptionCreate);
 
-    return this.appSubscriptionRepository.create(appSubscription);
+    const { shopId } = await this.shopifyAuthSessionService.getSession(shopifySession.id);
+
+    return this.appSubscriptionRepository.create({
+      ...appSubscription,
+      shop: { connect: { id: shopId } },
+    });
   }
 
-  public async getAll(shopName: string): Promise<SubscriptionResponse> {
-    const session = await this.shopifyAuthSessionService.getSessionByShopName(shopName);
+  public async createByShopName(shopName: string, createAppSubscriptionDto: CreateAppSubscriptionDto): Promise<AppSubscriptionDto> {
+    const shopifySession = await this.shopifyAuthSessionService.getShopifySessionByShopName(shopName);
 
-    return this.appSubscriptionGraphqlRepository.findAll(session);
+    return this.create(shopifySession, createAppSubscriptionDto);
+  }
+
+  public async getManyFromShopify(shopName: string): Promise<SubscriptionResponse> {
+    const shopifySession = await this.shopifyAuthSessionService.getShopifySessionByShopName(shopName);
+
+    return this.appSubscriptionGraphqlRepository.findAll(shopifySession);
+  }
+
+  public async getManyByShopName(shopName: string): Promise<AppSubscription[]> {
+    const { id } = await this.shopService.getOneByName(shopName);
+
+    return this.appSubscriptionRepository.findManyByShopId(id);
   }
 
   public async getOne(id: string): Promise<AppSubscription> {
@@ -65,5 +85,18 @@ export class AppSubscriptionService {
     await this.getOne(id);
 
     return this.appSubscriptionRepository.update(id, status);
+  }
+
+  public async delete(id: string, shopName: string): Promise<void> {
+    const shopifySession = await this.shopifyAuthSessionService.getShopifySessionByShopName(shopName);
+
+    const { status } = await this.appSubscriptionRepository.findOne(id);
+
+    if (status !== AppSubscriptionStatusesEnum.PENDING) {
+      throw new BadRequestException(APP_SUBSCRIPTION_INVALID_STATUS)
+    }
+
+    await this.appSubscriptionGraphqlRepository.cancel(shopifySession, id);
+    await this.appSubscriptionRepository.delete(id);
   }
 }
