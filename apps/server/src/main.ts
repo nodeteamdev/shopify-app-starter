@@ -1,10 +1,10 @@
 import { AppConfig } from '@config/app.config';
 import { NgrokConfig } from '@config/ngrok.config';
 import { SentryConfig } from '@config/sentry.config';
-import cookieParser from 'cookie-parser';
 import { SwaggerConfig } from '@config/swagger.config';
 import { NodeEnvsEnum } from '@enums/node-envs.enum';
 import { AppModule } from '@modules/app/app.module';
+import CustomRequest from '@modules/common/types/custom-request.type';
 import {
   Logger,
   RequestMethod,
@@ -16,10 +16,11 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { Listener } from '@ngrok/ngrok';
 import SwaggerCustomOptions from '@options/swagger-custom.options';
 import * as Sentry from '@sentry/node';
+import bodyParser from 'body-parser';
 import { useContainer } from 'class-validator';
+import cookieParser from 'cookie-parser';
 import basicAuth from 'express-basic-auth';
 import helmet from 'helmet';
 
@@ -34,6 +35,15 @@ async function bootstrap(): Promise<{
   });
 
   app.use(cookieParser());
+
+  app.use(
+    bodyParser.json({
+      limit: '5mb',
+      verify: function (req: CustomRequest, _res, buf) {
+        req.originalBody = buf;
+      },
+    }),
+  );
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
@@ -76,6 +86,7 @@ async function bootstrap(): Promise<{
       preflightContinue: false,
       optionsSuccessStatus: 204,
       credentials: true,
+      allowedHeaders: 'Content-Type, Accept, Authorization',
     };
 
     app.enableCors(options);
@@ -163,23 +174,7 @@ async function bootstrap(): Promise<{
   };
 }
 
-bootstrap().then(async ({ appConfig, ngrokConfig }): Promise<void> => {
+bootstrap().then(async ({ appConfig }): Promise<void> => {
   Logger.log(`Running in http://localhost:${appConfig.port}`, 'Bootstrap');
   Logger.log(`Docs in http://localhost:${appConfig.port}/docs`, 'Swagger');
-
-  if (appConfig.nodeEnv === NodeEnvsEnum.DEVELOPMENT && ngrokConfig.domain) {
-    const ngrok = await import('@ngrok/ngrok');
-
-    const listener: Listener = await ngrok.forward({
-      port: appConfig.port,
-      domain: ngrokConfig.domain,
-      authtoken: ngrokConfig.authToken,
-    });
-
-    Logger.log(`Ngrok ingress established at: ${listener.url()}`, 'Ngrok');
-    Logger.log(`Docs at: ${listener.url()}/docs`, 'Swagger');
-  } else {
-    Logger.log(`Running at https://${appConfig.host}`, 'Bootstrap');
-    Logger.log(`Docs at https://${appConfig.host}/docs`, 'Swagger');
-  }
 });

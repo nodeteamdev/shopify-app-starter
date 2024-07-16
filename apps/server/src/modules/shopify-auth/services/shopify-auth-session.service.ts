@@ -1,10 +1,8 @@
-import { Session, SessionParams } from '@shopify/shopify-api';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  SESSIONS_NOT_FOUND,
-  SESSION_NOT_FOUND,
-} from '@modules/common/constants/errors.constants';
+import { SESSION_NOT_FOUND } from '@modules/common/constants/errors.constants';
+import { SESSIONS_NOT_FOUND } from '@modules/common/constants/errors.constants';
 import { ShopifyAuthSessionRepository } from '@modules/shopify-auth/shopify-auth-session.repository';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Session, SessionParams } from '@shopify/shopify-api';
 
 @Injectable()
 export class ShopifyAuthSessionService {
@@ -30,7 +28,7 @@ export class ShopifyAuthSessionService {
       throw new NotFoundException(SESSION_NOT_FOUND);
     }
 
-    if (!session.content) {
+    if (session.content) {
       const sessionData: SessionParams = JSON.parse(
         session.content as string,
       ) as SessionParams;

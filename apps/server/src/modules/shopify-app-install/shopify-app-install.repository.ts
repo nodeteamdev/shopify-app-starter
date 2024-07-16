@@ -1,17 +1,17 @@
 import '@shopify/shopify-api/adapters/node';
-import { Injectable } from '@nestjs/common';
-import {
-  shopifyApi,
-  ApiVersion,
-  Shopify,
-  BeginParams,
-  Session,
-} from '@shopify/shopify-api';
-import { Request, Response } from 'express';
-import { restResources } from '@shopify/shopify-api/rest/admin/2023-07';
-import { ConfigService } from '@nestjs/config';
 import { ShopifyConfig } from '@config/shopify.config';
 import { WebhookConfig } from '@modules/shopify-app-install/interfaces/webhook-config.interface';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import {
+  BeginParams,
+  LATEST_API_VERSION,
+  Session,
+  Shopify,
+  shopifyApi,
+} from '@shopify/shopify-api';
+import { restResources } from '@shopify/shopify-api/rest/admin/2023-07';
+import { Request, Response } from 'express';
 
 @Injectable()
 export class ShopifyAppInstallRepository {
@@ -47,9 +47,13 @@ export class ShopifyAppInstallRepository {
       apiSecretKey: shopifyConfig.apiSecret,
       scopes: shopifyConfig.requiredScopes,
       hostName: shopifyConfig.hostName,
-      apiVersion: ApiVersion.July23,
-      isEmbeddedApp: false,
+      apiVersion: LATEST_API_VERSION,
+      isEmbeddedApp: shopifyConfig.isEmbeddedApp,
       isCustomStoreApp: false,
+      future: {
+        lineItemBilling: true,
+        customerAddressDefaultFix: true,
+      },
     });
   }
 

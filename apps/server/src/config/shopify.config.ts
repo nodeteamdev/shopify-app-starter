@@ -25,6 +25,7 @@ export type ShopifyConfig = {
   readonly maxTries: number;
   readonly maxPaginationLimit: number;
   readonly appPurchaseOneTimeMinPrice: number;
+  readonly isEmbeddedApp: boolean;
 };
 
 export const shopifyConfig = registerAs('shopify', (): ShopifyConfig => {
@@ -39,6 +40,7 @@ export const shopifyConfig = registerAs('shopify', (): ShopifyConfig => {
     maxPaginationLimit: 250,
     // The Shopify appPurchaseOneTimeCreate mutation trows an exception if price is less than $0.50
     appPurchaseOneTimeMinPrice: 0.5,
+    isEmbeddedApp: process.env.SHOPIFY_IS_EMBEDDED_APP === 'true',
   };
 
   validateScheme(scheme, config, new Logger('ShopifyConfig'));
