@@ -1,7 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { AppSubscription, AppSubscriptionStatusesEnum } from '@prisma/client';
+import { ApiProperty } from "@nestjs/swagger";
+import { AppSubscriptionStatusesEnum, Plan } from "@prisma/client";
 
-export class AppSubscriptionDto implements AppSubscription {
+export class PlanDto implements Plan {
   @ApiProperty({
     type: String,
     example: 'gid://shopify/AppSubscription/28342550780',
@@ -28,12 +28,6 @@ export class AppSubscriptionDto implements AppSubscription {
     example: AppSubscriptionStatusesEnum.ACTIVE,
   })
   readonly status: AppSubscriptionStatusesEnum;
-
-  @ApiProperty({ type: String })
-  readonly shopId: string;
-
-  @ApiProperty({ type: String })
-  readonly planId: string;
 
   @ApiProperty({ type: Date })
   readonly createdAt: Date;

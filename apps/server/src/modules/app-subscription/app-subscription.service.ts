@@ -49,44 +49,44 @@ export class AppSubscriptionService {
     };
   }
 
-  public async create(
-    shopifySession: ShopifySession,
-    createAppSubscriptionDto: CreateAppSubscriptionDto,
-  ): Promise<AppSubscription> {
-    const {
-      body: {
-        data: { appSubscriptionCreate },
-      },
-    } = await this.appSubscriptionGraphqlRepository.create(
-      shopifySession,
-      createAppSubscriptionDto,
-    );
+  // public async create(
+  //   shopifySession: ShopifySession,
+  //   createAppSubscriptionDto: CreateAppSubscriptionDto,
+  // ): Promise<AppSubscription> {
+  //   const {
+  //     body: {
+  //       data: { appSubscriptionCreate },
+  //     },
+  //   } = await this.appSubscriptionGraphqlRepository.create(
+  //     shopifySession,
+  //     createAppSubscriptionDto,
+  //   );
 
-    const appSubscription = AppSubscriptionService.mapAppSubscription(
-      appSubscriptionCreate,
-    );
+  //   const appSubscription = AppSubscriptionService.mapAppSubscription(
+  //     appSubscriptionCreate,
+  //   );
 
-    const { shopId } = await this.shopifyAuthSessionService.getSession(
-      shopifySession.id,
-    );
+  //   const { shopId } = await this.shopifyAuthSessionService.getSession(
+  //     shopifySession.id,
+  //   );
 
-    return this.appSubscriptionRepository.create({
-      ...appSubscription,
-      shop: { connect: { id: shopId } },
-    });
-  }
+  //   return this.appSubscriptionRepository.create({
+  //     ...appSubscription,
+  //     shop: { connect: { id: shopId } },
+  //   });
+  // }
 
-  public async createByShopName(
-    shopName: string,
-    createAppSubscriptionDto: CreateAppSubscriptionDto,
-  ): Promise<AppSubscriptionDto> {
-    const shopifySession =
-      await this.shopifyAuthSessionService.getShopifySessionByShopName(
-        shopName,
-      );
+  // public async createByShopName(
+  //   shopName: string,
+  //   createAppSubscriptionDto: CreateAppSubscriptionDto,
+  // ): Promise<AppSubscriptionDto> {
+  //   const shopifySession =
+  //     await this.shopifyAuthSessionService.getShopifySessionByShopName(
+  //       shopName,
+  //     );
 
-    return this.create(shopifySession, createAppSubscriptionDto);
-  }
+  //   return this.create(shopifySession, createAppSubscriptionDto);
+  // }
 
   public async getManyFromShopify(
     shopName: string,
@@ -138,5 +138,9 @@ export class AppSubscriptionService {
 
     await this.appSubscriptionGraphqlRepository.cancel(shopifySession, id);
     await this.appSubscriptionRepository.delete(id);
+  }
+
+  public findOne(id: string): Promise<AppSubscriptionDto> {
+    return this.appSubscriptionRepository.findOne(id);
   }
 }

@@ -13,17 +13,17 @@ export class AppSubscriptionController {
     private readonly appSubscriptionService: AppSubscriptionService,
   ) {}
 
-  @ApiCreatedBaseResponse({ dto: AppSubscriptionDto })
-  @Post(':shopName')
-  public create(
-    @Param('shopName') shopName: string,
-    @Body() createAppSubscriptionDto: CreateAppSubscriptionDto,
-  ): Promise<AppSubscriptionDto> {
-    return this.appSubscriptionService.createByShopName(
-      shopName,
-      createAppSubscriptionDto,
-    );
-  }
+  // @ApiCreatedBaseResponse({ dto: AppSubscriptionDto })
+  // @Post(':shopName')
+  // public create(
+  //   @Param('shopName') shopName: string,
+  //   @Body() createAppSubscriptionDto: CreateAppSubscriptionDto,
+  // ): Promise<AppSubscriptionDto> {
+  //   return this.appSubscriptionService.createByShopName(
+  //     shopName,
+  //     createAppSubscriptionDto,
+  //   );
+  // }
 
   @ApiCreatedBaseResponse({ dto: AppSubscriptionDto, isArray: true })
   @Get(':shopName')

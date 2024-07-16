@@ -93,19 +93,6 @@ export class ShopifyAppInstallController {
       )}`,
     );
 
-    const { confirmationUrl } = await this.appSubscriptionService.create(
-      session,
-      {
-        name: 'sub-test',
-        returnUrl: 'https://return-url.com',
-        amount: 10,
-        currencyCode: 'USD',
-      },
-    );
-
-    // TODO should redirect user to confirmation url from appSubscription where he can purchase subscription
-    this.logger.log(`Subscription url: ${confirmationUrl}`);
-
     const webhookConfigs: WebhookConfig[] =
       await this.shopifyAppInstallService.setupWebhooks(session);
 
@@ -117,7 +104,14 @@ export class ShopifyAppInstallController {
       )}`,
     );
 
-    // TODO change redirect to the dashboard when it's ready
-    res.redirect('https://google.com');
+    const appSubscription = await this.appSubscriptionService.findOne(createdShop.id);
+
+    if (!appSubscription) {
+      // TODO change redirect to the dashboard when it's ready
+      res.redirect('https://dashboard.com');
+    }
+
+    // TODO redirect to plans if user doesn't have a subscription
+    res.redirect('https://plans');
   }
 }

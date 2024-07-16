@@ -76,8 +76,24 @@ model AppSubscription {
   updatedAt       DateTime                    @updatedAt
   shop            Shop                        @relation(fields: [shopId], references: [id])
   shopId          String                      @unique
+  plan            SubscriptionPlan                        @relation(fields: [subscriptionPlanId], references: [id])
+  subscriptionPlanId          String
 
-  @@map("app_subscriptions")
+  @@map("app_subscriptions") // edit
+}
+
+model SubscriptionPlan {
+  id               String                      @id(map: "pk_Plan")
+  name             String
+  description String?
+  amount           Int
+  currencyCode     String
+  status           SubscriptionPlanStatusesEnum
+  createdAt        DateTime                    @default(now())
+  updatedAt        DateTime                    @updatedAt
+  appSubscriptions AppSubscription[]
+
+  @@map("subscription_plans")
 }
 
 enum RolesEnum {
@@ -92,4 +108,9 @@ enum AppSubscriptionStatusesEnum {
   EXPIRED
   FROZEN
   PENDING
+}
+
+enum SubscriptionPlanStatusesEnum {
+  ACTIVE
+  INACTIVE
 }
