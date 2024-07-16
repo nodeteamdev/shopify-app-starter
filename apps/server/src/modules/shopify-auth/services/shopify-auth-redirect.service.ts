@@ -28,6 +28,7 @@ export class ShopifyAuthRedirectService {
         shop,
         redirectUri: `https://${hostName}/api/v1/shopify-auth?shop=${shop}&host=${req.query.host}`,
       }).toString();
+
       return res.redirect(`/exitframe?${queryParams}`);
     }
 

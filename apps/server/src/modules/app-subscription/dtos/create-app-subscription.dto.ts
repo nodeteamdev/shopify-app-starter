@@ -1,5 +1,12 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsISO4217CurrencyCode, IsNotEmpty, IsPositive, IsString, IsUrl } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsInt,
+  IsISO4217CurrencyCode,
+  IsNotEmpty,
+  IsPositive,
+  IsString,
+  IsUrl,
+} from 'class-validator';
 
 export class CreateAppSubscriptionDto {
   @ApiProperty({ type: String, example: 'Super Recurring Plan' })
@@ -7,7 +14,10 @@ export class CreateAppSubscriptionDto {
   @IsNotEmpty()
   readonly name: string;
 
-  @ApiProperty({ type: String, example: 'http://super-recurring-plan.shopifyapps.com/' })
+  @ApiProperty({
+    type: String,
+    example: 'http://super-recurring-plan.shopifyapps.com/',
+  })
   @IsString()
   @IsUrl()
   @IsNotEmpty()

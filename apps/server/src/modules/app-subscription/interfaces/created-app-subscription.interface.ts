@@ -1,4 +1,4 @@
-import { AppSubscriptionStatusesEnum } from "@prisma/client";
+import { AppSubscriptionStatusesEnum } from '@prisma/client';
 
 interface UserError {
   readonly field: string | null;

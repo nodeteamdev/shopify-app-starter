@@ -1,6 +1,6 @@
+import { registerAs } from '@nestjs/config';
 import { validateScheme } from '@config/utils/scheme-validator.helper';
 import { Logger } from '@nestjs/common';
-import { registerAs } from '@nestjs/config';
 import { z } from 'zod';
 
 const scheme = z.object({

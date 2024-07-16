@@ -12,10 +12,24 @@
     "shopify": "shopify",
     "s:e:create": "shopify app generate extension",
     "s:e:deploy": "shopify app deploy"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "biome lint ./apps/server/src",
+    "format": "biome format --write ./apps/server/src",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/nodeteamdev/shopify-app-starter.git"
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^9.0.11"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   },
   "private": true,
   "dependencies": {
@@ -25,4 +39,6 @@
     "apps/*"
   ],
   "packageManager": "npm@10.5.1"
+    "@biomejs/biome": "^1.8.3"
+  }
 }

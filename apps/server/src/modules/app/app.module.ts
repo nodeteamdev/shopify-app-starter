@@ -123,15 +123,6 @@ const logger: Logger = new Logger('AppModule');
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(CSP)
-      .exclude(
-        'shopify-auth',
-        'shopify-auth/(.*)',
-        'webhooks',
-        'webhooks/(.*)',
-        'graphql',
-      )
-      .forRoutes('*');
+    consumer.apply(CSP).exclude('shopify-auth').forRoutes('*');
   }
 }

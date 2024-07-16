@@ -12,10 +12,11 @@ export class ShopifyAuthService {
   ) {}
 
   public async storeOnlineToken(req: Request, res: Response): Promise<string> {
-    const callbackResponse = await ShopifyAppInstallRepository.shopify.auth.callback({
-      rawRequest: req,
-      rawResponse: res,
-    });
+    const callbackResponse =
+      await ShopifyAppInstallRepository.shopify.auth.callback({
+        rawRequest: req,
+        rawResponse: res,
+      });
 
     const { session } = callbackResponse;
 

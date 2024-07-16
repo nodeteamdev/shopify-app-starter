@@ -2,6 +2,7 @@ import { ProductsQueryDto } from '@modules/product/dtos/products.query.dto';
 import { ProductVariantsWithPageInfo } from '@modules/product/interfaces/product-variants-with-page-info.interface';
 import { Product } from '@modules/product/interfaces/product.interface';
 import { ProductsWithPageInfo } from '@modules/product/interfaces/products-with-page-info.interface';
+
 import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopify-app-install.repository';
 import { Injectable } from '@nestjs/common';
 import { RequestReturn, Session } from '@shopify/shopify-api';

@@ -34,11 +34,13 @@ export class ShopifyAppInstallRepository {
       rawRequest: req,
       rawResponse: res,
     };
+
     return ShopifyAppInstallRepository.shopify.auth.begin(beginParams);
   }
 
   public initShopifyApi(shopifyConfig: ShopifyConfig): void {
     if (ShopifyAppInstallRepository.shopify !== null) return;
+
     ShopifyAppInstallRepository.shopify = shopifyApi({
       restResources,
       apiKey: shopifyConfig.apiKey,

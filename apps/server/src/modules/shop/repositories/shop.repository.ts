@@ -15,7 +15,7 @@ export class ShopRepository {
         contactEmail: data.contactEmail,
         myshopifyDomain: data.myshopifyDomain,
         primaryDomain: data.primaryDomain,
-      }
+      },
     });
   }
 
@@ -32,6 +32,6 @@ export class ShopRepository {
   }
 
   public findOneByName(name: string): Promise<Shop> {
-    return this.prismaService.shop.findFirst({ where: { name } })
+    return this.prismaService.shop.findFirst({ where: { name } });
   }
 }

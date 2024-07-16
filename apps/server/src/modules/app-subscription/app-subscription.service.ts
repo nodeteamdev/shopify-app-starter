@@ -16,37 +16,49 @@ export class AppSubscriptionService {
     private readonly appSubscriptionRepository: AppSubscriptionRepository,
   ) {}
 
-  private static mapAppSubscription(createdAppSubscription: CreatedAppSubscription) {
-    const {
-      confirmationUrl,
-      appSubscription,
-    } = createdAppSubscription;
+  private static mapAppSubscription(
+    createdAppSubscription: CreatedAppSubscription,
+  ) {
+    const { confirmationUrl, appSubscription } = createdAppSubscription;
 
     return {
       id: appSubscription.id,
       name: appSubscription.name,
       returnUrl: appSubscription.returnUrl,
       confirmationUrl,
-      amount: +appSubscription.lineItems.flatMap((lineItem) => lineItem.plan.pricingDetails.price.amount),
-      currencyCode: appSubscription.lineItems.flatMap((lineItem) => lineItem.plan.pricingDetails.price.currencyCode).toString(),
+      amount: +appSubscription.lineItems.flatMap(
+        (lineItem) => lineItem.plan.pricingDetails.price.amount,
+      ),
+      currencyCode: appSubscription.lineItems
+        .flatMap((lineItem) => lineItem.plan.pricingDetails.price.currencyCode)
+        .toString(),
       status: appSubscription.status,
-    }
+    };
   }
 
-  public async create(session: Session, createAppSubscriptionDto: CreateAppSubscriptionDto): Promise<AppSubscription> {
+  public async create(
+    session: Session,
+    createAppSubscriptionDto: CreateAppSubscriptionDto,
+  ): Promise<AppSubscription> {
     const {
       body: {
         data: { appSubscriptionCreate },
       },
-    } = await this.appSubscriptionGraphqlRepository.create(session, createAppSubscriptionDto);
+    } = await this.appSubscriptionGraphqlRepository.create(
+      session,
+      createAppSubscriptionDto,
+    );
 
-    const appSubscription = AppSubscriptionService.mapAppSubscription(appSubscriptionCreate);
+    const appSubscription = AppSubscriptionService.mapAppSubscription(
+      appSubscriptionCreate,
+    );
 
     return this.appSubscriptionRepository.create(appSubscription);
   }
 
   public async getAll(shopName: string): Promise<SubscriptionResponse> {
-    const session = await this.shopifyAuthSessionService.getSessionByShopName(shopName);
+    const session =
+      await this.shopifyAuthSessionService.getSessionByShopName(shopName);
 
     return this.appSubscriptionGraphqlRepository.findAll(session);
   }
@@ -61,7 +73,10 @@ export class AppSubscriptionService {
     return appSubscription;
   }
 
-  public async update(id: string, status: AppSubscriptionStatusesEnum): Promise<AppSubscription> {
+  public async update(
+    id: string,
+    status: AppSubscriptionStatusesEnum,
+  ): Promise<AppSubscription> {
     await this.getOne(id);
 
     return this.appSubscriptionRepository.update(id, status);
