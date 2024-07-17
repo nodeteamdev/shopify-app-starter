@@ -47,16 +47,16 @@ export class ClientProviderService {
     return new this.shopifyApi.clients.Graphql({ session });
   }
 
-  async restClient({ req, res, isOnline }) {
-    const session = await this.fetchSession({ req, res, isOnline });
-    const client = new this.shopifyApi.clients.Rest({
-      session,
-      apiVersion: this.currentApiVersion,
-    });
-    const { shop } = session;
+  // async restClient({ req, res, isOnline }) {
+  //   const session = await this.fetchSession({ req, res, isOnline });
+  //   const client = new this.shopifyApi.clients.Rest({
+  //     session,
+  //     apiVersion: this.currentApiVersion,
+  //   });
+  //   const { shop } = session;
 
-    return { client, shop, session };
-  }
+  //   return { client, shop, session };
+  // }
 
   async fetchOfflineSession(shop: string): Promise<any> {
     const sessionID = this.shopifyApi.session.getOfflineId(shop);
@@ -65,20 +65,20 @@ export class ClientProviderService {
     return session;
   }
 
-  public offline = {
-    graphqlClient: async ({ shop }: { shop: string }) => {
-      const session = await this.fetchOfflineSession(shop);
-      const client = new this.shopifyApi.clients.Graphql({ session });
-      return { client, shop, session };
-    },
-    restClient: async ({ shop }) => {
-      const session = await this.fetchOfflineSession(shop);
-      const client = new this.shopifyApi.clients.Rest({
-        session,
-        apiVersion: this.currentApiVersion,
-      });
+  // public offline = {
+  //   graphqlClient: async ({ shop }: { shop: string }) => {
+  //     const session = await this.fetchOfflineSession(shop);
+  //     const client = new this.shopifyApi.clients.Graphql({ session });
+  //     return { client, shop, session };
+  //   },
+  //   restClient: async ({ shop }) => {
+  //     const session = await this.fetchOfflineSession(shop);
+  //     const client = new this.shopifyApi.clients.Rest({
+  //       session,
+  //       apiVersion: this.currentApiVersion,
+  //     });
 
-      return { client, shop, session };
-    },
-  };
+  //     return { client, shop, session };
+  //   },
+  // };
 }

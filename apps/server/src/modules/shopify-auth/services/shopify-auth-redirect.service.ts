@@ -22,6 +22,7 @@ export class ShopifyAuthRedirectService {
     const shop = ShopifyAppInstallRepository.shopify.utils.sanitizeShop(
       <string>req.query.shop,
     );
+
     if (req.query.embedded === '1') {
       const queryParams = new URLSearchParams({
         ...req.query,
@@ -34,8 +35,8 @@ export class ShopifyAuthRedirectService {
 
     return ShopifyAppInstallRepository.shopify.auth.begin({
       shop,
-      callbackPath: '/api/v1/shopify-auth/online',
-      isOnline: true,
+      callbackPath: '/api/v1/shopify-app-install/install',
+      isOnline: false,
       rawRequest: req,
       rawResponse: res,
     });
