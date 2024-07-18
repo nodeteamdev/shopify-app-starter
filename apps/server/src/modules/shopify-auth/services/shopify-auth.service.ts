@@ -62,6 +62,8 @@ export class ShopifyAuthService {
   }
 
   public async storeOnlineToken(req: Request, res: Response): Promise<string> {
+    this.shopifyAppInstallService.validateHmac(req.query);
+
     const callbackResponse =
       await ShopifyAppInstallRepository.shopify.auth.callback({
         rawRequest: req,
