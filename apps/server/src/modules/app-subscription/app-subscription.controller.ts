@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { AppSubscriptionService } from '@modules/app-subscription/app-subscription.service';
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
-import { AppSubscriptionDto } from './dtos/app-subscription.dto';
-import { CreateAppSubscriptionDto } from './dtos/create-app-subscription.dto';
+import { AppSubscriptionDto } from '@modules/app-subscription/dtos/app-subscription.dto';
+import { CreateAppSubscriptionDto } from '@modules/app-subscription/dtos/create-app-subscription.dto';
 import { ApiCreatedBaseResponse } from '@modules/common/decorators/api-ok-base-response.decorator';
 
 @Controller('app-subscription')
