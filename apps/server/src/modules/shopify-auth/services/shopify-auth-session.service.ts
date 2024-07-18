@@ -1,6 +1,6 @@
 import { Session as ShopifySession, SessionParams } from '@shopify/shopify-api';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Session } from '@prisma/client';
+import { Prisma, Session } from '@prisma/client';
 import {
   SESSIONS_NOT_FOUND,
   SESSION_NOT_FOUND,
@@ -79,6 +79,10 @@ export class ShopifyAuthSessionService {
     }
 
     return session;
+  }
+
+  public deleteManyByShopId(shopId: string): Promise<Prisma.BatchPayload> {
+    return this.shopifyAuthSessionRepository.deleteManyByShopId(shopId);
   }
 
   // TODO Later if we decide to encrypt session tokens

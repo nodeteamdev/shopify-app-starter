@@ -38,4 +38,8 @@ export class ShopifyAuthSessionRepository {
   public deleteManyByShopName(shopName: string): Promise<Prisma.BatchPayload> {
     return this.prismaService.session.deleteMany({ where: { shopName } });
   }
+
+  public deleteManyByShopId(shopId: string): Promise<Prisma.BatchPayload> {
+    return this.prismaService.session.deleteMany({ where: { shopId } });
+  }
 }

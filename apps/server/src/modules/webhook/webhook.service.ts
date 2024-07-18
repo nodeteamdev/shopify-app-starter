@@ -154,6 +154,7 @@ export class WebhookService {
       );
     }
 
+    await this.shopifyAuthSessionService.deleteManyByShopId(shop.id);
     await this.shopService.delete(shop.id);
   }
 
