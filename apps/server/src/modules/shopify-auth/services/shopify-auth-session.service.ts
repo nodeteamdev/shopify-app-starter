@@ -67,6 +67,31 @@ export class ShopifyAuthSessionService {
     return;
   }
 
+  public async getShopifySessionByShopId(
+    shopId: string,
+  ): Promise<ShopifySession> {
+    const sessions =
+      await this.shopifyAuthSessionRepository.findManyByShopId(shopId);
+
+    if (!sessions.length) {
+      throw new NotFoundException(SESSIONS_NOT_FOUND);
+    }
+
+    const filteredSessions = sessions.filter(
+      (session) => !session.id.includes('offline'),
+    );
+
+    if (filteredSessions.length > 0) {
+      const sessionData: SessionParams = JSON.parse(
+        filteredSessions[0].content as string,
+      ) as SessionParams;
+
+      return new ShopifySession(sessionData);
+    }
+
+    return;
+  }
+
   public async deleteSessionsByShopName(shopName: string): Promise<void> {
     await this.shopifyAuthSessionRepository.deleteManyByShopName(shopName);
   }
