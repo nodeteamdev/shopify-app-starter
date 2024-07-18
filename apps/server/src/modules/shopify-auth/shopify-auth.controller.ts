@@ -3,7 +3,9 @@ import { Controller, Get, Req, Res, UseFilters } from '@nestjs/common';
 import { ShopifyAuthService } from '@modules/shopify-auth/services/shopify-auth.service';
 import { ShopifyAuthRedirectService } from '@modules/shopify-auth/services/shopify-auth-redirect.service';
 import { ShopifyAuthException } from '@modules/shopify-auth/exceptions/shopify-auth.exception';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Shopify Auth')
 @Controller('shopify-auth')
 export class ShopifyAuthController {
   constructor(
@@ -18,6 +20,12 @@ export class ShopifyAuthController {
     @Res() res: Response,
   ): Promise<void> {
     return this.shopifyAuthRedirectService.redirect(req, res);
+  }
+
+  @Get('/offline')
+  @UseFilters(ShopifyAuthException)
+  public authOffline(@Req() req: Request, @Res() res: Response): Promise<void> {
+    return this.shopifyAuthService.storeOfflineToken(req, res);
   }
 
   @Get('/online')
