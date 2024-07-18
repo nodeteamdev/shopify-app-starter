@@ -8,9 +8,7 @@ import { WebhookConfig } from '@modules/shopify-app-install/interfaces/webhook-c
 
 @Injectable()
 export class ShopifyAuthService {
-  private readonly logger: Logger = new Logger(
-    ShopifyAuthService.name,
-  );
+  private readonly logger: Logger = new Logger(ShopifyAuthService.name);
 
   constructor(
     private readonly shopifyAuthSessionService: ShopifyAuthSessionService,
@@ -21,42 +19,37 @@ export class ShopifyAuthService {
   public async storeOfflineToken(req: Request, res: Response) {
     this.shopifyAppInstallService.validateHmac(req.query);
 
-    const callbackResponse = await ShopifyAppInstallRepository.shopify.auth.callback({
-      rawRequest: req,
-      rawResponse: res,
-    });
+    const callbackResponse =
+      await ShopifyAppInstallRepository.shopify.auth.callback({
+        rawRequest: req,
+        rawResponse: res,
+      });
 
     const { session } = callbackResponse;
 
     const createdShop = await this.shopifyAppInstallService.setupShop(session);
 
     this.logger.debug(
-      `Shop has been successfully setup for the shop: ${createdShop.name}: ${JSON.stringify(
-        createdShop,
-        null,
-        2,
-      )}`,
+      `Shop has been successfully setup for the shop: ${
+        createdShop.name
+      }: ${JSON.stringify(createdShop, null, 2)}`,
     );
 
     await this.shopifyAuthSessionService.save(session, createdShop.id);
 
     this.logger.debug(
-      `Offline Session has been retrieved for the shop: ${createdShop.name}: ${JSON.stringify(
-        { session },
-        null,
-        2,
-      )}`,
+      `Offline Session has been retrieved for the shop: ${
+        createdShop.name
+      }: ${JSON.stringify({ session }, null, 2)}`,
     );
 
     const webhookConfigs: WebhookConfig[] =
       await this.shopifyAppInstallService.setupWebhooks(session);
 
     this.logger.debug(
-      `Webhooks have been setup successfully for shop: ${createdShop.name}: ${JSON.stringify(
-        { webhookConfigs },
-        null,
-        2,
-      )}`,
+      `Webhooks have been setup successfully for shop: ${
+        createdShop.name
+      }: ${JSON.stringify({ webhookConfigs }, null, 2)}`,
     );
 
     return await ShopifyAppInstallRepository.shopify.auth.begin({
@@ -77,7 +70,8 @@ export class ShopifyAuthService {
 
     const { session } = callbackResponse;
 
-    const { id: shopId, name: shopName } = await this.shopService.getShopInfo(session);
+    const { id: shopId, name: shopName } =
+      await this.shopService.getShopInfo(session);
 
     await this.shopifyAuthSessionService.save(session, shopId);
 
