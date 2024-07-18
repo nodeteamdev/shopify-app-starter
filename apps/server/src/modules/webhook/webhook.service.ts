@@ -244,11 +244,10 @@ export class WebhookService {
     }
 
     const shopifySession =
-      await this.shopifyAuthSessionService.getShopifySessionByShopId(
-        shop.id,
-      );
+      await this.shopifyAuthSessionService.getShopifySessionByShopId(shop.id);
 
-    const { id, currencyCode, ...rest } = await this.shopService.getShopInfo(shopifySession);
+    const { id, currencyCode, ...rest } =
+      await this.shopService.getShopInfo(shopifySession);
 
     const shopUpdateInput = {
       ...rest,

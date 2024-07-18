@@ -76,7 +76,10 @@ export class ShopifyAuthService {
     const { id: shopId, name: shopName } =
       await this.shopService.getShopInfo(session);
 
-    await this.shopifyAuthSessionService.save(session, extractIdFromShopify(shopId));
+    await this.shopifyAuthSessionService.save(
+      session,
+      extractIdFromShopify(shopId),
+    );
 
     this.logger.debug(
       `Online Session has been retrieved for the shop: ${shopName}: ${JSON.stringify(

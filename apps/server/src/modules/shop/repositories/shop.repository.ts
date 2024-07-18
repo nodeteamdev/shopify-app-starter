@@ -26,7 +26,10 @@ export class ShopRepository {
   }
 
   public update(id: string, data: UpdateShop): Promise<Shop> {
-    return this.prismaService.shop.update({ where: { id }, data: { ...data, updatedAt: new Date() } });
+    return this.prismaService.shop.update({
+      where: { id },
+      data: { ...data, updatedAt: new Date() },
+    });
   }
 
   public delete(id: string): Promise<Shop> {
