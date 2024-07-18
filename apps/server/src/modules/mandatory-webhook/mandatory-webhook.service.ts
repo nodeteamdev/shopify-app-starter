@@ -13,6 +13,7 @@ import { WebhookValidation } from '@shopify/shopify-api';
 import { ShopService } from '@modules/shop/shop.service';
 import { getGlobalId } from '@modules/common/helpers/get-global-id.helper';
 import { GraphQlTypesEnum } from '@modules/shop/enums/graphql-types.enum';
+import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 
 @Injectable()
 export class MandatoryWebhookService {
@@ -23,6 +24,7 @@ export class MandatoryWebhookService {
     private readonly webhookService: WebhookService,
     private readonly emailService: EmailService,
     private readonly shopService: ShopService,
+    private readonly shopifyAuthSessionService: ShopifyAuthSessionService,
   ) {}
 
   public async validateWebHook(req: RawBodyRequest<Request>): Promise<boolean> {
@@ -178,6 +180,7 @@ export class MandatoryWebhookService {
       );
     }
 
+    await this.shopifyAuthSessionService.deleteManyByShopId(shop.id);
     await this.shopService.delete(shop.id);
   }
 }

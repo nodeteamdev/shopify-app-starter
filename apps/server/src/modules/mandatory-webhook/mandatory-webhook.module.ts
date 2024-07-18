@@ -6,6 +6,7 @@ import { ShopifyAppInstallModule } from '@modules/shopify-app-install/shopify-ap
 import { WebhookModule } from '@modules/webhook/webhook.module';
 import { Module } from '@nestjs/common';
 import { ShopModule } from '@modules/shop/shop.module';
+import { ShopifyAuthModule } from '@modules/shopify-auth/shopify-auth.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ShopModule } from '@modules/shop/shop.module';
     ShopifyAppInstallModule,
     ShopifyModule,
     ShopModule,
+    ShopifyAuthModule,
   ],
   providers: [MandatoryWebhookService],
   controllers: [MandatoryWebhookController],

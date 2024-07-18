@@ -35,7 +35,7 @@ export class ShopifyAuthRedirectService {
 
     return ShopifyAppInstallRepository.shopify.auth.begin({
       shop,
-      callbackPath: '/api/v1/shopify-app-install/install',
+      callbackPath: '/api/v1/shopify-auth/offline',
       isOnline: false,
       rawRequest: req,
       rawResponse: res,
