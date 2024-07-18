@@ -9,6 +9,7 @@ import { Session } from '@shopify/shopify-api';
 import { WebhookConfig } from '@modules/shopify-app-install/interfaces/webhook-config.interface';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 
+// TODO This controller should be removed
 @ApiTags('Shopify App Install')
 @Controller('shopify-app-install')
 export class ShopifyAppInstallController {
