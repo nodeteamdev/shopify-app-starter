@@ -5,6 +5,7 @@ import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopif
 import { ShopService } from '@modules/shop/shop.service';
 import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-app-install.service';
 import { WebhookConfig } from '@modules/shopify-app-install/interfaces/webhook-config.interface';
+import { extractIdFromShopify } from '@modules/common/helpers/extract-id-from-shopify.helper';
 
 @Injectable()
 export class ShopifyAuthService {
@@ -75,7 +76,7 @@ export class ShopifyAuthService {
     const { id: shopId, name: shopName } =
       await this.shopService.getShopInfo(session);
 
-    await this.shopifyAuthSessionService.save(session, shopId);
+    await this.shopifyAuthSessionService.save(session, extractIdFromShopify(shopId));
 
     this.logger.debug(
       `Online Session has been retrieved for the shop: ${shopName}: ${JSON.stringify(

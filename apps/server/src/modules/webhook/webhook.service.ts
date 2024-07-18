@@ -9,8 +9,6 @@ import { AppSubscriptionStatusesEnum, Prisma, Webhook } from '@prisma/client';
 import { WebhookRepository } from '@modules/webhook/webhook.repository';
 import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-app-install.service';
 import { ShopService } from '@modules/shop/shop.service';
-import { getGlobalId } from '@modules/common/helpers/get-global-id.helper';
-import { GraphQlTypesEnum } from '@modules/shop/enums/graphql-types.enum';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 import { AppSubscriptionService } from '@modules/app-subscription/app-subscription.service';
 import { AppSubscriptionRequest } from '@modules/webhook/interfaces/app-subscription-request';
@@ -86,7 +84,7 @@ export class WebhookService {
     );
 
     try {
-      await this.updateShop(shopId);
+      await this.updateShop(String(shopId));
 
       Logger.debug(`Shop with id: ${shopId} was successfully updated`);
 
@@ -123,7 +121,7 @@ export class WebhookService {
     );
 
     try {
-      await this.uninstallApp(shopId);
+      await this.uninstallApp(String(shopId));
 
       Logger.debug(
         `App was successfully uninstalled from the shop with id: ${shopId}`,
@@ -144,9 +142,7 @@ export class WebhookService {
   }
 
   public async uninstallApp(shopId: string): Promise<void> {
-    const shop = await this.shopService.findOne(
-      getGlobalId(GraphQlTypesEnum.SHOP, shopId),
-    );
+    const shop = await this.shopService.findOne(shopId);
 
     if (!shop) {
       return Logger.debug(
@@ -239,9 +235,7 @@ export class WebhookService {
   }
 
   private async updateShop(shopId: string): Promise<void> {
-    const shop = await this.shopService.findOne(
-      getGlobalId(GraphQlTypesEnum.SHOP, shopId),
-    );
+    const shop = await this.shopService.findOne(shopId);
 
     if (!shop) {
       return Logger.debug(
@@ -250,20 +244,19 @@ export class WebhookService {
     }
 
     const shopifySession =
-      await this.shopifyAuthSessionService.getShopifySessionByShopName(
-        shop.name,
+      await this.shopifyAuthSessionService.getShopifySessionByShopId(
+        shop.id,
       );
 
-    const shopInfo = await this.shopService.getShopInfo(shopifySession);
+    const { id, currencyCode, ...rest } = await this.shopService.getShopInfo(shopifySession);
 
     const shopUpdateInput = {
-      ...shop,
-      primaryDomain: shopInfo.primaryDomain.host,
+      ...rest,
+      primaryDomain: rest.primaryDomain.host,
     };
 
     await this.shopService.update(shop.id, {
       ...shopUpdateInput,
-      updatedAt: new Date(),
     });
   }
 

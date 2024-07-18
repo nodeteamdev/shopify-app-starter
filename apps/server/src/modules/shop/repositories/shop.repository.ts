@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@modules/common/providers/prisma';
 import { Prisma, Shop } from '@prisma/client';
+import { extractIdFromShopify } from '@modules/common/helpers/extract-id-from-shopify.helper';
+import { UpdateShop } from '@modules/shop/interfaces/update-shop.interface';
 
 @Injectable()
 export class ShopRepository {
@@ -9,7 +11,7 @@ export class ShopRepository {
   public save(data: Prisma.ShopCreateInput): Promise<Shop> {
     return this.prismaService.shop.create({
       data: {
-        id: data.id,
+        id: extractIdFromShopify(data.id),
         name: data.name,
         email: data.email,
         contactEmail: data.contactEmail,
@@ -23,8 +25,8 @@ export class ShopRepository {
     return this.prismaService.shop.findFirst({ where: { id } });
   }
 
-  public update(id: string, data: Prisma.ShopUpdateInput): Promise<Shop> {
-    return this.prismaService.shop.update({ where: { id }, data });
+  public update(id: string, data: UpdateShop): Promise<Shop> {
+    return this.prismaService.shop.update({ where: { id }, data: { ...data, updatedAt: new Date() } });
   }
 
   public delete(id: string): Promise<Shop> {
