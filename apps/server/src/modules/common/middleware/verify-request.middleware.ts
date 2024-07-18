@@ -32,7 +32,7 @@ export class VerifyRequest implements NestMiddleware {
           rawResponse: res,
         });
 
-        const session = await this.sessionService.getSession(sessionId);
+        const session = await this.sessionService.getShopifySession(sessionId);
         shop = session?.shop;
 
         if (new Date(session?.expires) > new Date()) {

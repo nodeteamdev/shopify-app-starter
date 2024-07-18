@@ -7,8 +7,7 @@ import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-a
 import { ConfigService } from '@nestjs/config';
 import { Session } from '@shopify/shopify-api';
 import { WebhookConfig } from '@modules/shopify-app-install/interfaces/webhook-config.interface';
-import { AppSubscriptionService } from "@modules/app-subscription/app-subscription.service";
-import { ShopifyAuthSessionService } from "@modules/shopify-auth/services/shopify-auth-session.service";
+import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 
 @ApiTags('Shopify App Install')
 @Controller('shopify-app-install')
@@ -20,7 +19,6 @@ export class ShopifyAppInstallController {
   constructor(
     private readonly shopifyAppInstallService: ShopifyAppInstallService,
     private readonly configService: ConfigService,
-    private readonly appSubscriptionService: AppSubscriptionService,
     private readonly shopifyAuthSessionService: ShopifyAuthSessionService,
   ) {}
 
@@ -73,16 +71,6 @@ export class ShopifyAppInstallController {
     const { session }: { session: Session } =
       await this.shopifyAppInstallService.finishAuth(req, res);
 
-    await this.shopifyAuthSessionService.save(session);
-
-    this.logger.debug(
-      `Offline Session has been retrieved for the shop: ${shop}: ${JSON.stringify(
-        { session },
-        null,
-        2,
-      )}`,
-    );
-
     const createdShop = await this.shopifyAppInstallService.setupShop(session);
 
     this.logger.debug(
@@ -93,18 +81,15 @@ export class ShopifyAppInstallController {
       )}`,
     );
 
-    const { confirmationUrl } = await this.appSubscriptionService.create(
-      session,
-      {
-        name: 'sub-test',
-        returnUrl: 'https://return-url.com',
-        amount: 10,
-        currencyCode: 'USD',
-      },
-    );
+    await this.shopifyAuthSessionService.save(session, createdShop.id);
 
-    // TODO should redirect user to confirmation url from appSubscription where he can purchase subscription
-    this.logger.log(`Subscription url: ${confirmationUrl}`);
+    this.logger.debug(
+      `Offline Session has been retrieved for the shop: ${shop}: ${JSON.stringify(
+        { session },
+        null,
+        2,
+      )}`,
+    );
 
     const webhookConfigs: WebhookConfig[] =
       await this.shopifyAppInstallService.setupWebhooks(session);
@@ -117,7 +102,6 @@ export class ShopifyAppInstallController {
       )}`,
     );
 
-    // TODO change redirect to the dashboard when it's ready
-    res.redirect('https://google.com');
+    res.status(200).redirect(`/?shop=${shop}&host=${req.query.host}`);
   }
 }

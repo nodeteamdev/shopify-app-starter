@@ -8,6 +8,7 @@ import { CreateAppSubscriptionDto } from '@modules/app-subscription/dtos/create-
 import { GraphqlBody } from '@modules/product/shopify-product.repository';
 import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopify-app-install.repository';
 import { CreatedAppSubscription } from '@modules/app-subscription/interfaces/created-app-subscription.interface';
+import { CanceledAppSubscription } from '@modules/app-subscription/interfaces/canceled-app-subscription.interface';
 
 @Injectable()
 export class AppSubscriptionGraphqlRepository {
@@ -84,7 +85,14 @@ export class AppSubscriptionGraphqlRepository {
     });
   }
 
-  public cancel(session: Session, id: string) {
+  public cancel(
+    session: Session,
+    id: string,
+  ): Promise<
+    RequestReturn<
+      GraphqlBody<{ readonly appSubscriptionCancel: CanceledAppSubscription }>
+    >
+  > {
     const client = new ShopifyAppInstallRepository.shopify.clients.Graphql({
       session: new Session(session),
     });

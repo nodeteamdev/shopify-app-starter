@@ -1,6 +1,6 @@
 import { AppSubscriptionStatusesEnum } from '@prisma/client';
 
-interface UserError {
+export interface UserError {
   readonly field: string | null;
   readonly message: string;
 }

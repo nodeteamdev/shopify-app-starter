@@ -20,11 +20,11 @@ export class ShopifyAuthService {
 
     const { session } = callbackResponse;
 
-    await this.shopifyAuthSessionService.save(session);
+    const { id: shopId } = await this.shopService.getShopInfo(session);
 
-    const shopInfo = await this.shopService.getShopInfo(session);
+    await this.shopifyAuthSessionService.save(session, shopId);
 
-    const { name: shopName } = await this.shopService.findOne(shopInfo.id);
+    const { name: shopName } = await this.shopService.findOne(shopId);
 
     return shopName;
   }

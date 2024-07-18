@@ -20,6 +20,10 @@ export class AppSubscriptionRepository {
     return this.prismaService.appSubscription.findFirst({ where: { id } });
   }
 
+  public findManyByShopId(shopId: string): Promise<AppSubscription[]> {
+    return this.prismaService.appSubscription.findMany({ where: { shopId } });
+  }
+
   public update(
     id: string,
     status: AppSubscriptionStatusesEnum,
