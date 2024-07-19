@@ -3,9 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import {
-  SubscriptionResponse,
-} from '@shopify/shopify-api';
+import { SubscriptionResponse } from '@shopify/shopify-api';
 import { AppSubscription, AppSubscriptionStatusesEnum } from '@prisma/client';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 import { CreatedAppSubscription } from '@modules/app-subscription/interfaces/created-app-subscription.interface';

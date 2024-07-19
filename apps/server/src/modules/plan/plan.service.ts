@@ -16,7 +16,7 @@ export class PlanService {
     const subscriptionPlan = await this.planRepository.findOne(id);
 
     if (!subscriptionPlan) {
-      throw new NotFoundException(PLAN_NOT_FOUND)
+      throw new NotFoundException(PLAN_NOT_FOUND);
     }
 
     return subscriptionPlan;

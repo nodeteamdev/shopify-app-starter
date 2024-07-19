@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { SubscriptionPlan, SubscriptionPlanStatusesEnum } from "@prisma/client";
+import { ApiProperty } from '@nestjs/swagger';
+import { SubscriptionPlan, SubscriptionPlanStatusesEnum } from '@prisma/client';
 
 export class SubscriptionPlanDto implements SubscriptionPlan {
   @ApiProperty({
