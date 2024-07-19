@@ -4,12 +4,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import {
-  Session as ShopifySession,
   SubscriptionResponse,
 } from '@shopify/shopify-api';
 import { AppSubscription, AppSubscriptionStatusesEnum } from '@prisma/client';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
-import { CreateAppSubscriptionDto } from '@modules/app-subscription/dtos/create-app-subscription.dto';
 import { CreatedAppSubscription } from '@modules/app-subscription/interfaces/created-app-subscription.interface';
 import { AppSubscriptionGraphqlRepository } from '@modules/app-subscription/repositories/app-subscription-graphql.repository';
 import { AppSubscriptionRepository } from '@modules/app-subscription/repositories/app-subscription.repository';

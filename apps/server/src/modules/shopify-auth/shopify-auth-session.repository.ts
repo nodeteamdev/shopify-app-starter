@@ -35,7 +35,17 @@ export class ShopifyAuthSessionRepository {
     });
   }
 
+  public findManyByShopId(shopId: string): Promise<ShopifySession[]> {
+    return this.prismaService.session.findMany({
+      where: { shopId },
+    });
+  }
+
   public deleteManyByShopName(shopName: string): Promise<Prisma.BatchPayload> {
     return this.prismaService.session.deleteMany({ where: { shopName } });
+  }
+
+  public deleteManyByShopId(shopId: string): Promise<Prisma.BatchPayload> {
+    return this.prismaService.session.deleteMany({ where: { shopId } });
   }
 }

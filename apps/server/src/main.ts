@@ -4,7 +4,6 @@ import { SentryConfig } from '@config/sentry.config';
 import { SwaggerConfig } from '@config/swagger.config';
 import { NodeEnvsEnum } from '@enums/node-envs.enum';
 import { AppModule } from '@modules/app/app.module';
-import CustomRequest from '@modules/common/types/custom-request.type';
 import {
   Logger,
   RequestMethod,
@@ -18,7 +17,6 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import SwaggerCustomOptions from '@options/swagger-custom.options';
 import * as Sentry from '@sentry/node';
-import bodyParser from 'body-parser';
 import { useContainer } from 'class-validator';
 import cookieParser from 'cookie-parser';
 import basicAuth from 'express-basic-auth';
@@ -35,15 +33,6 @@ async function bootstrap(): Promise<{
   });
 
   app.use(cookieParser());
-
-  app.use(
-    bodyParser.json({
-      limit: '5mb',
-      verify: function (req: CustomRequest, _res, buf) {
-        req.originalBody = buf;
-      },
-    }),
-  );
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 

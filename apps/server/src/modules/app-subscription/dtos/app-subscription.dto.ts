@@ -33,7 +33,7 @@ export class AppSubscriptionDto implements AppSubscription {
   readonly shopId: string;
 
   @ApiProperty({ type: String })
-  readonly planId: string;
+  readonly subscriptionPlanId: string;
 
   @ApiProperty({ type: Date })
   readonly createdAt: Date;

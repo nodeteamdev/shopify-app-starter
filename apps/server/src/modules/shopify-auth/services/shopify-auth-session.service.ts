@@ -1,6 +1,6 @@
 import { Session as ShopifySession, SessionParams } from '@shopify/shopify-api';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Session } from '@prisma/client';
+import { Prisma, Session } from '@prisma/client';
 import {
   SESSIONS_NOT_FOUND,
   SESSION_NOT_FOUND,
@@ -67,6 +67,31 @@ export class ShopifyAuthSessionService {
     return;
   }
 
+  public async getShopifySessionByShopId(
+    shopId: string,
+  ): Promise<ShopifySession> {
+    const sessions =
+      await this.shopifyAuthSessionRepository.findManyByShopId(shopId);
+
+    if (!sessions.length) {
+      throw new NotFoundException(SESSIONS_NOT_FOUND);
+    }
+
+    const filteredSessions = sessions.filter(
+      (session) => !session.id.includes('offline'),
+    );
+
+    if (filteredSessions.length > 0) {
+      const sessionData: SessionParams = JSON.parse(
+        filteredSessions[0].content as string,
+      ) as SessionParams;
+
+      return new ShopifySession(sessionData);
+    }
+
+    return;
+  }
+
   public async deleteSessionsByShopName(shopName: string): Promise<void> {
     await this.shopifyAuthSessionRepository.deleteManyByShopName(shopName);
   }
@@ -79,6 +104,10 @@ export class ShopifyAuthSessionService {
     }
 
     return session;
+  }
+
+  public deleteManyByShopId(shopId: string): Promise<Prisma.BatchPayload> {
+    return this.shopifyAuthSessionRepository.deleteManyByShopId(shopId);
   }
 
   // TODO Later if we decide to encrypt session tokens

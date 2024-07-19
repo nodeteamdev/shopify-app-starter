@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { AppSubscriptionStatusesEnum, Plan } from "@prisma/client";
+import { SubscriptionPlan, SubscriptionPlanStatusesEnum } from "@prisma/client";
 
-export class PlanDto implements Plan {
+export class SubscriptionPlanDto implements SubscriptionPlan {
   @ApiProperty({
     type: String,
     example: 'gid://shopify/AppSubscription/28342550780',
@@ -11,11 +11,8 @@ export class PlanDto implements Plan {
   @ApiProperty({ type: String, example: 'Super Subscription' })
   readonly name: string;
 
-  @ApiProperty({ type: String, example: 'https://return-url.com/' })
-  readonly returnUrl: string;
-
-  @ApiProperty({ type: String, example: 'https://confirmation-url.com/' })
-  readonly confirmationUrl: string;
+  @ApiProperty({ type: String, example: 'description' })
+  readonly description: string;
 
   @ApiProperty({ type: Number, example: 10 })
   readonly amount: number;
@@ -24,10 +21,10 @@ export class PlanDto implements Plan {
   readonly currencyCode: string;
 
   @ApiProperty({
-    enum: AppSubscriptionStatusesEnum,
-    example: AppSubscriptionStatusesEnum.ACTIVE,
+    enum: SubscriptionPlanStatusesEnum,
+    example: SubscriptionPlanStatusesEnum.ACTIVE,
   })
-  readonly status: AppSubscriptionStatusesEnum;
+  readonly status: SubscriptionPlanStatusesEnum;
 
   @ApiProperty({ type: Date })
   readonly createdAt: Date;

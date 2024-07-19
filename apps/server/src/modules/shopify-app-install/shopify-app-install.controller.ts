@@ -7,9 +7,9 @@ import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-a
 import { ConfigService } from '@nestjs/config';
 import { Session } from '@shopify/shopify-api';
 import { WebhookConfig } from '@modules/shopify-app-install/interfaces/webhook-config.interface';
-import { AppSubscriptionService } from '@modules/app-subscription/app-subscription.service';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 
+// TODO This controller should be removed
 @ApiTags('Shopify App Install')
 @Controller('shopify-app-install')
 export class ShopifyAppInstallController {
@@ -20,7 +20,6 @@ export class ShopifyAppInstallController {
   constructor(
     private readonly shopifyAppInstallService: ShopifyAppInstallService,
     private readonly configService: ConfigService,
-    private readonly appSubscriptionService: AppSubscriptionService,
     private readonly shopifyAuthSessionService: ShopifyAuthSessionService,
   ) {}
 
@@ -104,14 +103,6 @@ export class ShopifyAppInstallController {
       )}`,
     );
 
-    const appSubscription = await this.appSubscriptionService.findOne(createdShop.id);
-
-    if (!appSubscription) {
-      // TODO change redirect to the dashboard when it's ready
-      res.redirect('https://dashboard.com');
-    }
-
-    // TODO redirect to plans if user doesn't have a subscription
-    res.redirect('https://plans');
+    res.status(200).redirect(`/?shop=${shop}&host=${req.query.host}`);
   }
 }

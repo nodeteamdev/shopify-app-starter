@@ -30,7 +30,7 @@ export class ShopifyAppInstallRepository {
         true,
       ),
       callbackPath: '/api/v1/shopify-app-install/callback',
-      isOnline: false,
+      isOnline: true,
       rawRequest: req,
       rawResponse: res,
     };
