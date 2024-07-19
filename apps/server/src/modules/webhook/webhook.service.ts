@@ -84,7 +84,7 @@ export class WebhookService {
     );
 
     try {
-      await this.updateShop(String(shopId));
+      await this.updateShop(`${shopId}`);
 
       Logger.debug(`Shop with id: ${shopId} was successfully updated`);
 
@@ -121,7 +121,7 @@ export class WebhookService {
     );
 
     try {
-      await this.uninstallApp(String(shopId));
+      await this.uninstallApp(`${shopId}`);
 
       Logger.debug(
         `App was successfully uninstalled from the shop with id: ${shopId}`,
