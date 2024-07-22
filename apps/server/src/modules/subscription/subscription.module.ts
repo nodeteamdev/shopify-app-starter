@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppSubscriptionService } from '@modules/subscription/services/app-subscription.service';
 import { AppSubscriptionGraphqlRepository } from '@modules/subscription/repositories/app-subscription-graphql.repository';
 import { AppSubscriptionRepository } from '@modules/subscription/repositories/app-subscription.repository';
@@ -13,7 +13,7 @@ import { SubscriptionPlanController } from '@modules/subscription/controllers/su
 
 @Module({
   imports: [
-    forwardRef(() => ShopifyAppInstallModule),
+    ShopifyAppInstallModule,
     ShopifyAuthModule,
     PrismaModule,
     ShopModule,
