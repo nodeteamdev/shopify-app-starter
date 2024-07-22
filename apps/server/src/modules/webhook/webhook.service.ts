@@ -10,7 +10,7 @@ import { WebhookRepository } from '@modules/webhook/webhook.repository';
 import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-app-install.service';
 import { ShopService } from '@modules/shop/shop.service';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
-import { AppSubscriptionService } from '@modules/app-subscription/app-subscription.service';
+import { AppSubscriptionService } from '@modules/subscription/services/app-subscription.service';
 import { AppSubscriptionRequest } from '@modules/webhook/interfaces/app-subscription-request';
 
 @Injectable()
@@ -84,7 +84,7 @@ export class WebhookService {
     );
 
     try {
-      await this.updateShop(String(shopId));
+      await this.updateShop(`${shopId}`);
 
       Logger.debug(`Shop with id: ${shopId} was successfully updated`);
 
@@ -121,7 +121,7 @@ export class WebhookService {
     );
 
     try {
-      await this.uninstallApp(String(shopId));
+      await this.uninstallApp(`${shopId}`);
 
       Logger.debug(
         `App was successfully uninstalled from the shop with id: ${shopId}`,

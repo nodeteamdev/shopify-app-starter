@@ -1,4 +1,4 @@
-import { UserError } from '@modules/app-subscription/interfaces/created-app-subscription.interface';
+import { UserError } from '@modules/subscription/interfaces/created-app-subscription.interface';
 import { AppSubscriptionStatusesEnum } from '@prisma/client';
 
 interface AppSubscription {
