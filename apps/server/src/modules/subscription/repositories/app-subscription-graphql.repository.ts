@@ -8,7 +8,7 @@ import { GraphqlBody } from '@modules/product/shopify-product.repository';
 import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopify-app-install.repository';
 import { CreatedAppSubscription } from '@modules/subscription/interfaces/created-app-subscription.interface';
 import { CanceledAppSubscription } from '@modules/subscription/interfaces/canceled-app-subscription.interface';
-import { CreateAppSubscription } from '../interfaces/create-app-subscription.interface';
+import { CreateAppSubscription } from '@modules/subscription/interfaces/create-app-subscription.interface';
 
 @Injectable()
 export class AppSubscriptionGraphqlRepository {

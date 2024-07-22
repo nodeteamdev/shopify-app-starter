@@ -21,7 +21,7 @@ import { AppSubscriptionDto } from '@modules/subscription/dtos/app-subscription.
 import { ShopService } from '@modules/shop/shop.service';
 import { SubscriptionPlanService } from '@modules/subscription/services/subscription-plan.service';
 import { MappedAppSubscription } from '@modules/subscription/interfaces/mapped-app-subscription.interface';
-import { CreateAppSubscription } from '../interfaces/create-app-subscription.interface';
+import { CreateAppSubscription } from '@modules/subscription/interfaces/create-app-subscription.interface';
 import { extractIdFromShopify } from '@modules/common/helpers/extract-id-from-shopify.helper';
 
 @Injectable()
