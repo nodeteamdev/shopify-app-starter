@@ -77,13 +77,13 @@ model AppSubscription {
   shop               Shop                        @relation(fields: [shopId], references: [id])
   shopId             String                      @unique
   subscriptionPlan   SubscriptionPlan            @relation(fields: [subscriptionPlanId], references: [id])
-  subscriptionPlanId String
+  subscriptionPlanId String                      @db.Uuid
 
   @@map("app_subscriptions")
 }
 
 model SubscriptionPlan {
-  id               String                       @id(map: "pk_Plan")
+  id               String                       @id(map: "pk_SubscriptionPlan") @db.Uuid
   name             String
   description      String?
   amount           Int

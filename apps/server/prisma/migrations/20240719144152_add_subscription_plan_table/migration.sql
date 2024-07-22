@@ -8,11 +8,11 @@
 CREATE TYPE "SubscriptionPlanStatusesEnum" AS ENUM ('ACTIVE', 'INACTIVE');
 
 -- AlterTable
-ALTER TABLE "app_subscriptions" ADD COLUMN     "subscriptionPlanId" TEXT NOT NULL;
+ALTER TABLE "app_subscriptions" ADD COLUMN     "subscriptionPlanId" UUID NOT NULL;
 
 -- CreateTable
 CREATE TABLE "subscription_plans" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
     "amount" INTEGER NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE "subscription_plans" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "pk_Plan" PRIMARY KEY ("id")
+    CONSTRAINT "pk_SubscriptionPlan" PRIMARY KEY ("id")
 );
 
 -- AddForeignKey

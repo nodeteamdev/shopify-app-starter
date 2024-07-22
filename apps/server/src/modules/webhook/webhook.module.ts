@@ -1,4 +1,4 @@
-import { AppSubscriptionModule } from '@modules/app-subscription/app-subscription.module';
+import { SubscriptionModule } from '@modules/subscription/subscription.module';
 import { PrismaModule } from '@modules/common/providers/prisma';
 import { ShopModule } from '@modules/shop/shop.module';
 import { ShopifyService } from '@modules/shopify-api/services/shopify.service';
@@ -11,7 +11,7 @@ import { WebhookService } from '@modules/webhook/webhook.service';
 import { Module } from '@nestjs/common';
 
 @Module({
-  imports: [PrismaModule, ShopModule, ShopifyAuthModule, AppSubscriptionModule],
+  imports: [PrismaModule, ShopModule, ShopifyAuthModule, SubscriptionModule],
   providers: [
     WebhookService,
     WebhookRepository,

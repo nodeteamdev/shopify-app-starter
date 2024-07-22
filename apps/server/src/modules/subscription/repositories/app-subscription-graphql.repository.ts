@@ -4,17 +4,17 @@ import {
   Session,
   SubscriptionResponse,
 } from '@shopify/shopify-api';
-import { CreateAppSubscriptionDto } from '@modules/app-subscription/dtos/create-app-subscription.dto';
 import { GraphqlBody } from '@modules/product/shopify-product.repository';
 import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopify-app-install.repository';
-import { CreatedAppSubscription } from '@modules/app-subscription/interfaces/created-app-subscription.interface';
-import { CanceledAppSubscription } from '@modules/app-subscription/interfaces/canceled-app-subscription.interface';
+import { CreatedAppSubscription } from '@modules/subscription/interfaces/created-app-subscription.interface';
+import { CanceledAppSubscription } from '@modules/subscription/interfaces/canceled-app-subscription.interface';
+import { CreateAppSubscription } from '../interfaces/create-app-subscription.interface';
 
 @Injectable()
 export class AppSubscriptionGraphqlRepository {
   public async create(
     session: Session,
-    createAppSubscriptionDto: CreateAppSubscriptionDto,
+    createAppSubscription: CreateAppSubscription,
   ): Promise<
     RequestReturn<
       GraphqlBody<{ readonly appSubscriptionCreate: CreatedAppSubscription }>
@@ -24,7 +24,9 @@ export class AppSubscriptionGraphqlRepository {
       session: new Session(session),
     });
 
-    const { name, returnUrl, amount, currencyCode } = createAppSubscriptionDto;
+    const { name, amount, currencyCode } = createAppSubscription;
+    // TODO on the dashboard
+    const returnUrl = 'https://google.com';
 
     // TODO currency it's only for a test purpose due to test flag
     const queryData = `

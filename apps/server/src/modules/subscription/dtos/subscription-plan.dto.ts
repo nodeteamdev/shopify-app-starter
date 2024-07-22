@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { SubscriptionPlan, SubscriptionPlanStatusesEnum } from '@prisma/client';
+import { ApiProperty } from "@nestjs/swagger";
+import { SubscriptionPlan, SubscriptionPlanStatusesEnum } from "@prisma/client";
 
 export class SubscriptionPlanDto implements SubscriptionPlan {
   @ApiProperty({
@@ -8,7 +8,7 @@ export class SubscriptionPlanDto implements SubscriptionPlan {
   })
   readonly id: string;
 
-  @ApiProperty({ type: String, example: 'Super Subscription' })
+  @ApiProperty({ type: String, example: 'Subscription1' })
   readonly name: string;
 
   @ApiProperty({ type: String, example: 'description' })
@@ -22,7 +22,7 @@ export class SubscriptionPlanDto implements SubscriptionPlan {
 
   @ApiProperty({
     enum: SubscriptionPlanStatusesEnum,
-    example: SubscriptionPlanStatusesEnum.ACTIVE,
+    example: SubscriptionPlanStatusesEnum.INACTIVE,
   })
   readonly status: SubscriptionPlanStatusesEnum;
 

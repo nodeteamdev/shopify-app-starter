@@ -7,7 +7,7 @@ import { RedisConfig, redisConfig } from '@config/redis.config';
 import { sentryConfig } from '@config/sentry.config';
 import { shopifyConfig } from '@config/shopify.config';
 import { swaggerConfig } from '@config/swagger.config';
-import { AppSubscriptionModule } from '@modules/app-subscription/app-subscription.module';
+import { SubscriptionModule } from '@modules/subscription/subscription.module';
 import { AppController } from '@modules/app/app.controller';
 import { AppService } from '@modules/app/app.service';
 import { AuthModule } from '@modules/auth/auth.module';
@@ -108,7 +108,7 @@ const logger: Logger = new Logger('AppModule');
     MandatoryWebhookModule,
     ShopifyAuthModule,
     ShopModule,
-    AppSubscriptionModule,
+    SubscriptionModule,
     ShopifyModule,
     ProductModule,
     GraphqlModule,

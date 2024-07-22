@@ -10,7 +10,7 @@ import { WebhookRepository } from '@modules/webhook/webhook.repository';
 import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-app-install.service';
 import { ShopService } from '@modules/shop/shop.service';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
-import { AppSubscriptionService } from '@modules/app-subscription/app-subscription.service';
+import { AppSubscriptionService } from '@modules/subscription/services/app-subscription.service';
 import { AppSubscriptionRequest } from '@modules/webhook/interfaces/app-subscription-request';
 
 @Injectable()

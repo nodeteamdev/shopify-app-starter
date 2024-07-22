@@ -29,10 +29,10 @@ export class AppSubscriptionDto implements AppSubscription {
   })
   readonly status: AppSubscriptionStatusesEnum;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, example: '70162710780' })
   readonly shopId: string;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, example: '28364472572' })
   readonly subscriptionPlanId: string;
 
   @ApiProperty({ type: Date })
