@@ -12,6 +12,7 @@ import { ShopService } from '@modules/shop/shop.service';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 import { AppSubscriptionService } from '@modules/subscription/services/app-subscription.service';
 import { AppSubscriptionRequest } from '@modules/webhook/interfaces/app-subscription-request';
+import { extractIdFromShopify } from '@modules/common/helpers/extract-id-from-shopify.helper';
 
 @Injectable()
 export class WebhookService {
@@ -165,9 +166,10 @@ export class WebhookService {
       app_subscription: appSubscription,
     }: { app_subscription: AppSubscriptionRequest } = req.body;
     const { admin_graphql_api_shop_id: shopId } = appSubscription;
+    const extractedShopId = extractIdFromShopify(shopId);
 
     Logger.debug(
-      `Webhook for updating app subscription from the shop with id: ${shopId}. ${JSON.stringify(
+      `Webhook for updating app subscription from the shop with id: ${extractedShopId}. ${JSON.stringify(
         {
           body: req.body,
           headers: req.headers,
@@ -176,16 +178,16 @@ export class WebhookService {
     );
 
     try {
-      await this.updateAppSubscription(shopId, appSubscription);
+      await this.updateAppSubscription(extractedShopId, appSubscription);
 
       Logger.debug(
-        `App subscription was successfully updated from the shop with id: ${shopId}`,
+        `App subscription was successfully updated for the shopId: ${extractedShopId}`,
       );
 
       await this.saveWebhook(req);
     } catch (error) {
       Logger.debug(
-        `An error occurs during updating app subscription from the shop with id: ${shopId}: ${JSON.stringify(
+        `An error occurs during updating app subscription from the shop with id: ${extractedShopId}: ${JSON.stringify(
           {
             error,
           },
@@ -210,22 +212,24 @@ export class WebhookService {
 
     const { admin_graphql_api_id: appSubscriptionId, status } = appSubscription;
 
+    const extractedAppSubscriptionId = extractIdFromShopify(appSubscriptionId);
+
     switch (status) {
       case AppSubscriptionStatusesEnum.ACTIVE:
         await this.appSubscriptionService.update(
-          appSubscriptionId,
+          extractedAppSubscriptionId,
           AppSubscriptionStatusesEnum.ACTIVE,
         );
         break;
       case AppSubscriptionStatusesEnum.CANCELLED:
         await this.appSubscriptionService.update(
-          appSubscriptionId,
+          extractedAppSubscriptionId,
           AppSubscriptionStatusesEnum.CANCELLED,
         );
         break;
       case AppSubscriptionStatusesEnum.DECLINED:
         await this.appSubscriptionService.update(
-          appSubscriptionId,
+          extractedAppSubscriptionId,
           AppSubscriptionStatusesEnum.DECLINED,
         );
         break;
