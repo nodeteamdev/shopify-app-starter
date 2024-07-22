@@ -8,7 +8,9 @@ import { AppSubscriptionService } from '@modules/subscription/services/app-subsc
 @ApiTags('App Subscription')
 @ApiExtraModels(AppSubscriptionDto)
 export class AppSubscriptionController {
-  constructor(private readonly appSubscriptionService: AppSubscriptionService) {}
+  constructor(
+    private readonly appSubscriptionService: AppSubscriptionService,
+  ) {}
 
   @ApiCreatedBaseResponse({ dto: AppSubscriptionDto })
   @Post(':shopName/subscription-plan/:subscriptionPlanId')
@@ -16,9 +18,6 @@ export class AppSubscriptionController {
     @Param('shopName') shopName: string,
     @Param('subscriptionPlanId') subscriptionPlanId: string,
   ): Promise<AppSubscriptionDto> {
-    return this.appSubscriptionService.create(
-      shopName,
-      subscriptionPlanId,
-    );
+    return this.appSubscriptionService.create(shopName, subscriptionPlanId);
   }
 }

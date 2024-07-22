@@ -7,10 +7,7 @@ import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-a
 import { ShopifyAuthModule } from '@modules/shopify-auth/shopify-auth.module';
 
 @Module({
-  imports: [
-    ShopifyAuthModule,
-    ShopModule,
-  ],
+  imports: [ShopifyAuthModule, ShopModule],
   controllers: [ShopifyAppInstallController],
   providers: [
     ShopifyAppInstallService,

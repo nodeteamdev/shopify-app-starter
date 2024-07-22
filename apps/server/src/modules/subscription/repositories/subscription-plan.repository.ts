@@ -1,12 +1,18 @@
 import { PrismaService } from '@modules/common/providers/prisma';
 import { Injectable } from '@nestjs/common';
-import { SubscriptionPlan, Prisma, SubscriptionPlanStatusesEnum } from '@prisma/client';
+import {
+  SubscriptionPlan,
+  Prisma,
+  SubscriptionPlanStatusesEnum,
+} from '@prisma/client';
 
 @Injectable()
 export class SubscriptionPlanRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
-  public create(data: Prisma.SubscriptionPlanCreateInput): Promise<SubscriptionPlan> {
+  public create(
+    data: Prisma.SubscriptionPlanCreateInput,
+  ): Promise<SubscriptionPlan> {
     return this.prismaService.subscriptionPlan.create({ data });
   }
 
@@ -18,7 +24,13 @@ export class SubscriptionPlanRepository {
     return this.prismaService.subscriptionPlan.findMany();
   }
 
-  public updateStatus(id: string, status: SubscriptionPlanStatusesEnum): Promise<SubscriptionPlan> {
-    return this.prismaService.subscriptionPlan.update({ where: { id }, data: { status } });
+  public updateStatus(
+    id: string,
+    status: SubscriptionPlanStatusesEnum,
+  ): Promise<SubscriptionPlan> {
+    return this.prismaService.subscriptionPlan.update({
+      where: { id },
+      data: { status },
+    });
   }
 }

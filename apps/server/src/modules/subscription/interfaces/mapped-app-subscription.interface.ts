@@ -1,4 +1,4 @@
-import { AppSubscriptionStatusesEnum } from "@prisma/client";
+import { AppSubscriptionStatusesEnum } from '@prisma/client';
 
 export interface MappedAppSubscription {
   readonly id: string;

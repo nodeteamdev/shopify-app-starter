@@ -10,7 +10,9 @@ import { SUBSCRIPTION_PLAN_NOT_FOUND } from '@modules/common/constants/errors.co
 
 @Injectable()
 export class SubscriptionPlanService {
-  constructor(private readonly subscriptionPlanRepository: SubscriptionPlanRepository) {}
+  constructor(
+    private readonly subscriptionPlanRepository: SubscriptionPlanRepository,
+  ) {}
 
   private static mapSubscriptionPlan(
     createdSubscriptionPlan: CreatedSubscriptionPlan,
@@ -29,7 +31,9 @@ export class SubscriptionPlanService {
     };
   }
 
-  public create(createSubscriptionPlanDto: CreateSubscriptionPlanDto): Promise<SubscriptionPlanDto> {
+  public create(
+    createSubscriptionPlanDto: CreateSubscriptionPlanDto,
+  ): Promise<SubscriptionPlanDto> {
     return this.subscriptionPlanRepository.create({
       ...createSubscriptionPlanDto,
       id: randomUUID(),
@@ -45,13 +49,16 @@ export class SubscriptionPlanService {
     const subscriptionPlan = await this.subscriptionPlanRepository.findOne(id);
 
     if (!subscriptionPlan) {
-      throw new NotFoundException(SUBSCRIPTION_PLAN_NOT_FOUND)
+      throw new NotFoundException(SUBSCRIPTION_PLAN_NOT_FOUND);
     }
 
     return subscriptionPlan;
   }
 
-  public updateStatus(id: string, status: SubscriptionPlanStatusesEnum): Promise<SubscriptionPlanDto> {
+  public updateStatus(
+    id: string,
+    status: SubscriptionPlanStatusesEnum,
+  ): Promise<SubscriptionPlanDto> {
     return this.subscriptionPlanRepository.updateStatus(id, status);
   }
 }

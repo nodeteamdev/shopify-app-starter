@@ -4,7 +4,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { SubscriptionResponse } from '@shopify/shopify-api';
-import { AppSubscription, AppSubscriptionStatusesEnum, SubscriptionPlanStatusesEnum } from '@prisma/client';
+import {
+  AppSubscription,
+  AppSubscriptionStatusesEnum,
+  SubscriptionPlanStatusesEnum,
+} from '@prisma/client';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 import { CreatedAppSubscription } from '@modules/subscription/interfaces/created-app-subscription.interface';
 import { AppSubscriptionGraphqlRepository } from '@modules/subscription/repositories/app-subscription-graphql.repository';
@@ -59,13 +63,14 @@ export class AppSubscriptionService {
         shopName,
       );
 
-    const subscriptionPlan = await this.subscriptionPlanService.getOne(subscriptionPlanId);
+    const subscriptionPlan =
+      await this.subscriptionPlanService.getOne(subscriptionPlanId);
 
     const createAppSubscription: CreateAppSubscription = {
       name: subscriptionPlan.name,
       amount: subscriptionPlan.amount,
       currencyCode: subscriptionPlan.currencyCode,
-    }
+    };
 
     const {
       body: {
@@ -91,7 +96,10 @@ export class AppSubscriptionService {
       subscriptionPlan: { connect: { id: subscriptionPlan.id } },
     });
 
-    await this.subscriptionPlanService.updateStatus(subscriptionPlan.id, SubscriptionPlanStatusesEnum.ACTIVE);
+    await this.subscriptionPlanService.updateStatus(
+      subscriptionPlan.id,
+      SubscriptionPlanStatusesEnum.ACTIVE,
+    );
 
     return createdAppSubscription;
   }
