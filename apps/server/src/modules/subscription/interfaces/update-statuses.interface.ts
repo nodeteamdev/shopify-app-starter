@@ -1,8 +1,11 @@
-import { AppSubscriptionStatusesEnum, SubscriptionPlanStatusesEnum } from "@prisma/client";
+import {
+  AppSubscriptionStatusesEnum,
+  SubscriptionPlanStatusesEnum,
+} from '@prisma/client';
 
 export interface UpdateStatuses {
-  readonly id: string,
-  readonly appSubscriptionStatus: AppSubscriptionStatusesEnum,
+  readonly id: string;
+  readonly appSubscriptionStatus: AppSubscriptionStatusesEnum;
   readonly subscriptionPlanId: string;
-  readonly subscriptionPlanStatus: SubscriptionPlanStatusesEnum,
+  readonly subscriptionPlanStatus: SubscriptionPlanStatusesEnum;
 }

@@ -66,7 +66,10 @@ export class ShopService {
     return this.shopRepository.updateStatus(id, status);
   }
 
-  public updateStatusWithAppUninstalledAt(id: string, status: ShopStatusesEnum): Promise<Shop> {
+  public updateStatusWithAppUninstalledAt(
+    id: string,
+    status: ShopStatusesEnum,
+  ): Promise<Shop> {
     return this.shopRepository.updateStatus(id, status);
   }
 
@@ -77,6 +80,6 @@ export class ShopService {
     return this.shopRepository.subscriptionsShopAndSessionTransaction(
       appSubscriptionDto,
       shopId,
-    )
+    );
   }
 }

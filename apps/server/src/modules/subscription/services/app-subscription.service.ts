@@ -166,7 +166,9 @@ export class AppSubscriptionService {
     return this.appSubscriptionRepository.findOneByShopId(shopId);
   }
 
-  public updateStatuses(data: UpdateStatuses): Promise<[AppSubscription, SubscriptionPlan]> {
+  public updateStatuses(
+    data: UpdateStatuses,
+  ): Promise<[AppSubscription, SubscriptionPlan]> {
     return this.appSubscriptionRepository.updateStatuses(data);
   }
 }

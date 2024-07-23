@@ -153,9 +153,14 @@ export class WebhookService {
       );
     }
 
-    const appSubscription = await this.appSubscriptionService.findOneByShopId(shop.id);
+    const appSubscription = await this.appSubscriptionService.findOneByShopId(
+      shop.id,
+    );
 
-    await this.shopService.subscriptionsShopAndSessionTransaction(appSubscription, shop.id);
+    await this.shopService.subscriptionsShopAndSessionTransaction(
+      appSubscription,
+      shop.id,
+    );
   }
 
   public async handleUpdateAppSubscription(

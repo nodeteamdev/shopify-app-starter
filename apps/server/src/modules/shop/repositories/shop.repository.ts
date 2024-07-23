@@ -1,6 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@modules/common/providers/prisma';
-import { AppSubscriptionStatusesEnum, Prisma, Shop, ShopStatusesEnum, SubscriptionPlanStatusesEnum } from '@prisma/client';
+import {
+  AppSubscriptionStatusesEnum,
+  Prisma,
+  Shop,
+  ShopStatusesEnum,
+  SubscriptionPlanStatusesEnum,
+} from '@prisma/client';
 import { extractIdFromShopify } from '@modules/common/helpers/extract-id-from-shopify.helper';
 import { UpdateShop } from '@modules/shop/interfaces/update-shop.interface';
 import { AppSubscriptionDto } from '@modules/subscription/dtos/app-subscription.dto';
@@ -45,18 +51,20 @@ export class ShopRepository {
     return this.prismaService.shop.update({
       where: { id },
       data: { status },
-    })
+    });
   }
-  
 
-  public updateStatusWithAppUninstalledAt(id: string, status: ShopStatusesEnum): Promise<Shop> {
+  public updateStatusWithAppUninstalledAt(
+    id: string,
+    status: ShopStatusesEnum,
+  ): Promise<Shop> {
     return this.prismaService.shop.update({
       where: { id },
       data: {
         status,
         appUninstalledAt: new Date(),
-      }
-    })
+      },
+    });
   }
 
   public async subscriptionsShopAndSessionTransaction(
@@ -74,7 +82,7 @@ export class ShopRepository {
         this.prismaService.subscriptionPlan.update({
           where: { id: appSubscription.subscriptionPlanId },
           data: { status: SubscriptionPlanStatusesEnum.INACTIVE },
-        })
+        }),
       );
     }
 
@@ -82,8 +90,11 @@ export class ShopRepository {
       this.prismaService.session.deleteMany({ where: { shopId } }),
       this.prismaService.shop.update({
         where: { id: shopId },
-        data: { status: ShopStatusesEnum.INACTIVE, appUninstalledAt: new Date() },
-      })
+        data: {
+          status: ShopStatusesEnum.INACTIVE,
+          appUninstalledAt: new Date(),
+        },
+      }),
     );
 
     await this.prismaService.$transaction(operations);

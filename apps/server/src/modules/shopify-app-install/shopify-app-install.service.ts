@@ -128,7 +128,8 @@ export class ShopifyAppInstallService {
 
     const extractedShopId = extractIdFromShopify(shopInfo.id);
 
-    const previouslyCreatedShop = await this.shopService.findOne(extractedShopId);
+    const previouslyCreatedShop =
+      await this.shopService.findOne(extractedShopId);
 
     if (previouslyCreatedShop) {
       this.logger.debug(
@@ -139,7 +140,10 @@ export class ShopifyAppInstallService {
         )}`,
       );
 
-      await this.shopService.updateStatus(previouslyCreatedShop.id, ShopStatusesEnum.ACTIVE);
+      await this.shopService.updateStatus(
+        previouslyCreatedShop.id,
+        ShopStatusesEnum.ACTIVE,
+      );
 
       return previouslyCreatedShop;
     }

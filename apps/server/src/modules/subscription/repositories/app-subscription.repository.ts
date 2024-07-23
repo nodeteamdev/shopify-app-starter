@@ -44,13 +44,15 @@ export class AppSubscriptionRepository {
     return this.prismaService.appSubscription.findFirst({ where: { shopId } });
   }
 
-  public updateStatuses(data: UpdateStatuses): Promise<[AppSubscription, SubscriptionPlan]> {
+  public updateStatuses(
+    data: UpdateStatuses,
+  ): Promise<[AppSubscription, SubscriptionPlan]> {
     const {
       id,
       appSubscriptionStatus,
       subscriptionPlanId,
       subscriptionPlanStatus,
-    } = data
+    } = data;
 
     return this.prismaService.$transaction([
       this.prismaService.appSubscription.update({
