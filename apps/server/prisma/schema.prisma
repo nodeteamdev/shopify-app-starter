@@ -14,16 +14,18 @@ datasource db {
 }
 
 model Shop {
-  id              String           @id(map: "pk_Shop")
-  name            String
-  email           String
-  contactEmail    String
-  myshopifyDomain String
-  primaryDomain   String
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  appSubscription AppSubscription?
-  sessions        Session[]
+  id               String           @id(map: "pk_Shop")
+  name             String
+  email            String
+  contactEmail     String
+  myshopifyDomain  String
+  primaryDomain    String
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  appSubscription  AppSubscription?
+  sessions         Session[]
+  status           ShopStatusesEnum @default(ACTIVE)
+  appUninstalledAt DateTime?
 
   @@map("shops")
 }
@@ -111,6 +113,11 @@ enum AppSubscriptionStatusesEnum {
 }
 
 enum SubscriptionPlanStatusesEnum {
+  ACTIVE
+  INACTIVE
+}
+
+enum ShopStatusesEnum {
   ACTIVE
   INACTIVE
 }

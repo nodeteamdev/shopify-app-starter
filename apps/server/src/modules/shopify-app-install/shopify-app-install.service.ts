@@ -14,7 +14,8 @@ import { ConfigService } from '@nestjs/config';
 import { ShopifyConfig } from '@config/shopify.config';
 import { WebhookTopicsEnum } from '@modules/shopify-app-install/enums/webhook-topics.enum';
 import { ShopService } from '@modules/shop/shop.service';
-import { Shop } from '@prisma/client';
+import { Shop, ShopStatusesEnum } from '@prisma/client';
+import { extractIdFromShopify } from '@modules/common/helpers/extract-id-from-shopify.helper';
 
 @Injectable()
 export class ShopifyAppInstallService {
@@ -125,7 +126,10 @@ export class ShopifyAppInstallService {
   public async setupShop(session: Session): Promise<Shop> {
     const shopInfo = await this.shopService.getShopInfo(session);
 
-    const previouslyCreatedShop = await this.shopService.findOne(shopInfo.id);
+    const extractedShopId = extractIdFromShopify(shopInfo.id);
+
+    const previouslyCreatedShop =
+      await this.shopService.findOne(extractedShopId);
 
     if (previouslyCreatedShop) {
       this.logger.debug(
@@ -134,6 +138,11 @@ export class ShopifyAppInstallService {
           null,
           2,
         )}`,
+      );
+
+      await this.shopService.updateStatus(
+        previouslyCreatedShop.id,
+        ShopStatusesEnum.ACTIVE,
       );
 
       return previouslyCreatedShop;
