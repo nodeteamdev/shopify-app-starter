@@ -25,7 +25,7 @@ import { SubscriptionPlanController } from '@modules/subscription/controllers/su
     SubscriptionPlanService,
     SubscriptionPlanRepository,
   ],
-  exports: [AppSubscriptionService],
+  exports: [AppSubscriptionService, SubscriptionPlanService],
   controllers: [AppSubscriptionController, SubscriptionPlanController],
 })
 export class SubscriptionModule {}

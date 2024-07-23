@@ -4,7 +4,9 @@ import {
   AppSubscription,
   AppSubscriptionStatusesEnum,
   Prisma,
+  SubscriptionPlan,
 } from '@prisma/client';
+import { UpdateStatuses } from '@modules/subscription/interfaces/update-statuses.interface';
 
 @Injectable()
 export class AppSubscriptionRepository {
@@ -24,7 +26,7 @@ export class AppSubscriptionRepository {
     return this.prismaService.appSubscription.findMany({ where: { shopId } });
   }
 
-  public update(
+  public updateStatus(
     id: string,
     status: AppSubscriptionStatusesEnum,
   ): Promise<AppSubscription> {
@@ -36,5 +38,29 @@ export class AppSubscriptionRepository {
 
   public delete(id: string): Promise<AppSubscription> {
     return this.prismaService.appSubscription.delete({ where: { id } });
+  }
+
+  public findOneByShopId(shopId: string): Promise<AppSubscription> {
+    return this.prismaService.appSubscription.findFirst({ where: { shopId } });
+  }
+
+  public updateStatuses(data: UpdateStatuses): Promise<[AppSubscription, SubscriptionPlan]> {
+    const {
+      id,
+      appSubscriptionStatus,
+      subscriptionPlanId,
+      subscriptionPlanStatus,
+    } = data
+
+    return this.prismaService.$transaction([
+      this.prismaService.appSubscription.update({
+        where: { id },
+        data: { status: appSubscriptionStatus },
+      }),
+      this.prismaService.subscriptionPlan.update({
+        where: { id: subscriptionPlanId },
+        data: { status: subscriptionPlanStatus },
+      }),
+    ]);
   }
 }

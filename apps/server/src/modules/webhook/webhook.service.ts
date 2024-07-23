@@ -13,6 +13,7 @@ import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopif
 import { AppSubscriptionService } from '@modules/subscription/services/app-subscription.service';
 import { AppSubscriptionRequest } from '@modules/webhook/interfaces/app-subscription-request';
 import { extractIdFromShopify } from '@modules/common/helpers/extract-id-from-shopify.helper';
+import { SubscriptionPlanService } from '@modules/subscription/services/subscription-plan.service';
 
 @Injectable()
 export class WebhookService {
@@ -24,6 +25,7 @@ export class WebhookService {
     private readonly shopService: ShopService,
     private readonly shopifyAuthSessionService: ShopifyAuthSessionService,
     private readonly appSubscriptionService: AppSubscriptionService,
+    private readonly subscriptionPlanService: SubscriptionPlanService,
   ) {}
 
   public create(data: Prisma.WebhookCreateInput): Promise<Webhook> {
@@ -151,8 +153,9 @@ export class WebhookService {
       );
     }
 
-    await this.shopifyAuthSessionService.deleteManyByShopId(shop.id);
-    await this.shopService.delete(shop.id);
+    const appSubscription = await this.appSubscriptionService.findOneByShopId(shop.id);
+
+    await this.shopService.subscriptionsShopAndSessionTransaction(appSubscription, shop.id);
   }
 
   public async handleUpdateAppSubscription(
@@ -216,19 +219,19 @@ export class WebhookService {
 
     switch (status) {
       case AppSubscriptionStatusesEnum.ACTIVE:
-        await this.appSubscriptionService.update(
+        await this.appSubscriptionService.updateStatus(
           extractedAppSubscriptionId,
           AppSubscriptionStatusesEnum.ACTIVE,
         );
         break;
       case AppSubscriptionStatusesEnum.CANCELLED:
-        await this.appSubscriptionService.update(
+        await this.appSubscriptionService.updateStatus(
           extractedAppSubscriptionId,
           AppSubscriptionStatusesEnum.CANCELLED,
         );
         break;
       case AppSubscriptionStatusesEnum.DECLINED:
-        await this.appSubscriptionService.update(
+        await this.appSubscriptionService.updateStatus(
           extractedAppSubscriptionId,
           AppSubscriptionStatusesEnum.DECLINED,
         );

@@ -2,11 +2,12 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Session } from '@shopify/shopify-api';
 import { ShopRepository } from '@modules/shop/repositories/shop.repository';
 import { ShopInfo } from '@modules/shop/interfaces/shop-info.interface';
-import { Shop } from '@prisma/client';
+import { Shop, ShopStatusesEnum } from '@prisma/client';
 import { SHOP_NOT_FOUND } from '@modules/common/constants/errors.constants';
 import { CreateShop } from '@modules/shop/interfaces/create-shop.interface';
 import { ShopifyShopRepository } from '@modules/shop/repositories/shopify-shop.repository';
 import { UpdateShop } from '@modules/shop/interfaces/update-shop.interface';
+import { AppSubscriptionDto } from '@modules/subscription/dtos/app-subscription.dto';
 
 @Injectable()
 export class ShopService {
@@ -59,5 +60,23 @@ export class ShopService {
     }
 
     return shop;
+  }
+
+  public updateStatus(id: string, status: ShopStatusesEnum): Promise<Shop> {
+    return this.shopRepository.updateStatus(id, status);
+  }
+
+  public updateStatusWithAppUninstalledAt(id: string, status: ShopStatusesEnum): Promise<Shop> {
+    return this.shopRepository.updateStatus(id, status);
+  }
+
+  public subscriptionsShopAndSessionTransaction(
+    appSubscriptionDto: AppSubscriptionDto,
+    shopId: string,
+  ): Promise<void> {
+    return this.shopRepository.subscriptionsShopAndSessionTransaction(
+      appSubscriptionDto,
+      shopId,
+    )
   }
 }

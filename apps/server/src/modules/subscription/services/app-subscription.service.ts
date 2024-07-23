@@ -7,6 +7,7 @@ import { SubscriptionResponse } from '@shopify/shopify-api';
 import {
   AppSubscription,
   AppSubscriptionStatusesEnum,
+  SubscriptionPlan,
   SubscriptionPlanStatusesEnum,
 } from '@prisma/client';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
@@ -23,6 +24,7 @@ import { SubscriptionPlanService } from '@modules/subscription/services/subscrip
 import { MappedAppSubscription } from '@modules/subscription/interfaces/mapped-app-subscription.interface';
 import { CreateAppSubscription } from '@modules/subscription/interfaces/create-app-subscription.interface';
 import { extractIdFromShopify } from '@modules/common/helpers/extract-id-from-shopify.helper';
+import { UpdateStatuses } from '@modules/subscription/interfaces/update-statuses.interface';
 
 @Injectable()
 export class AppSubscriptionService {
@@ -131,13 +133,13 @@ export class AppSubscriptionService {
     return appSubscription;
   }
 
-  public async update(
+  public async updateStatus(
     id: string,
     status: AppSubscriptionStatusesEnum,
   ): Promise<AppSubscription> {
     await this.getOne(id);
 
-    return this.appSubscriptionRepository.update(id, status);
+    return this.appSubscriptionRepository.updateStatus(id, status);
   }
 
   public async delete(id: string, shopName: string): Promise<void> {
@@ -158,5 +160,13 @@ export class AppSubscriptionService {
 
   public findOne(id: string): Promise<AppSubscriptionDto> {
     return this.appSubscriptionRepository.findOne(id);
+  }
+
+  public findOneByShopId(shopId: string): Promise<AppSubscriptionDto> {
+    return this.appSubscriptionRepository.findOneByShopId(shopId);
+  }
+
+  public updateStatuses(data: UpdateStatuses): Promise<[AppSubscription, SubscriptionPlan]> {
+    return this.appSubscriptionRepository.updateStatuses(data);
   }
 }
