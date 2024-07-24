@@ -8,6 +8,7 @@ import { WebhookConfig } from '@modules/shopify-app-install/interfaces/webhook-c
 import { extractIdFromShopify } from '@modules/common/helpers/extract-id-from-shopify.helper';
 import { AppSubscriptionService } from '@modules/subscription/services/app-subscription.service';
 import { AppSubscriptionStatusesEnum } from '@prisma/client';
+import { SubscriptionPlanService } from '@modules/subscription/services/subscription-plan.service';
 
 @Injectable()
 export class ShopifyAuthService {
@@ -18,6 +19,7 @@ export class ShopifyAuthService {
     private readonly shopService: ShopService,
     private readonly shopifyAppInstallService: ShopifyAppInstallService,
     private readonly appSubscriptionService: AppSubscriptionService,
+    private readonly subscriptionPlanService: SubscriptionPlanService,
   ) {}
 
   public async storeOfflineToken(req: Request, res: Response) {
@@ -88,8 +90,11 @@ export class ShopifyAuthService {
       }: ${JSON.stringify({ session }, null, 2)}`,
     );
 
+    await this.subscriptionPlanService.createMany();
+
     const appSubscription =
       await this.appSubscriptionService.findOneByShopId(extractedShopId);
+
     if (!appSubscription) {
       return res
         .status(200)

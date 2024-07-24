@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { SubscriptionPlanStatusesEnum } from '@prisma/client';
+import { Prisma, SubscriptionPlanStatusesEnum } from '@prisma/client';
 import { SubscriptionPlanRepository } from '@modules/subscription/repositories/subscription-plan.repository';
 import { CreateSubscriptionPlanDto } from '@modules/subscription/dtos/create-subscription-plan.dto';
 import { SubscriptionPlanDto } from '@modules/subscription/dtos/subscription-plan.dto';
@@ -60,5 +60,33 @@ export class SubscriptionPlanService {
     status: SubscriptionPlanStatusesEnum,
   ): Promise<SubscriptionPlanDto> {
     return this.subscriptionPlanRepository.updateStatus(id, status);
+  }
+
+  public createMany(): Promise<Prisma.BatchPayload> {
+    const plans = [
+      {
+        id: randomUUID(),
+        name: 'Basic Plan',
+        amount: 10,
+        currencyCode: 'USD',
+        status: SubscriptionPlanStatusesEnum.INACTIVE,
+      },
+      {
+        id: randomUUID(),
+        name: 'Pro Plan',
+        amount: 50,
+        currencyCode: 'USD',
+        status: SubscriptionPlanStatusesEnum.INACTIVE,
+      },
+      {
+        id: randomUUID(),
+        name: 'Enterprise Plan',
+        amount: 100,
+        currencyCode: 'USD',
+        status: SubscriptionPlanStatusesEnum.INACTIVE,
+      },
+    ];
+
+    return this.subscriptionPlanRepository.createMany(plans);
   }
 }
