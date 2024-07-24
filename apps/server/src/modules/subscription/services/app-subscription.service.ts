@@ -59,24 +59,36 @@ export class AppSubscriptionService {
     shopName: string,
     subscriptionPlanId: string,
   ): Promise<AppSubscriptionDto> {
-    const shopifySession = await this.shopifyAuthSessionService.getShopifySessionByShopName(shopName);
-    const foundAppSubscription = await this.appSubscriptionRepository.findOneByShopName(shopName);
+    const shopifySession =
+      await this.shopifyAuthSessionService.getShopifySessionByShopName(
+        shopName,
+      );
+    const foundAppSubscription =
+      await this.appSubscriptionRepository.findOneByShopName(shopName);
 
     let shopifyAppSubscription: SubscriptionResponse = null;
 
     if (foundAppSubscription) {
-      shopifyAppSubscription = await this.appSubscriptionGraphqlRepository.findOne(shopifySession, Number(foundAppSubscription.id));
+      shopifyAppSubscription =
+        await this.appSubscriptionGraphqlRepository.findOne(
+          shopifySession,
+          Number(foundAppSubscription.id),
+        );
     }
 
-    if (foundAppSubscription 
-      && shopifyAppSubscription
-      && foundAppSubscription.status
-      !== AppSubscriptionStatusesEnum.ACTIVE
+    if (
+      foundAppSubscription &&
+      shopifyAppSubscription &&
+      foundAppSubscription.status !== AppSubscriptionStatusesEnum.ACTIVE
     ) {
-      await this.appSubscriptionRepository.deleteAndUpdateStatusTransaction(foundAppSubscription.id, foundAppSubscription.subscriptionPlanId);
+      await this.appSubscriptionRepository.deleteAndUpdateStatusTransaction(
+        foundAppSubscription.id,
+        foundAppSubscription.subscriptionPlanId,
+      );
     }
 
-    const subscriptionPlan = await this.subscriptionPlanService.getOne(subscriptionPlanId);
+    const subscriptionPlan =
+      await this.subscriptionPlanService.getOne(subscriptionPlanId);
 
     const createAppSubscription: CreateAppSubscription = {
       name: subscriptionPlan.name,

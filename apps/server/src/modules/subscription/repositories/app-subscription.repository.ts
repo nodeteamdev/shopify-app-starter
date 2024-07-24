@@ -68,7 +68,9 @@ export class AppSubscriptionRepository {
   }
 
   public findOneByShopName(shopName: string): Promise<AppSubscription> {
-    return this.prismaService.appSubscription.findFirst({ where: { shop: { myshopifyDomain: shopName } } });
+    return this.prismaService.appSubscription.findFirst({
+      where: { shop: { myshopifyDomain: shopName } },
+    });
   }
 
   public deleteAndUpdateStatusTransaction(
@@ -80,7 +82,7 @@ export class AppSubscriptionRepository {
       this.prismaService.subscriptionPlan.update({
         where: { id: subscriptionPlanId },
         data: { status: SubscriptionPlanStatusesEnum.INACTIVE },
-      })
-    ])
+      }),
+    ]);
   }
 }

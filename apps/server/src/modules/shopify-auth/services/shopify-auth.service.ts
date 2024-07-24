@@ -80,28 +80,28 @@ export class ShopifyAuthService {
 
     const extractedShopId = extractIdFromShopify(shopInfo.id);
 
-    await this.shopifyAuthSessionService.save(
-      session,
-      extractedShopId,
-    );
+    await this.shopifyAuthSessionService.save(session, extractedShopId);
 
     this.logger.debug(
-      `Online Session has been retrieved for the shop: ${shopInfo.name}: ${JSON.stringify(
-        { session },
-        null,
-        2,
-      )}`,
+      `Online Session has been retrieved for the shop: ${
+        shopInfo.name
+      }: ${JSON.stringify({ session }, null, 2)}`,
     );
 
-    const appSubscription = await this.appSubscriptionService.findOneByShopId(extractedShopId);
+    const appSubscription =
+      await this.appSubscriptionService.findOneByShopId(extractedShopId);
     if (!appSubscription) {
-      return res.status(200).redirect(`/plans/?shop=${shopInfo.name}&host=${req.query.host}`);
+      return res
+        .status(200)
+        .redirect(`/plans/?shop=${shopInfo.name}&host=${req.query.host}`);
     }
 
     if (appSubscription.status !== AppSubscriptionStatusesEnum.ACTIVE) {
       await this.appSubscriptionService.delete(appSubscription.id);
 
-      return res.status(200).redirect(`/plans/?shop=${shopInfo.name}&host=${req.query.host}`);
+      return res
+        .status(200)
+        .redirect(`/plans/?shop=${shopInfo.name}&host=${req.query.host}`);
     }
 
     res.status(200).redirect(`/?shop=${shopInfo.name}&host=${req.query.host}`);
