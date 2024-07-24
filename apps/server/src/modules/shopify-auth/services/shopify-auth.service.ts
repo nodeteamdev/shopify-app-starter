@@ -6,6 +6,8 @@ import { ShopService } from '@modules/shop/shop.service';
 import { ShopifyAppInstallService } from '@modules/shopify-app-install/shopify-app-install.service';
 import { WebhookConfig } from '@modules/shopify-app-install/interfaces/webhook-config.interface';
 import { extractIdFromShopify } from '@modules/common/helpers/extract-id-from-shopify.helper';
+import { AppSubscriptionService } from '@modules/subscription/services/app-subscription.service';
+import { AppSubscriptionStatusesEnum } from '@prisma/client';
 
 @Injectable()
 export class ShopifyAuthService {
@@ -15,6 +17,7 @@ export class ShopifyAuthService {
     private readonly shopifyAuthSessionService: ShopifyAuthSessionService,
     private readonly shopService: ShopService,
     private readonly shopifyAppInstallService: ShopifyAppInstallService,
+    private readonly appSubscriptionService: AppSubscriptionService,
   ) {}
 
   public async storeOfflineToken(req: Request, res: Response) {
@@ -62,7 +65,7 @@ export class ShopifyAuthService {
     });
   }
 
-  public async storeOnlineToken(req: Request, res: Response): Promise<string> {
+  public async storeOnlineToken(req: Request, res: Response): Promise<void> {
     this.shopifyAppInstallService.validateHmac(req.query);
 
     const callbackResponse =
@@ -73,22 +76,34 @@ export class ShopifyAuthService {
 
     const { session } = callbackResponse;
 
-    const { id: shopId, name: shopName } =
-      await this.shopService.getShopInfo(session);
+    const shopInfo = await this.shopService.getShopInfo(session);
+
+    const extractedShopId = extractIdFromShopify(shopInfo.id);
 
     await this.shopifyAuthSessionService.save(
       session,
-      extractIdFromShopify(shopId),
+      extractedShopId,
     );
 
     this.logger.debug(
-      `Online Session has been retrieved for the shop: ${shopName}: ${JSON.stringify(
+      `Online Session has been retrieved for the shop: ${shopInfo.name}: ${JSON.stringify(
         { session },
         null,
         2,
       )}`,
     );
 
-    return shopName;
+    const appSubscription = await this.appSubscriptionService.findOneByShopId(extractedShopId);
+    if (!appSubscription) {
+      return res.status(200).redirect(`/plans/?shop=${shopInfo.name}&host=${req.query.host}`);
+    }
+
+    if (appSubscription.status !== AppSubscriptionStatusesEnum.ACTIVE) {
+      await this.appSubscriptionService.delete(appSubscription.id);
+
+      return res.status(200).redirect(`/plans/?shop=${shopInfo.name}&host=${req.query.host}`);
+    }
+
+    res.status(200).redirect(`/?shop=${shopInfo.name}&host=${req.query.host}`);
   }
 }

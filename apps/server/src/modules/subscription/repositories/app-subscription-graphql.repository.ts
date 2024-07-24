@@ -9,9 +9,13 @@ import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopif
 import { CreatedAppSubscription } from '@modules/subscription/interfaces/created-app-subscription.interface';
 import { CanceledAppSubscription } from '@modules/subscription/interfaces/canceled-app-subscription.interface';
 import { CreateAppSubscription } from '@modules/subscription/interfaces/create-app-subscription.interface';
+import { ConfigService } from '@nestjs/config';
+import { ShopifyConfig } from '@config/shopify.config';
 
 @Injectable()
 export class AppSubscriptionGraphqlRepository {
+  constructor(private readonly configService: ConfigService) {}
+
   public async create(
     session: Session,
     createAppSubscription: CreateAppSubscription,
@@ -24,9 +28,11 @@ export class AppSubscriptionGraphqlRepository {
       session: new Session(session),
     });
 
+    const { apiKey } = this.configService.get<ShopifyConfig>('shopify');
+
     const { name, amount, currencyCode } = createAppSubscription;
-    // TODO on the dashboard
-    const returnUrl = 'https://google.com';
+
+    const returnUrl = `https://${session.shop}/admin/apps/${apiKey}`;
 
     // TODO currency it's only for a test purpose due to test flag
     const queryData = `

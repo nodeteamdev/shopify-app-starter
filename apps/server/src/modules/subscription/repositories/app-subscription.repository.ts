@@ -5,6 +5,7 @@ import {
   AppSubscriptionStatusesEnum,
   Prisma,
   SubscriptionPlan,
+  SubscriptionPlanStatusesEnum,
 } from '@prisma/client';
 import { UpdateStatuses } from '@modules/subscription/interfaces/update-statuses.interface';
 
@@ -64,5 +65,22 @@ export class AppSubscriptionRepository {
         data: { status: subscriptionPlanStatus },
       }),
     ]);
+  }
+
+  public findOneByShopName(shopName: string): Promise<AppSubscription> {
+    return this.prismaService.appSubscription.findFirst({ where: { shop: { myshopifyDomain: shopName } } });
+  }
+
+  public deleteAndUpdateStatusTransaction(
+    id: string,
+    subscriptionPlanId: string,
+  ): Promise<[AppSubscription, SubscriptionPlan]> {
+    return this.prismaService.$transaction([
+      this.prismaService.appSubscription.delete({ where: { id } }),
+      this.prismaService.subscriptionPlan.update({
+        where: { id: subscriptionPlanId },
+        data: { status: SubscriptionPlanStatusesEnum.INACTIVE },
+      })
+    ])
   }
 }

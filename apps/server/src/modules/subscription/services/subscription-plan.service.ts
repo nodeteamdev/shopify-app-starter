@@ -37,7 +37,7 @@ export class SubscriptionPlanService {
     return this.subscriptionPlanRepository.create({
       ...createSubscriptionPlanDto,
       id: randomUUID(),
-      status: SubscriptionPlanStatusesEnum.INACTIVE,
+      status: SubscriptionPlanStatusesEnum.ACTIVE,
     });
   }
 

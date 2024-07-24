@@ -36,8 +36,8 @@
     "title": "Product Counter",
     "totalProductsHeading": "TOTAL PRODUCTS"
   },
-    "ProductsList": {
-        "description": "This is a list of sample products. You can remove them at any time.",
-        "title": "All products"
-    }
+  "ProductsList": {
+    "description": "This is a list of sample products. You can remove them at any time.",
+    "title": "All products"
+  }
 }
