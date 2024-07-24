@@ -34,7 +34,9 @@ export class SubscriptionPlanRepository {
     });
   }
 
-  public createMany(data: Prisma.SubscriptionPlanCreateInput[]): Promise<Prisma.BatchPayload> {
+  public createMany(
+    data: Prisma.SubscriptionPlanCreateInput[],
+  ): Promise<Prisma.BatchPayload> {
     return this.prismaService.subscriptionPlan.createMany({ data });
   }
 }
