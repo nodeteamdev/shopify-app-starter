@@ -8,10 +8,11 @@ import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopif
 import { ShopifyAuthService } from '@modules/shopify-auth/services/shopify-auth.service';
 import { ShopifyAuthSessionRepository } from '@modules/shopify-auth/shopify-auth-session.repository';
 import { ShopifyAuthController } from '@modules/shopify-auth/shopify-auth.controller';
-import { Module } from '@nestjs/common';
+import { SubscriptionModule } from '@modules/subscription/subscription.module';
+import { forwardRef, Module } from '@nestjs/common';
 
 @Module({
-  imports: [PrismaModule, ShopModule],
+  imports: [PrismaModule, ShopModule, forwardRef(() => SubscriptionModule)],
   providers: [
     ShopifyAuthService,
     ShopifyAuthRedirectService,

@@ -44,7 +44,6 @@ export class AppSubscriptionService {
     return {
       id: appSubscription.id,
       name: appSubscription.name,
-      returnUrl: appSubscription.returnUrl,
       confirmationUrl,
       amount: +appSubscription.lineItems.flatMap(
         (lineItem) => lineItem.plan.pricingDetails.price.amount,
@@ -59,11 +58,34 @@ export class AppSubscriptionService {
   public async create(
     shopName: string,
     subscriptionPlanId: string,
-  ): Promise<AppSubscription> {
+  ): Promise<AppSubscriptionDto> {
     const shopifySession =
       await this.shopifyAuthSessionService.getShopifySessionByShopName(
         shopName,
       );
+    const foundAppSubscription =
+      await this.appSubscriptionRepository.findOneByShopName(shopName);
+
+    let shopifyAppSubscription: SubscriptionResponse = null;
+
+    if (foundAppSubscription) {
+      shopifyAppSubscription =
+        await this.appSubscriptionGraphqlRepository.findOne(
+          shopifySession,
+          Number(foundAppSubscription.id),
+        );
+    }
+
+    if (
+      foundAppSubscription &&
+      shopifyAppSubscription &&
+      foundAppSubscription.status !== AppSubscriptionStatusesEnum.ACTIVE
+    ) {
+      await this.appSubscriptionRepository.deleteAndUpdateStatusTransaction(
+        foundAppSubscription.id,
+        foundAppSubscription.subscriptionPlanId,
+      );
+    }
 
     const subscriptionPlan =
       await this.subscriptionPlanService.getOne(subscriptionPlanId);
@@ -142,7 +164,7 @@ export class AppSubscriptionService {
     return this.appSubscriptionRepository.updateStatus(id, status);
   }
 
-  public async delete(id: string, shopName: string): Promise<void> {
+  public async deleteByStatus(id: string, shopName: string): Promise<void> {
     const shopifySession =
       await this.shopifyAuthSessionService.getShopifySessionByShopName(
         shopName,
@@ -170,5 +192,9 @@ export class AppSubscriptionService {
     data: UpdateStatuses,
   ): Promise<[AppSubscription, SubscriptionPlan]> {
     return this.appSubscriptionRepository.updateStatuses(data);
+  }
+
+  public delete(id: string): Promise<AppSubscription> {
+    return this.appSubscriptionRepository.delete(id);
   }
 }

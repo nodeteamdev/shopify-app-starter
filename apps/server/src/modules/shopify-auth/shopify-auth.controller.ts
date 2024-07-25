@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { Controller, Get, Req, Res, UseFilters } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { ShopifyAuthService } from '@modules/shopify-auth/services/shopify-auth.service';
 import { ShopifyAuthRedirectService } from '@modules/shopify-auth/services/shopify-auth-redirect.service';
 import { ShopifyAuthException } from '@modules/shopify-auth/exceptions/shopify-auth.exception';
-import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Shopify Auth')
 @Controller('shopify-auth')
@@ -34,8 +34,6 @@ export class ShopifyAuthController {
     @Req() req: Request,
     @Res() res: Response,
   ): Promise<void> {
-    const shop = await this.shopifyAuthService.storeOnlineToken(req, res);
-
-    res.status(200).redirect(`/?shop=${shop}&host=${req.query.host}`);
+    return this.shopifyAuthService.storeOnlineToken(req, res);
   }
 }

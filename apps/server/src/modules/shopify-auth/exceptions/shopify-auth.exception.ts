@@ -33,7 +33,7 @@ export class ShopifyAuthException extends BaseExceptionFilter {
     ) {
       const shop = request.query.shop;
 
-      response.redirect(`/auth?shop=${shop}`);
+      response.redirect(`/shopify-auth?shop=${shop}`);
     } else {
       const status = exception.getStatus() || HttpStatus.INTERNAL_SERVER_ERROR;
 

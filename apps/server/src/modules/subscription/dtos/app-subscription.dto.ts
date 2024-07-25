@@ -11,9 +11,6 @@ export class AppSubscriptionDto implements AppSubscription {
   @ApiProperty({ type: String, example: 'Super Subscription' })
   readonly name: string;
 
-  @ApiProperty({ type: String, example: 'https://return-url.com/' })
-  readonly returnUrl: string;
-
   @ApiProperty({ type: String, example: 'https://confirmation-url.com/' })
   readonly confirmationUrl: string;
 

@@ -24,6 +24,7 @@
     "@shopify/i18next-shopify": "^0.2.9",
     "@shopify/polaris": "^10.50.1",
     "@vitejs/plugin-react": "4.2.1",
+    "axios": "^1.7.2",
     "dotenv": "^16.4.5",
     "i18next": "^23.11.5",
     "i18next-resources-to-backend": "^1.2.1",

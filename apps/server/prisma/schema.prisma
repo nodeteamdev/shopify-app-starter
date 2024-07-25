@@ -69,7 +69,6 @@ model Webhook {
 model AppSubscription {
   id                 String                      @id(map: "pk_AppSubscription")
   name               String
-  returnUrl          String
   confirmationUrl    String
   amount             Int
   currencyCode       String
