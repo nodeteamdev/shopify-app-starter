@@ -17,7 +17,7 @@
     "format": "biome format --write ./apps/server/src",
     "prepare": "husky install"
   },
-  "type": "git",
+  "type": "module",
   "url": "https://github.com/nodeteamdev/shopify-app-starter.git",
   "author": "",
   "license": "ISC",
