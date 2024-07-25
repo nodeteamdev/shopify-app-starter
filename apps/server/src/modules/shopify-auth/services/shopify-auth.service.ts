@@ -90,12 +90,6 @@ export class ShopifyAuthService {
       }: ${JSON.stringify({ session }, null, 2)}`,
     );
 
-    const plans = await this.subscriptionPlanService.getMany();
-
-    if (!plans.length) {
-      await this.subscriptionPlanService.createMany();
-    }
-
     const appSubscription =
       await this.appSubscriptionService.findOneByShopId(extractedShopId);
 
