@@ -30,7 +30,7 @@ export type AppConfig = Required<z.infer<typeof scheme>>;
 
 export const appConfig = registerAs('app', (): AppConfig => {
   const config: AppConfig = {
-    port: Number(process.env.APP_PORT),
+    port: Number(process.env.SERVER_PORT),
     loggerLevel: Utils.parseLogLevel(
       process.env.APP_LOGGER_LEVEL,
     ) as LogLevel[],

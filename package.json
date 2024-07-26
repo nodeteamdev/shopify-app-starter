@@ -15,9 +15,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "biome lint ./apps/server/src",
     "format": "biome format --write ./apps/server/src",
+    "db:migrate:dev": "prisma migrate dev --schema=./apps/server/prisma/schema.prisma",
     "prepare": "husky install"
   },
-  "type": "git",
+  "type": "module",
   "url": "https://github.com/nodeteamdev/shopify-app-starter.git",
   "author": "",
   "license": "ISC",
