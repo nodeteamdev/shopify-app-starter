@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { 
   Page,
   Layout,
@@ -9,7 +10,6 @@ import {
   LegacyStack as Stack,
   LegacyCard as Card,
 } from '@shopify/polaris';
-import axios from 'axios';
 
 export const getSubscriptionPlans = async () => {
   const url = '/api/v1/subscription-plan';

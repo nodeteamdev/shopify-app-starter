@@ -4,14 +4,13 @@ import { Toast } from "@shopify/app-bridge-react";
 import { useTranslation } from "react-i18next";
 import { useAppQuery, useAuthenticatedFetch } from "../hooks";
 
-export function ProductsCard() {
+export function ProductsCard({shop}) {
   const emptyToastProps = { content: null };
   const [isLoading, setIsLoading] = useState(true);
   const [toastProps, setToastProps] = useState(emptyToastProps);
   const fetch = useAuthenticatedFetch();
   const { t } = useTranslation();
   const productsCount = 5;
-  const shop = new URLSearchParams(location.search).get("shop");
 
   const {
     data,

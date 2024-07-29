@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   AlphaCard as Card,
   Page,
@@ -12,11 +14,21 @@ import { TitleBar } from "@shopify/app-bridge-react";
 import { useTranslation, Trans } from "react-i18next";
 
 import { trophyImage } from "../assets";
-
 import { ProductsCard } from "../components";
+import { setShop } from '../store/shopSlice';
 
 export default function HomePage() {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const storedShop = useSelector((state) => state.shop.shop);
+
+  useEffect(() => {
+    const shopFromUrl = new URLSearchParams(location.search).get('shop');
+
+    if (shopFromUrl && shopFromUrl !== storedShop) {
+      dispatch(setShop(shopFromUrl));
+    }
+  }, [dispatch, storedShop]);
 
   return (
     <Page narrowWidth>
@@ -86,7 +98,7 @@ export default function HomePage() {
           </Card>
         </Layout.Section>
         <Layout.Section>
-          <ProductsCard />
+          <ProductsCard shop={storedShop} />
         </Layout.Section>
       </Layout>
     </Page>
