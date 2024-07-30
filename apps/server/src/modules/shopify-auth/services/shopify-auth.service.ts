@@ -96,7 +96,9 @@ export class ShopifyAuthService {
     if (!appSubscription) {
       return res
         .status(200)
-        .redirect(`https://${shopInfo.myshopifyDomain}/admin/apps/${process.env.SHOPIFY_API_KEY}/plans`);
+        .redirect(
+          `https://${shopInfo.myshopifyDomain}/admin/apps/${process.env.SHOPIFY_API_KEY}/plans`,
+        );
     }
 
     if (appSubscription.status !== AppSubscriptionStatusesEnum.ACTIVE) {
@@ -104,9 +106,15 @@ export class ShopifyAuthService {
 
       return res
         .status(200)
-        .redirect(`https://${shopInfo.myshopifyDomain}/admin/apps/${process.env.SHOPIFY_API_KEY}/plans`);
+        .redirect(
+          `https://${shopInfo.myshopifyDomain}/admin/apps/${process.env.SHOPIFY_API_KEY}/plans`,
+        );
     }
 
-    res.status(200).redirect(`https://${shopInfo.myshopifyDomain}/admin/apps/${process.env.SHOPIFY_API_KEY}`);
+    res
+      .status(200)
+      .redirect(
+        `https://${shopInfo.myshopifyDomain}/admin/apps/${process.env.SHOPIFY_API_KEY}`,
+      );
   }
 }
