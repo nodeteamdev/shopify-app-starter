@@ -45,6 +45,8 @@ $ npm run test:cov
   - Do not delete `shopify.app.toml` file since that's required by Shopify CLI 3.0 to function properly, even if the file is empty.
 - [x] Prisma migrations
   - Run `db:migrate:dev` to run db migrations
+- [x] Build project
+  - Run `build` to create dist file and move it to public in apps/server.
 - [x] Create a new Public app from your [Shopify Partner Dashboard](https://partners.shopify.com).
 - [x] Build your `.env` file in core project based on `.env.example` . Some envs explanation:
   - `DATABASE_URL`: Postgres connection URL. If you're using a locally hosted version, `postgresql://<username>:<password>@localhost:5432/<dbname>`

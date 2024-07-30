@@ -40,7 +40,7 @@ const logger: Logger = new Logger('AppModule');
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../../../../', 'client'),
+      rootPath: join(__dirname, '../../../public/dist'),
     }),
     ConfigModule.forRoot({
       isGlobal: true,
