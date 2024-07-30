@@ -8,7 +8,8 @@ import { WebhookConfig } from '@modules/shopify-app-install/interfaces/webhook-c
 import { extractIdFromShopify } from '@modules/common/helpers/extract-id-from-shopify.helper';
 import { AppSubscriptionService } from '@modules/subscription/services/app-subscription.service';
 import { AppSubscriptionStatusesEnum } from '@prisma/client';
-import { SubscriptionPlanService } from '@modules/subscription/services/subscription-plan.service';
+import { ConfigService } from '@nestjs/config';
+import { ShopifyConfig } from '@config/shopify.config';
 
 @Injectable()
 export class ShopifyAuthService {
@@ -19,7 +20,7 @@ export class ShopifyAuthService {
     private readonly shopService: ShopService,
     private readonly shopifyAppInstallService: ShopifyAppInstallService,
     private readonly appSubscriptionService: AppSubscriptionService,
-    private readonly subscriptionPlanService: SubscriptionPlanService,
+    private readonly configService: ConfigService,
   ) {}
 
   public async storeOfflineToken(req: Request, res: Response) {
@@ -90,6 +91,8 @@ export class ShopifyAuthService {
       }: ${JSON.stringify({ session }, null, 2)}`,
     );
 
+    const { apiKey } = this.configService.get<ShopifyConfig>('shopify');
+
     const appSubscription =
       await this.appSubscriptionService.findOneByShopId(extractedShopId);
 
@@ -97,7 +100,7 @@ export class ShopifyAuthService {
       return res
         .status(200)
         .redirect(
-          `https://${shopInfo.myshopifyDomain}/admin/apps/${process.env.SHOPIFY_API_KEY}/plans`,
+          `https://${shopInfo.myshopifyDomain}/admin/apps/${apiKey}/plans`,
         );
     }
 
@@ -107,14 +110,14 @@ export class ShopifyAuthService {
       return res
         .status(200)
         .redirect(
-          `https://${shopInfo.myshopifyDomain}/admin/apps/${process.env.SHOPIFY_API_KEY}/plans`,
+          `https://${shopInfo.myshopifyDomain}/admin/apps/${apiKey}/plans`,
         );
     }
 
     res
       .status(200)
       .redirect(
-        `https://${shopInfo.myshopifyDomain}/admin/apps/${process.env.SHOPIFY_API_KEY}`,
+        `https://${shopInfo.myshopifyDomain}/admin/apps/${apiKey}`,
       );
   }
 }
