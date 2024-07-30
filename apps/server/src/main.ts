@@ -1,3 +1,8 @@
+import * as path from 'node:path';
+import * as Sentry from '@sentry/node';
+import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
+import basicAuth from 'express-basic-auth';
 import { AppConfig } from '@config/app.config';
 import { NgrokConfig } from '@config/ngrok.config';
 import { SentryConfig } from '@config/sentry.config';
@@ -16,11 +21,7 @@ import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import SwaggerCustomOptions from '@options/swagger-custom.options';
-import * as Sentry from '@sentry/node';
 import { useContainer } from 'class-validator';
-import cookieParser from 'cookie-parser';
-import basicAuth from 'express-basic-auth';
-import helmet from 'helmet';
 
 async function bootstrap(): Promise<{
   appConfig: AppConfig;
@@ -33,6 +34,8 @@ async function bootstrap(): Promise<{
   });
 
   app.use(cookieParser());
+
+  app.useStaticAssets(path.join(__dirname, '../../client/dist'));
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
