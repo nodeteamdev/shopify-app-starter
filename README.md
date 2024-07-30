@@ -65,7 +65,7 @@ $ npm run test:cov
   - `format`: Run biome format.
   - `prepare`: Install husky.
 - [x] Setup Partner Dashboard
-  - Run `npm run ngrok` to generate your subdomain. Copy the `https://<your-url>` domain and add it in `API_HOST_NAME` in your `.env` file.
+  - Run `npm run ngrok` to generate your subdomain. Copy the `<your-url>` domain and add it in `API_HOST_NAME` in your `.env` file.
   - Setup URL's manually by heading over to Shopify Partner Dashboard > Apps > _Your App Name_ > Configuration
   - In the URLs section
     - App URL: `https://<your-url>`
