@@ -9,7 +9,7 @@
     "dev": "turbo run dev",
     "start:dev": "cd apps/server && nest start --watch",
     "build": "turbo run build && npm run move-build",
-    "move-build": "mv apps/client/dist apps/server/public",
+    "move-build": "rsync -av --delete apps/client/dist/ apps/server/public/",
     "start": "node apps/server/dist/main",
     "shopify": "shopify",
     "s:e:create": "shopify app generate extension",

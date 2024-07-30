@@ -1,4 +1,3 @@
-import * as path from 'node:path';
 import * as Sentry from '@sentry/node';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
@@ -34,8 +33,6 @@ async function bootstrap(): Promise<{
   });
 
   app.use(cookieParser());
-
-  app.useStaticAssets(path.join(__dirname, '../../client/dist'));
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
