@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import {
   Page,
   LegacyCard as Card,
@@ -9,13 +10,11 @@ import {
   Select,
   Pagination,
 } from '@shopify/polaris';
-import { useTranslation } from 'react-i18next';
 import { useAuthenticatedFetch } from '../hooks/index.js';
+
 const DEFAULT_PAGINATION_LIMIT = 10;
 
 const  ProductList = () => {
-  const { t } = useTranslation();
-  const shop = new URLSearchParams(location.search).get("shop");
   const fetch = useAuthenticatedFetch();
   const [products, setProducts] = useState([]);
   const [pageInfo, setPageInfo] = useState({ endCursor: null, hasNextPage: false });
@@ -23,6 +22,8 @@ const  ProductList = () => {
   const [query, setQuery] = useState('');
   const [sortKey, setSortKey] = useState('');
   const [reverse, setReverse] = useState('');
+
+  const shop = useSelector((state) => state.shop.shop);
 
   const fetchProducts = async (params = {}) => {
     try {
