@@ -116,8 +116,6 @@ export class ShopifyAuthService {
 
     res
       .status(200)
-      .redirect(
-        `https://${shopInfo.myshopifyDomain}/admin/apps/${apiKey}`,
-      );
+      .redirect(`https://${shopInfo.myshopifyDomain}/admin/apps/${apiKey}`);
   }
 }
