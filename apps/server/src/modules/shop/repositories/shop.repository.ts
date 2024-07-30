@@ -81,7 +81,7 @@ export class ShopRepository {
         }),
         this.prismaService.subscriptionPlan.update({
           where: { id: appSubscription.subscriptionPlanId },
-          data: { status: SubscriptionPlanStatusesEnum.INACTIVE },
+          data: { status: SubscriptionPlanStatusesEnum.ACTIVE },
         }),
       );
     }
