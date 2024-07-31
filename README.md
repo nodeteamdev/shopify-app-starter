@@ -45,13 +45,10 @@ $ npm run test:cov
   - Do not delete `shopify.app.toml` file since that's required by Shopify CLI 3.0 to function properly, even if the file is empty.
 - [x] Prisma migrations
   - Run `db:migrate:dev` to run db migrations
-- [x] Build project
-  - Run `build` to create dist file and move it to public in apps/server.
 - [x] Create a new Public app from your [Shopify Partner Dashboard](https://partners.shopify.com).
 - [x] Build your `.env` file in core project based on `.env.example` . Some envs explanation:
   - `DATABASE_URL`: Postgres connection URL. If you're using a locally hosted version, `postgresql://<username>:<password>@localhost:5432/<dbname>`
   - `API_HOST_NAME`: URL generated from Ngrok. It should not contain trailing slash.
-- [x] Build your `.env` file in apps/client based on `.env.example` .
 - [x] You can choose Shopify api scopes in apps/server/src/config/shopify.config.ts
   - A list of access scopes can be found [here](https://shopify.dev/api/usage/access-scopes)
 - [x] NPM Scripts
@@ -80,6 +77,8 @@ $ npm run test:cov
       - Customers Data Request: `https://<your-url>/api/v1/mandatory-webhook/customers/data-request`
       - Customers Redact: `https://<your-url>/api/v1/mandatory-webhook/customers/redact`
       - Shop Redact: `https://<your-url>/api/v1/mandatory-webhook/shops/redact`
+- [x] Build project
+  - Run `build` to create dist file and move it to public in apps/server.
 - [x] Running App
   - Development Mode
     - Run `npm run ngrok` to create a ngrok instance if you haven't already.
