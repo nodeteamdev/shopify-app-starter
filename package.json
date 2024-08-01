@@ -8,7 +8,8 @@
     "ngrok:prod": "ngrok http 3000",
     "dev": "turbo run dev",
     "start:dev": "cd apps/server && nest start --watch",
-    "build": "turbo run build && npm run move-build",
+    "build": "turbo run build && npm run move-build && npm run shopify:build && npm run shopify:deploy",
+    "inject-env": "node inject-env.js",
     "move-build": "rsync -av --delete apps/client/dist/ apps/server/public/",
     "start": "node apps/server/dist/main",
     "shopify": "shopify",
@@ -18,7 +19,14 @@
     "lint": "biome lint ./apps/server/src",
     "format": "biome format --write ./apps/server/src",
     "db:migrate:dev": "prisma migrate dev --schema=./apps/server/prisma/schema.prisma",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "shopify:dev": "shopify app dev",
+    "shopify:info": "shopify app info",
+    "shopify:generate": "shopify app generate",
+    "shopify:build": "shopify app build",
+    "shopify:deploy": "shopify app deploy",
+    "shopify:auth": "shopify auth",
+    "shopify:config": "shopify app config use"
   },
   "type": "module",
   "url": "https://github.com/nodeteamdev/shopify-app-starter.git",
@@ -35,6 +43,7 @@
   },
   "private": true,
   "dependencies": {
+    "dotenv": "^16.4.5",
     "turbo": "^2.0.6"
   },
   "workspaces": [

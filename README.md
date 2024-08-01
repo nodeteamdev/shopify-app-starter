@@ -41,31 +41,8 @@ $ npm run test:cov
 
 ## Setup
 
-- [x] Run `npm i` to install dependencies.
-  - Do not delete `shopify.app.toml` file since that's required by Shopify CLI 3.0 to function properly, even if the file is empty.
-- [x] Prisma migrations
-  - Run `db:migrate:dev` to run db migrations
-- [x] Build project
-  - Run `build` to create dist file and move it to public in apps/server.
+- [x] Run `npm install && npm install -g @shopify/cli@latest` to install dependencies.
 - [x] Create a new Public app from your [Shopify Partner Dashboard](https://partners.shopify.com).
-- [x] Build your `.env` file in core project based on `.env.example` . Some envs explanation:
-  - `DATABASE_URL`: Postgres connection URL. If you're using a locally hosted version, `postgresql://<username>:<password>@localhost:5432/<dbname>`
-  - `API_HOST_NAME`: URL generated from Ngrok. It should not contain trailing slash.
-- [x] Build your `.env` file in apps/client based on `.env.example` .
-- [x] You can choose Shopify api scopes in apps/server/src/config/shopify.config.ts
-  - A list of access scopes can be found [here](https://shopify.dev/api/usage/access-scopes)
-- [x] NPM Scripts
-  - `dev`: Run in dev mode.
-  - `build`: Use Vite to build React into `client/dist`. If you don't run build, you cannot serve anything in dev / production modes.
-  - `start`: Run in production mode. Please run `npm run build` before to compile client side.
-  - `ngrok:auth`: Add in your auth token from [Ngrok](https://ngrok.com) to use the service.
-  - `ngrok`: Ngrok is used to expose specific ports of your machine to the internet and serve over https. Running `npm run ngrok` auto generates a URL for you. The URL that's generated here goes in `API_HOST_NAME` and in the URL section of your app in Partner Dashboard.
-  - `shopify`: Run CLI 3.0 commands with `npm run shopify [command]`;
-  - `s:e:create`: Create extension scaffolding using CLI 3.0. A new folder called `extensions` is created at root that uses the new folder structure.
-  - `s:e:deploy`: Deploy extension(s) to Shopify.
-  - `lint`: Run biome lint.
-  - `format`: Run biome format.
-  - `prepare`: Install husky.
 - [x] Setup Partner Dashboard
   - Run `npm run ngrok` to generate your subdomain. Copy the `<your-url>` domain and add it in `API_HOST_NAME` in your `.env` file.
   - Setup URL's manually by heading over to Shopify Partner Dashboard > Apps > _Your App Name_ > Configuration
@@ -80,6 +57,16 @@ $ npm run test:cov
       - Customers Data Request: `https://<your-url>/api/v1/mandatory-webhook/customers/data-request`
       - Customers Redact: `https://<your-url>/api/v1/mandatory-webhook/customers/redact`
       - Shop Redact: `https://<your-url>/api/v1/mandatory-webhook/shops/redact`
+- [x] Build your `.env` file in core project based on `.env.example` . Some envs explanation:
+  - `DATABASE_URL`: Postgres connection URL. If you're using a locally hosted version, `postgresql://<username>:<password>@localhost:5432/<dbname>`
+  - `API_HOST_NAME`: URL generated from Ngrok. It should not contain trailing slash.
+- [x] You can choose Shopify api scopes in apps/server/src/config/shopify.config.ts
+  - A list of access scopes can be found [here](https://shopify.dev/api/usage/access-scopes)
+- [x] Build your `shopify.app.toml` file in core project based on `shopify.app.toml.example`
+- [x] Prisma migrations
+  - Run `db:migrate:dev` to run db migrations
+- [x] Build project
+  - Run `build` to build project.
 - [x] Running App
   - Development Mode
     - Run `npm run ngrok` to create a ngrok instance if you haven't already.
@@ -88,7 +75,7 @@ $ npm run test:cov
     - Run `npm run ngrok:prod` to create a ngrok instance if you haven't already.
     - Run `npm run build` to build both react and nest.
     - Run `npm run start` to run the server in development mode.
-  - Install the app by heading over to `https://ngrokurl.io/api/v1/shopify-auth?shop=mystorename.myshopify.com`. In dev mode, if you try and install from your partner dashboard, it'll fail since it'll use Vite instead of Express to run the server.
+  - Install the app by heading over to `https://<your-url>/api/v1/shopify-auth?shop=mystorename.myshopify.com`. In dev mode, if you try and install from your partner dashboard, it'll fail since it'll use Vite instead of Express to run the server. Or just select store in [Shopify Partner Dashboard](https://partners.shopify.com).
 
 ## Support
 

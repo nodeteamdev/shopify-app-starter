@@ -28,7 +28,7 @@ export class ShopifyAuthSessionService {
     const session = await this.shopifyAuthSessionRepository.findUnique(id);
 
     if (!session) {
-      throw new NotFoundException(SESSION_NOT_FOUND);
+      return undefined;
     }
 
     if (session.content) {

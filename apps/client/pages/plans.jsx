@@ -48,7 +48,7 @@ const SubscriptionPlans = () => {
 
   const shop = new URLSearchParams(location.search).get('shop');
 
-  const dashboardUrl = `https://${shop}/admin/apps/${process.env.SHOPIFY_API_KEY}`;
+  const dashboardUrl = `https://${shop}/admin/apps/${window.env.SHOPIFY_API_KEY}`;
 
   useEffect(() => {
     const fetchPlans = async () => {
