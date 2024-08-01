@@ -8,7 +8,8 @@
     "ngrok:prod": "ngrok http 3000",
     "dev": "turbo run dev",
     "start:dev": "cd apps/server && nest start --watch",
-    "build": "turbo run build && npm run move-build",
+    "build": "turbo run build && npm run inject-env && npm run move-build",
+    "inject-env": "node inject-env.js",
     "move-build": "rsync -av --delete apps/client/dist/ apps/server/public/",
     "start": "node apps/server/dist/main",
     "shopify": "shopify",
@@ -35,6 +36,7 @@
   },
   "private": true,
   "dependencies": {
+    "dotenv": "^16.4.5",
     "turbo": "^2.0.6"
   },
   "workspaces": [
