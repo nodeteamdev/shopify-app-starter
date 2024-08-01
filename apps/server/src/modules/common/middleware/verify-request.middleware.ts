@@ -64,7 +64,7 @@ export class VerifyRequest implements NestMiddleware {
           res.header('X-Shopify-API-Request-Failure-Reauthorize', '1');
           res.header(
             'X-Shopify-API-Request-Failure-Reauthorize-Url',
-            `/shopify-auth?shop=${shop}&host=${host}`,
+            `/api/v1/shopify-auth?shop=${shop}&host=${host}`,
           );
 
           return res.end();
