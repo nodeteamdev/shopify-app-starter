@@ -42,8 +42,6 @@ $ npm run test:cov
 ## Setup
 
 - [x] Run `npm install && npm install -g @shopify/cli@latest` to install dependencies.
-- [x] Prisma migrations
-  - Run `db:migrate:dev` to run db migrations
 - [x] Create a new Public app from your [Shopify Partner Dashboard](https://partners.shopify.com).
 - [x] Setup Partner Dashboard
   - Run `npm run ngrok` to generate your subdomain. Copy the `<your-url>` domain and add it in `API_HOST_NAME` in your `.env` file.
@@ -64,7 +62,9 @@ $ npm run test:cov
   - `API_HOST_NAME`: URL generated from Ngrok. It should not contain trailing slash.
 - [x] You can choose Shopify api scopes in apps/server/src/config/shopify.config.ts
   - A list of access scopes can be found [here](https://shopify.dev/api/usage/access-scopes)
-- [x] Build your `shopify.app.toml` file in core project bases on `shopify.app.toml.example`
+- [x] Build your `shopify.app.toml` file in core project based on `shopify.app.toml.example`
+- [x] Prisma migrations
+  - Run `db:migrate:dev` to run db migrations
 - [x] Build project
   - Run `build` to build project.
 - [x] Running App

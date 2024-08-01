@@ -43,13 +43,13 @@ export function AppBridgeProvider({ children }) {
 
     return {
       host,
-      apiKey: process.env.SHOPIFY_API_KEY,
+      apiKey: window.env.SHOPIFY_API_KEY,
       forceRedirect: true,
     };
   });
 
-  if (!process.env.SHOPIFY_API_KEY || !appBridgeConfig.host) {
-    const bannerProps = !process.env.SHOPIFY_API_KEY
+  if (!window.env.SHOPIFY_API_KEY || !appBridgeConfig.host) {
+    const bannerProps = !window.env.SHOPIFY_API_KEY
       ? {
           title: "Missing Shopify API Key",
           children: (
