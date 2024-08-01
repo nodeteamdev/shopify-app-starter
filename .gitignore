@@ -11,6 +11,11 @@ node_modules/
 .turbo/
 public/
 
+# shopify
+shopify.app.toml/
+./shopify.app.toml
+/shopify.app.toml
+
 # Logs
 logs
 *.log

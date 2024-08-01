@@ -41,8 +41,8 @@ $ npm run test:cov
 
 ## Setup
 
-- [x] Run `npm i` to install dependencies.
-  - Do not delete `shopify.app.toml` file since that's required by Shopify CLI 3.0 to function properly, even if the file is empty.
+- [x] Run `npm install && npm install -g @shopify/cli@latest` to install dependencies.
+  - In `shopify.app.toml` file add data from shopify.partners.
 - [x] Prisma migrations
   - Run `db:migrate:dev` to run db migrations
 - [x] Build project
@@ -51,7 +51,6 @@ $ npm run test:cov
 - [x] Build your `.env` file in core project based on `.env.example` . Some envs explanation:
   - `DATABASE_URL`: Postgres connection URL. If you're using a locally hosted version, `postgresql://<username>:<password>@localhost:5432/<dbname>`
   - `API_HOST_NAME`: URL generated from Ngrok. It should not contain trailing slash.
-- [x] Build your `.env` file in apps/client based on `.env.example` .
 - [x] You can choose Shopify api scopes in apps/server/src/config/shopify.config.ts
   - A list of access scopes can be found [here](https://shopify.dev/api/usage/access-scopes)
 - [x] NPM Scripts
@@ -88,7 +87,7 @@ $ npm run test:cov
     - Run `npm run ngrok:prod` to create a ngrok instance if you haven't already.
     - Run `npm run build` to build both react and nest.
     - Run `npm run start` to run the server in development mode.
-  - Install the app by heading over to `https://ngrokurl.io/api/v1/shopify-auth?shop=mystorename.myshopify.com`. In dev mode, if you try and install from your partner dashboard, it'll fail since it'll use Vite instead of Express to run the server.
+  - Install the app by heading over to `https://<your-url>/api/v1/shopify-auth?shop=mystorename.myshopify.com`. In dev mode, if you try and install from your partner dashboard, it'll fail since it'll use Vite instead of Express to run the server.
 
 ## Support
 
