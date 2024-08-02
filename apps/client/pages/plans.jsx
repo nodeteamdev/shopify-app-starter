@@ -48,8 +48,6 @@ const SubscriptionPlans = () => {
 
   const shop = new URLSearchParams(location.search).get('shop');
 
-  const dashboardUrl = `https://${shop}/admin/apps/${window.env.SHOPIFY_API_KEY}`;
-
   useEffect(() => {
     const fetchPlans = async () => {
       try {
@@ -64,10 +62,6 @@ const SubscriptionPlans = () => {
 
     fetchPlans();
   }, []);
-
-  const handleSkip = () => {
-    window.top.location.href = dashboardUrl;
-  };
 
   if (loading) return <Spinner accessibilityLabel="Loading" size="large" />;
   if (error) return <Banner status="critical">{error}</Banner>;
@@ -98,17 +92,6 @@ const SubscriptionPlans = () => {
                 </Button>
               </Card>
             ))}
-          </Stack>
-        </Layout.Section>
-        <Layout.Section>
-          <div style={{ marginTop: '30px' }}></div>
-          <Stack alignment="center" distribution="center">
-            <Text>
-              You can choose a plan later.{' '}
-              <Button plain onClick={handleSkip}>
-                Skip this page
-              </Button>
-            </Text>
           </Stack>
         </Layout.Section>
       </Layout>
