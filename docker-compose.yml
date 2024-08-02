@@ -2,13 +2,14 @@ services:
   app:
     build:
       context: .
-      dockerfile: ./apps/server/Dockerfile
+      dockerfile: ./Dockerfile
     container_name: shopify-starter-app
     env_file:
-      - ./apps/server/.env
+      - ./.env
     environment:
       - REDIS_URL=redis://redis:6379
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/postgres?schema=public
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/shopify-app?schema=public
+      - NODE_OPTIONS=--max-old-space-size=4096
     volumes:
       - ./:/app:cached
     restart: always
