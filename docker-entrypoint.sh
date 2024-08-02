@@ -1,11 +1,11 @@
 #!/bin/bash
 set -e
 
-echo "Migration started"
-npm run db:migrate:prod
-
 echo "Generate prisma"
 npm run db:generate
+
+echo "Migrate prisma"
+npm run db:migrate:dev
 
 echo "Start prod"
 npm run start:prod

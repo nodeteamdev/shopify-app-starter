@@ -1,12 +1,10 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import { fileURLToPath } from 'url';
+import fs from 'fs';
+import path from 'path';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const baseDir = path.resolve('apps/client/dist');
 
 const envVars = {
   SHOPIFY_API_KEY: process.env.SHOPIFY_API_KEY,
@@ -14,7 +12,7 @@ const envVars = {
 
 const envFileContent = `window.env = ${JSON.stringify(envVars)}`;
 
-const envFilePath = path.resolve(__dirname, 'apps/client/dist/env.js');
+const envFilePath = path.join(baseDir, 'env.js');
 
 fs.writeFileSync(envFilePath, envFileContent, { encoding: 'utf8' });
 
