@@ -1,10 +1,10 @@
-const fs = require('fs');
-const path = require('path');
-const dotenv = require('dotenv');
+import fs from 'fs';
+import path from 'path';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
-const baseDir = path.resolve(__dirname, 'apps/client/dist');
+const baseDir = path.resolve('apps/client/dist');
 
 const envVars = {
   SHOPIFY_API_KEY: process.env.SHOPIFY_API_KEY,

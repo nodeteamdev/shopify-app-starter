@@ -1,10 +1,11 @@
 #!/bin/bash
 set -e
 
-# export PATH=./node_modules/.bin:$PATH
+echo "Generate prisma"
+npm run db:generate
 
 echo "Migrate prisma"
-npx prisma migrate dev --schema=./apps/server/prisma/schema.prisma
+npm run db:migrate:dev
 
 echo "Start prod"
 npm run start:prod
