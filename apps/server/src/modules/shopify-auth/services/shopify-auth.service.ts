@@ -93,7 +93,9 @@ export class ShopifyAuthService {
       }: ${JSON.stringify({ session }, null, 2)}`,
     );
 
-    await this.bulkOperationService.parseAndSaveOrders(shopInfo.myshopifyDomain);
+    await this.bulkOperationService.parseAndSaveOrders(
+      shopInfo.myshopifyDomain,
+    );
 
     this.logger.debug(`Orders have been saved for the shop: ${shopInfo.name}`);
 

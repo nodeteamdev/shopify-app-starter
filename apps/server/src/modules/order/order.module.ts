@@ -9,6 +9,6 @@ import { ShopModule } from '@modules/shop/shop.module';
   imports: [PrismaModule, ShopModule],
   controllers: [OrderController],
   providers: [OrderService, OrderRepository],
-  exports: [OrderService]
+  exports: [OrderService],
 })
 export class OrderModule {}

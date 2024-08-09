@@ -1,8 +1,8 @@
-import { Controller, Get, Param } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
-import { ApiOkBaseResponse } from "@modules/common/decorators/api-ok-base-response.decorator";
-import { OrderService } from "@modules/order/order.service";
-import { OrderDto } from "@modules/order/dtos/order.dto";
+import { Controller, Get, Param } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { ApiOkBaseResponse } from '@modules/common/decorators/api-ok-base-response.decorator';
+import { OrderService } from '@modules/order/order.service';
+import { OrderDto } from '@modules/order/dtos/order.dto';
 
 @Controller('order')
 @ApiTags('Orders')

@@ -11,10 +11,7 @@ export class OrderService {
     private readonly shopService: ShopService,
   ) {}
 
-  public upsertMany(
-    shopId: string,
-    orders: OrderDto[],
-  ): Promise<OrderDto[]> {
+  public upsertMany(shopId: string, orders: OrderDto[]): Promise<OrderDto[]> {
     return this.orderRepository.upsertMany(
       orders.map((order) => {
         const data: Prisma.OrderUpsertArgs = {
@@ -43,7 +40,8 @@ export class OrderService {
   }
 
   public async findManyByShopId(shopName: string): Promise<OrderDto[]> {
-    const { id: shopId } = await this.shopService.findOneByPrimaryDomain(shopName);
+    const { id: shopId } =
+      await this.shopService.findOneByPrimaryDomain(shopName);
 
     return this.orderRepository.findManyByShopId(shopId);
   }

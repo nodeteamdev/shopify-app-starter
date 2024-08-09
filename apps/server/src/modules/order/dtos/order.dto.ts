@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Order, Prisma } from "@prisma/client";
+import { ApiProperty } from '@nestjs/swagger';
+import { Order, Prisma } from '@prisma/client';
 
 export class OrderDto implements Order {
   @ApiProperty({ type: String, example: '5789856203004' })

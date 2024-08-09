@@ -112,36 +112,37 @@ export class BulkOperationService {
     return bulkOperation;
   }
 
-  public async createAndGetBulkOperation(shopName: string): Promise<ShopifyBulkOperation> {
+  public async createAndGetBulkOperation(
+    shopName: string,
+  ): Promise<ShopifyBulkOperation> {
     const createdBulkOperation = await this.create(shopName);
 
-    return new Promise(
-      (resolve, reject) => {
-        setTimeout(async () => {
-          try {
-            const foundBulkOperation = await this.findOne(
-              shopName,
-              createdBulkOperation.id,
-            );
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          const foundBulkOperation = await this.findOne(
+            shopName,
+            createdBulkOperation.id,
+          );
 
-            resolve(foundBulkOperation);
-          } catch (error) {
-            this.logger.error('Error fetching bulk operation:', error);
-            reject(error);
-          }
-        }, 2000);
-      },
-    );
+          resolve(foundBulkOperation);
+        } catch (error) {
+          this.logger.error('Error fetching bulk operation:', error);
+          reject(error);
+        }
+      }, 2000);
+    });
   }
 
   public async parseAndSaveOrders(shopName: string): Promise<Order[]> {
     const bulkOperation = await this.createAndGetBulkOperation(shopName);
 
     if (bulkOperation.status !== BulkOperationStatusesEnum.COMPLETED) {
-      throw new BadRequestException(BULK_OPERATION_NOT_COMPLETED)
+      throw new BadRequestException(BULK_OPERATION_NOT_COMPLETED);
     }
 
-    const { id: shopId } = await this.shopService.findOneByPrimaryDomain(shopName);
+    const { id: shopId } =
+      await this.shopService.findOneByPrimaryDomain(shopName);
 
     const stream = await this.getReadableStream(bulkOperation.url);
 

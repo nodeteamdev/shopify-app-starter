@@ -8,9 +8,14 @@ import { OrderModule } from '@modules/order/order.module';
 import { ShopModule } from '@modules/shop/shop.module';
 
 @Module({
-  imports: [forwardRef(() => ShopifyAuthModule), HttpModule, OrderModule, ShopModule],
+  imports: [
+    forwardRef(() => ShopifyAuthModule),
+    HttpModule,
+    OrderModule,
+    ShopModule,
+  ],
   controllers: [BulkOperationController],
   providers: [BulkOperationService, ShopifyBulkOperationRepository],
-  exports: [BulkOperationService]
+  exports: [BulkOperationService],
 })
 export class BulkOperationModule {}

@@ -1,6 +1,6 @@
-import { PrismaService } from "@modules/common/providers/prisma";
-import { Injectable } from "@nestjs/common";
-import { Order, Prisma } from "@prisma/client";
+import { PrismaService } from '@modules/common/providers/prisma';
+import { Injectable } from '@nestjs/common';
+import { Order, Prisma } from '@prisma/client';
 
 @Injectable()
 export class OrderRepository {
