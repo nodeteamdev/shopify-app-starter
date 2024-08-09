@@ -34,6 +34,7 @@ import { RedisThrottlerStorageService } from '@providers/redis/redis-throttler-s
 import { RedisModule } from '@providers/redis/redis.module';
 import { RedisModule as NestRedisModule } from '@songkeys/nestjs-redis';
 import { Redis } from 'ioredis';
+import { BulkOperationModule } from '@modules/bulk-operation/bulk-operation.module';
 
 const logger: Logger = new Logger('AppModule');
 
@@ -112,6 +113,7 @@ const logger: Logger = new Logger('AppModule');
     ShopifyModule,
     ProductModule,
     GraphqlModule,
+    BulkOperationModule,
   ],
   controllers: [AppController],
   providers: [
