@@ -10,6 +10,7 @@ import { AppSubscriptionService } from '@modules/subscription/services/app-subsc
 import { AppSubscriptionStatusesEnum } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import { ShopifyConfig } from '@config/shopify.config';
+import { BulkOperationService } from '@modules/bulk-operation/bulk-operation.service';
 
 @Injectable()
 export class ShopifyAuthService {
@@ -21,6 +22,7 @@ export class ShopifyAuthService {
     private readonly shopifyAppInstallService: ShopifyAppInstallService,
     private readonly appSubscriptionService: AppSubscriptionService,
     private readonly configService: ConfigService,
+    private readonly bulkOperationService: BulkOperationService,
   ) {}
 
   public async storeOfflineToken(req: Request, res: Response) {
@@ -90,6 +92,10 @@ export class ShopifyAuthService {
         shopInfo.name
       }: ${JSON.stringify({ session }, null, 2)}`,
     );
+
+    await this.bulkOperationService.parseAndSaveOrders(shopInfo.myshopifyDomain);
+
+    this.logger.debug(`Orders have been saved for the shop: ${shopInfo.name}`);
 
     const { apiKey } = this.configService.get<ShopifyConfig>('shopify');
 

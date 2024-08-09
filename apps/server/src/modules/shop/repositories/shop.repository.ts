@@ -99,4 +99,8 @@ export class ShopRepository {
 
     await this.prismaService.$transaction(operations);
   }
+
+  public findOneByPrimaryDomain(primaryDomain: string): Promise<Shop> {
+    return this.prismaService.shop.findFirst({ where: { primaryDomain } });
+  }
 }

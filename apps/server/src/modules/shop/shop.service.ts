@@ -82,4 +82,8 @@ export class ShopService {
       shopId,
     );
   }
+
+  public findOneByPrimaryDomain(primaryDomain: string): Promise<Shop> {
+    return this.shopRepository.findOneByPrimaryDomain(primaryDomain);
+  }
 }

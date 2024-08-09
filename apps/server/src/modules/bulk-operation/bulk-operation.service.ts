@@ -1,11 +1,17 @@
 import * as readline from 'readline';
 import { Readable } from 'node:stream';
 import { HttpService } from '@nestjs/axios';
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { Order } from '@prisma/client';
 import { ShopifyBulkOperationRepository } from '@modules/bulk-operation/shopify-bulk-operation.repository';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 import { ShopifyBulkOperation } from '@modules/bulk-operation/interfaces/shopify-bulk-operation.interface';
 import { CreatedBulkOperation } from '@modules/bulk-operation/interfaces/created-bulk-operation.interface';
+import { OrderService } from '@modules/order/order.service';
+import { ShopService } from '@modules/shop/shop.service';
+import { OrderDto } from '@modules/order/dtos/order.dto';
+import { BulkOperationStatusesEnum } from './enums/bulk-operation-statuses.enum';
+import { BULK_OPERATION_NOT_COMPLETED } from '@modules/common/constants/errors.constants';
 
 @Injectable()
 export class BulkOperationService {
@@ -15,9 +21,11 @@ export class BulkOperationService {
     private readonly shopifyBulkOperationRepository: ShopifyBulkOperationRepository,
     private readonly shopifyAuthSessionService: ShopifyAuthSessionService,
     public readonly httpService: HttpService,
+    public readonly orderService: OrderService,
+    public readonly shopService: ShopService,
   ) {}
 
-  private static parseLine(parsedLine: any, orders: any): void {
+  private static parseLine(parsedLine: any, orders: OrderDto[]): void {
     if (!parsedLine.__parentId) {
       parsedLine.id = parsedLine.id.split('/').at(-1);
 
@@ -104,10 +112,10 @@ export class BulkOperationService {
     return bulkOperation;
   }
 
-  public async createAndGetBulkOperation(shopName: string) {
+  public async createAndGetBulkOperation(shopName: string): Promise<ShopifyBulkOperation> {
     const createdBulkOperation = await this.create(shopName);
 
-    const bulkOperation: ShopifyBulkOperation = await new Promise(
+    return new Promise(
       (resolve, reject) => {
         setTimeout(async () => {
           try {
@@ -124,10 +132,20 @@ export class BulkOperationService {
         }, 2000);
       },
     );
+  }
+
+  public async parseAndSaveOrders(shopName: string): Promise<Order[]> {
+    const bulkOperation = await this.createAndGetBulkOperation(shopName);
+
+    if (bulkOperation.status !== BulkOperationStatusesEnum.COMPLETED) {
+      throw new BadRequestException(BULK_OPERATION_NOT_COMPLETED)
+    }
+
+    const { id: shopId } = await this.shopService.findOneByPrimaryDomain(shopName);
 
     const stream = await this.getReadableStream(bulkOperation.url);
 
-    return new Promise<void>((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       try {
         const rl = readline.createInterface({
           input: stream,
@@ -142,16 +160,18 @@ export class BulkOperationService {
         });
 
         rl.on('close', async () => {
-          resolve(orders as any);
+          await this.orderService.upsertMany(shopId, orders);
+
+          resolve(orders);
         });
 
         rl.on('error', (error) => {
-          Logger.error('Error reading the file:', error);
+          this.logger.error('Error reading the file:', error);
 
           reject(error);
         });
       } catch (error) {
-        Logger.error(error);
+        this.logger.error(error);
 
         reject(error);
       }
