@@ -10,7 +10,7 @@ import { CreatedBulkOperation } from '@modules/bulk-operation/interfaces/created
 import { OrderService } from '@modules/order/order.service';
 import { ShopService } from '@modules/shop/shop.service';
 import { OrderDto } from '@modules/order/dtos/order.dto';
-import { BulkOperationStatusesEnum } from './enums/bulk-operation-statuses.enum';
+import { BulkOperationStatusesEnum } from '@modules/bulk-operation/enums/bulk-operation-statuses.enum';
 import { BULK_OPERATION_NOT_COMPLETED } from '@modules/common/constants/errors.constants';
 
 @Injectable()
