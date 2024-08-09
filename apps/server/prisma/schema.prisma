@@ -26,6 +26,7 @@ model Shop {
   sessions         Session[]
   status           ShopStatusesEnum @default(ACTIVE)
   appUninstalledAt DateTime?
+  orders           Order[]
 
   @@map("shops")
 }
@@ -95,6 +96,19 @@ model SubscriptionPlan {
   appSubscriptions AppSubscription[]
 
   @@map("subscription_plans")
+}
+
+model Order {
+  id                     String   @id(map: "pk_Order")
+  createdAt              String
+  discountCodes          String[]
+  currencyCode           String
+  displayFinancialStatus String
+  lineItems              Json[]
+  shop                   Shop     @relation(fields: [shopId], references: [id])
+  shopId                 String
+
+  @@map("orders")
 }
 
 enum RolesEnum {

@@ -1,3 +1,4 @@
+import { BulkOperationModule } from '@modules/bulk-operation/bulk-operation.module';
 import { PrismaModule } from '@modules/common/providers/prisma';
 import { ShopModule } from '@modules/shop/shop.module';
 import { ShopifyService } from '@modules/shopify-api/services/shopify.service';
@@ -12,7 +13,12 @@ import { SubscriptionModule } from '@modules/subscription/subscription.module';
 import { forwardRef, Module } from '@nestjs/common';
 
 @Module({
-  imports: [PrismaModule, ShopModule, forwardRef(() => SubscriptionModule)],
+  imports: [
+    PrismaModule,
+    ShopModule,
+    BulkOperationModule,
+    forwardRef(() => SubscriptionModule),
+  ],
   providers: [
     ShopifyAuthService,
     ShopifyAuthRedirectService,
