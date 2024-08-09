@@ -8,6 +8,6 @@ import { BulkOperationController } from '@modules/bulk-operation/bulk-operation.
 @Module({
   imports: [ShopifyAuthModule, HttpModule],
   controllers: [BulkOperationController],
-  providers: [BulkOperationService, ShopifyBulkOperationRepository]
+  providers: [BulkOperationService, ShopifyBulkOperationRepository],
 })
 export class BulkOperationModule {}

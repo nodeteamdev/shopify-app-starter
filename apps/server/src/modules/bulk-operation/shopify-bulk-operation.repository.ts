@@ -1,15 +1,17 @@
-import { GraphqlBody } from "@modules/product/shopify-product.repository";
-import { ShopifyAppInstallRepository } from "@modules/shopify-app-install/shopify-app-install.repository";
-import { RequestReturn, Session } from "@shopify/shopify-api";
-import { CreatedShopifyBulkOperation } from "@modules/bulk-operation/interfaces/created-shopify-bulk-operation.interface";
-import { ShopifyBulkOperation } from "@modules/bulk-operation/interfaces/shopify-bulk-operation.interface";
+import { GraphqlBody } from '@modules/product/shopify-product.repository';
+import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopify-app-install.repository';
+import { RequestReturn, Session } from '@shopify/shopify-api';
+import { CreatedShopifyBulkOperation } from '@modules/bulk-operation/interfaces/created-shopify-bulk-operation.interface';
+import { ShopifyBulkOperation } from '@modules/bulk-operation/interfaces/shopify-bulk-operation.interface';
 
 export class ShopifyBulkOperationRepository {
-  public create(session: Session): Promise<RequestReturn<GraphqlBody<CreatedShopifyBulkOperation>>> {
+  public create(
+    session: Session,
+  ): Promise<RequestReturn<GraphqlBody<CreatedShopifyBulkOperation>>> {
     const client = new ShopifyAppInstallRepository.shopify.clients.Graphql({
       session: new Session(session),
     });
-  
+
     const data = `
       mutation {
         bulkOperationRunQuery(
@@ -61,11 +63,14 @@ export class ShopifyBulkOperationRepository {
         }
       }
     `;
-  
+
     return client.query({ data });
   }
 
-  public findOne(session: Session, bulkOperationId: string): Promise<RequestReturn<GraphqlBody<{ node: ShopifyBulkOperation }>>> {
+  public findOne(
+    session: Session,
+    bulkOperationId: string,
+  ): Promise<RequestReturn<GraphqlBody<{ node: ShopifyBulkOperation }>>> {
     const client = new ShopifyAppInstallRepository.shopify.clients.Graphql({
       session: new Session(session),
     });
@@ -86,11 +91,13 @@ export class ShopifyBulkOperationRepository {
       }
     `;
 
-    return client.query({ data: {
-      query,
-      variables: {
-        id: bulkOperationId,
+    return client.query({
+      data: {
+        query,
+        variables: {
+          id: bulkOperationId,
+        },
       },
-    }, });
+    });
   }
 }

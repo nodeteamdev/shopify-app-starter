@@ -78,49 +78,52 @@ export class BulkOperationService {
           bulkOperationRunQuery: { bulkOperation: createdBulkOperation },
         },
       },
-    } = await this.shopifyBulkOperationRepository.create(
-      shopifySession
-    );
+    } = await this.shopifyBulkOperationRepository.create(shopifySession);
 
     return createdBulkOperation;
   }
 
-  public async findOne(shopName: string, bulkOperationId: string): Promise<ShopifyBulkOperation> {
+  public async findOne(
+    shopName: string,
+    bulkOperationId: string,
+  ): Promise<ShopifyBulkOperation> {
     const shopifySession =
       await this.shopifyAuthSessionService.getShopifySessionByShopName(
         shopName,
       );
 
-      const {
-        body: {
-          data: {
-            node: bulkOperation,
-          },
-        },
-      } = await this.shopifyBulkOperationRepository.findOne(
-        shopifySession,
-        bulkOperationId,
-      );
-  
-      
+    const {
+      body: {
+        data: { node: bulkOperation },
+      },
+    } = await this.shopifyBulkOperationRepository.findOne(
+      shopifySession,
+      bulkOperationId,
+    );
+
     return bulkOperation;
   }
 
   public async createAndGetBulkOperation(shopName: string) {
     const createdBulkOperation = await this.create(shopName);
 
-    const bulkOperation: ShopifyBulkOperation = await new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const foundBulkOperation = await this.findOne(shopName, createdBulkOperation.id);
+    const bulkOperation: ShopifyBulkOperation = await new Promise(
+      (resolve, reject) => {
+        setTimeout(async () => {
+          try {
+            const foundBulkOperation = await this.findOne(
+              shopName,
+              createdBulkOperation.id,
+            );
 
-          resolve(foundBulkOperation);
-        } catch (error) {
-          this.logger.error('Error fetching bulk operation:', error);
-          reject(error);
-        }
-      }, 2000);
-    });
+            resolve(foundBulkOperation);
+          } catch (error) {
+            this.logger.error('Error fetching bulk operation:', error);
+            reject(error);
+          }
+        }, 2000);
+      },
+    );
 
     const stream = await this.getReadableStream(bulkOperation.url);
 
@@ -129,22 +132,22 @@ export class BulkOperationService {
         const rl = readline.createInterface({
           input: stream,
         });
-    
+
         const orders = [];
-    
+
         rl.on('line', async (line) => {
           const parsedLine = JSON.parse(line);
-    
+
           BulkOperationService.parseLine(parsedLine, orders);
         });
-    
+
         rl.on('close', async () => {
           resolve(orders as any);
         });
-    
+
         rl.on('error', (error) => {
           Logger.error('Error reading the file:', error);
-    
+
           reject(error);
         });
       } catch (error) {
@@ -152,12 +155,14 @@ export class BulkOperationService {
 
         reject(error);
       }
-    })
+    });
   }
 
   private async getReadableStream(url: string): Promise<Readable> {
     try {
-      const response = await this.httpService.axiosRef.get(url, { responseType: 'stream' });
+      const response = await this.httpService.axiosRef.get(url, {
+        responseType: 'stream',
+      });
 
       return response.data;
     } catch (error) {
