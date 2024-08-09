@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {LegacyCard as Card, VerticalStack as TextContainer, Text } from "@shopify/polaris";
+import {LegacyCard as Card, TextContainer, Text } from "@shopify/polaris";
 import { Toast } from "@shopify/app-bridge-react";
 import { useTranslation } from "react-i18next";
 import { useAppQuery, useAuthenticatedFetch } from "../hooks";

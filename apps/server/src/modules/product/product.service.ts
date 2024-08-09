@@ -63,6 +63,16 @@ export class ProductService {
     return ProductService.mapProduct(product);
   }
 
+  public async getProductRecommendations(shopName: string, productId: string) {
+    const shopifySession =
+      await this.shopifyAuthSessionService.getOfflineShopifySession(shopName);
+
+    return this.shopifyProductRepository.getRecommendedProducts(
+      shopifySession,
+      productId,
+    );
+  }
+
   public async getMany(
     shopName: string,
     productsQueryDto: ProductsQueryDto,

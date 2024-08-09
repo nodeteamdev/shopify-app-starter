@@ -1,5 +1,5 @@
 import { LegacyCard as  Card, Page, Layout,
-  VerticalStack as TextContainer, Text } from "@shopify/polaris";
+  TextContainer, Text } from "@shopify/polaris";
 import { TitleBar } from "@shopify/app-bridge-react";
 import { useTranslation } from "react-i18next";
 

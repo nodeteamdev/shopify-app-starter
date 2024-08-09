@@ -54,4 +54,13 @@ export class ProductController {
       productsQueryDto,
     );
   }
+
+  @ApiOkBaseResponse({ dto: ProductsDto })
+  @Get(':shopName/products/:productId/recommendations')
+  public getProductRecommendations(
+    @Param('shopName') shopName: string,
+    @Param('productId') productId: string,
+  ) {
+    return this.productService.getProductRecommendations(shopName, productId);
+  }
 }
