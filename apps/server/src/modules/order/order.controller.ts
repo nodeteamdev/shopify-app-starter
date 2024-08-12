@@ -1,8 +1,10 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiOkBaseResponse } from '@modules/common/decorators/api-ok-base-response.decorator';
 import { OrderService } from '@modules/order/order.service';
 import { OrderDto } from '@modules/order/dtos/order.dto';
+import { PaginationQueryDto } from '@modules/common/dtos/pagination-query.dto';
+import { PaginatorTypes } from '@nodeteam/nestjs-prisma-pagination';
 
 @Controller('order')
 @ApiTags('Orders')
@@ -11,7 +13,10 @@ export class OrderController {
 
   @ApiOkBaseResponse({ dto: OrderDto, isArray: true })
   @Get(':shopName')
-  public findMany(@Param('shopName') shopName: string): Promise<OrderDto[]> {
-    return this.orderService.findManyByShopId(shopName);
+  public findMany(
+    @Param('shopName') shopName: string,
+    @Query() paginationQueryDto: PaginationQueryDto
+  ): Promise<PaginatorTypes.PaginatedResult<OrderDto[]>> {
+    return this.orderService.findManyByShopId(shopName, paginationQueryDto);
   }
 }
