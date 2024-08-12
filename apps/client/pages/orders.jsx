@@ -6,6 +6,8 @@ import {
   DataTable,
   Button,
   Pagination,
+  Box,
+  Text,
 } from '@shopify/polaris';
 import { useAuthenticatedFetch } from '../hooks/index.js';
 
@@ -14,9 +16,10 @@ const DEFAULT_PAGINATION_LIMIT = 10;
 const OrderList = () => {
   const fetch = useAuthenticatedFetch();
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [_loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [expandedOrderId, setExpandedOrderId] = useState(null);
 
   const shop = useSelector((state) => state.shop.shop);
 
@@ -61,14 +64,35 @@ const OrderList = () => {
     }
   };
 
-  const rows = orders.map((order) => [
-    order.id,
-    order.createdAt,
-    order.discountCodes.join(', ') || 'None',
-    order.currencyCode,
-    order.displayFinancialStatus,
-    order.lineItems.length,
-    <Button>View</Button>,
+  const toggleOrderDetails = (orderId) => {
+    setExpandedOrderId((prev) => (prev === orderId ? null : orderId));
+  };
+
+  const rows = orders.flatMap((order) => [
+    [
+      order.id,
+      order.createdAt,
+      order.discountCodes.join(', ') || 'None',
+      order.currencyCode,
+      order.displayFinancialStatus,
+      order.lineItems.length,
+      <Button onClick={() => toggleOrderDetails(order.id)}>
+        {expandedOrderId === order.id ? 'Hide' : 'View'}
+      </Button>,
+    ],
+    ...(expandedOrderId === order.id
+      ? order.lineItems.map((item, index) => [
+          <Box>
+            <Text variation="strong">Item {index + 1}</Text>
+          </Box>,
+          `Product ID: ${item.productId}`,
+          `Quantity: ${item.quantity}`,
+          `Price: ${item.lineItemVariant.price} ${order.currencyCode}`,
+          `Total: ${item.originalTotal} ${order.currencyCode}`,
+          `Discounted Total: ${item.discountedTotal} ${order.currencyCode}`,
+          '',
+        ])
+      : []),
   ]);
 
   return (
