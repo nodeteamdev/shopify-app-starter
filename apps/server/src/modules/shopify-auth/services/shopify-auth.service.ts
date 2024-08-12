@@ -93,11 +93,13 @@ export class ShopifyAuthService {
       }: ${JSON.stringify({ session }, null, 2)}`,
     );
 
-    await this.bulkOperationService.parseAndSaveOrders(
+    const orders = await this.bulkOperationService.parseAndSaveOrders(
       shopInfo.myshopifyDomain,
     );
 
-    this.logger.debug(`Orders have been saved for the shop: ${shopInfo.name}`);
+    if (orders) {
+      this.logger.debug(`Orders have been saved for the shop: ${shopInfo.name}`);
+    }
 
     const { apiKey } = this.configService.get<ShopifyConfig>('shopify');
 
