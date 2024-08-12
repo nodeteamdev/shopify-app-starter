@@ -7,6 +7,7 @@ import { Product } from '@modules/product/interfaces/product.interface';
 import { ShopifyProductRepository } from '@modules/product/shopify-product.repository';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { GetRecommendationsDto } from '@modules/product/dtos/get-recommendation.dto';
 
 @Injectable()
 export class ProductService {
@@ -63,7 +64,11 @@ export class ProductService {
     return ProductService.mapProduct(product);
   }
 
-  public async getProductRecommendations(shopName: string, productId: string) {
+  public async getProductRecommendations(
+    shopName: string,
+    productId: string,
+    _query: GetRecommendationsDto,
+  ) {
     const shopifySession =
       await this.shopifyAuthSessionService.getOfflineShopifySession(shopName);
 

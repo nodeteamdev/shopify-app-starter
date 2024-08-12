@@ -21,6 +21,7 @@ export class OrderService {
           create: {
             id: order.id,
             createdAt: order.createdAt,
+            updatedAt: order.updatedAt,
             currencyCode: order.currencyCode,
             displayFinancialStatus: order.displayFinancialStatus,
             shop: { connect: { id: shopId } },

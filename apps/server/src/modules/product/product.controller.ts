@@ -7,6 +7,7 @@ import { ProductsQueryDto } from '@modules/product/dtos/products.query.dto';
 import { ProductService } from '@modules/product/product.service';
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
+import { GetRecommendationsDto } from '@modules/product/dtos/get-recommendation.dto';
 
 @ApiTags('Products')
 @ApiExtraModels(ProductsDto, ProductVariantsDto, ProductDto)
@@ -60,7 +61,12 @@ export class ProductController {
   public getProductRecommendations(
     @Param('shopName') shopName: string,
     @Param('productId') productId: string,
+    @Query() query: GetRecommendationsDto,
   ) {
-    return this.productService.getProductRecommendations(shopName, productId);
+    return this.productService.getProductRecommendations(
+      shopName,
+      productId,
+      query,
+    );
   }
 }

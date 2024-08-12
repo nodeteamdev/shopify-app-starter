@@ -40,8 +40,6 @@ const  RecommendationsList = () => {
         const { products: productsData, pageInfo: pageInfoData } = await response.json();
         setProducts(productsData);
         setPageInfo(pageInfoData);
-        console.log('pageInfoData');
-        console.log(pageInfoData);
       } else {
         console.error("HTTP-Error: " + response.status);
       }
