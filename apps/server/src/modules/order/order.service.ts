@@ -48,11 +48,14 @@ export class OrderService {
     const { id: shopId } =
       await this.shopService.findOneByPrimaryDomain(shopName);
 
-    const orders = await this.orderRepository.findManyByShopId(shopId, paginationQueryDto);
+    const orders = await this.orderRepository.findManyByShopId(
+      shopId,
+      paginationQueryDto,
+    );
 
     return {
       data: orders.data,
       meta: orders.meta,
-    }
+    };
   }
 }

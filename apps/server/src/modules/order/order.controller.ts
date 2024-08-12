@@ -15,7 +15,7 @@ export class OrderController {
   @Get(':shopName')
   public findMany(
     @Param('shopName') shopName: string,
-    @Query() paginationQueryDto: PaginationQueryDto
+    @Query() paginationQueryDto: PaginationQueryDto,
   ): Promise<PaginatorTypes.PaginatedResult<OrderDto[]>> {
     return this.orderService.findManyByShopId(shopName, paginationQueryDto);
   }
