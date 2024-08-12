@@ -141,7 +141,10 @@ export class BulkOperationService {
       throw new BadRequestException(BULK_OPERATION_NOT_COMPLETED);
     }
 
-    if (bulkOperation.status === BulkOperationStatusesEnum.COMPLETED && !bulkOperation.url) {
+    if (
+      bulkOperation.status === BulkOperationStatusesEnum.COMPLETED &&
+      !bulkOperation.url
+    ) {
       return;
     }
 

@@ -98,7 +98,9 @@ export class ShopifyAuthService {
     );
 
     if (orders) {
-      this.logger.debug(`Orders have been saved for the shop: ${shopInfo.name}`);
+      this.logger.debug(
+        `Orders have been saved for the shop: ${shopInfo.name}`,
+      );
     }
 
     const { apiKey } = this.configService.get<ShopifyConfig>('shopify');
