@@ -3,12 +3,16 @@ import { Prisma } from '@prisma/client';
 import { OrderRepository } from '@modules/order/order.repository';
 import { OrderDto } from '@modules/order/dtos/order.dto';
 import { ShopService } from '@modules/shop/shop.service';
+import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
+import { GetRecommendationsDto } from '@modules/product/dtos/get-recommendation.dto';
+import { GetProductNode } from '@modules/product/interfaces/get-products.interface';
 
 @Injectable()
 export class OrderService {
   constructor(
     private readonly orderRepository: OrderRepository,
     private readonly shopService: ShopService,
+    private readonly shopifyAuthSessionService: ShopifyAuthSessionService,
   ) {}
 
   public upsertMany(shopId: string, orders: OrderDto[]): Promise<OrderDto[]> {
@@ -45,5 +49,27 @@ export class OrderService {
       await this.shopService.findOneByPrimaryDomain(shopName);
 
     return this.orderRepository.findManyByShopId(shopId);
+  }
+
+  public async getProductRecommendations(
+    shopName: string,
+    query: GetRecommendationsDto,
+  ): Promise<{ products: GetProductNode[]; count: number }> {
+    const shopifySession =
+      await this.shopifyAuthSessionService.getShopifySessionByShopName(
+        shopName,
+      );
+
+    const orders = await this.orderRepository.getRecommendedProducts(query);
+
+    const productsIds = orders.map((order) => order.productId);
+
+    const products = await this.orderRepository.fetchProducts(
+      shopifySession,
+      productsIds,
+      query.limit,
+    );
+
+    return { products: products, count: orders[0]?.count || 0 };
   }
 }

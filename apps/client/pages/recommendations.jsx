@@ -34,7 +34,7 @@ const  RecommendationsList = () => {
         first: DEFAULT_PAGINATION_LIMIT,
         ...Object.fromEntries(Object.entries(params).filter(([_, v]) => v !== null && v !== '')),
       });
-      const url = `/api/v1/product/${shop}/products?${urlParams.toString()}`;
+      const url = `/api/v1/product/${shop}/products/recommendations?${urlParams.toString()}`;
       const response = await fetch(url, { method: "GET" });
       if (response.ok) {
         const { products: productsData, pageInfo: pageInfoData } = await response.json();
@@ -56,7 +56,7 @@ const  RecommendationsList = () => {
 
   const handleNextPage = () => {
     if (pageInfo.hasNextPage) {
-      fetchProducts({ after: pageInfo.endCursor, query, sortKey, reverse });
+      fetchProducts({ sortType: productFilter, skip: 0, limit: 10 });
     }
   };
 
