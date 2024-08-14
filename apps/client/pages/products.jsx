@@ -49,9 +49,6 @@ const  ProductList = () => {
     }
   };
 
-  // const getRecomandations = async (param = {}) => {
-  //   console.log('getRecomendations');
-  // } 
 
   useEffect(() => {
     fetchProducts();

@@ -55,12 +55,12 @@ export class OrderService {
     shopName: string,
     query: GetRecommendationsDto,
   ): Promise<{ products: GetProductNode[]; count: number }> {
+    const orders = await this.orderRepository.getRecommendedProducts(query);
+
     const shopifySession =
       await this.shopifyAuthSessionService.getShopifySessionByShopName(
         shopName,
       );
-
-    const orders = await this.orderRepository.getRecommendedProducts(query);
 
     const productsIds = orders.map((order) => order.productId);
 

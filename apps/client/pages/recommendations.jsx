@@ -5,7 +5,6 @@ import {
   Card,
   Button,
   Select,
-  Pagination,
   BlockStack,
   Text,
   Grid,
@@ -18,46 +17,51 @@ const DEFAULT_PAGINATION_LIMIT = 10;
 const  RecommendationsList = () => {
   const fetch = useAuthenticatedFetch();
   const [products, setProducts] = useState([]);
-  const [pageInfo, setPageInfo] = useState({ endCursor: null, hasNextPage: false });
-  const [loading, setLoading] = useState(false);
-  const [query, setQuery] = useState('');
-  const [sortKey, setSortKey] = useState('');
-  const [reverse, setReverse] = useState('');
+  const [pagination, setPagination] = useState({ skip: 0, limit: DEFAULT_PAGINATION_LIMIT });
   const [productFilter, setProductFilter] = useState('HOT');
 
   const shop = useSelector((state) => state.shop.shop);
 
   const fetchProducts = async (params = {}) => {
     try {
-      setLoading(true);
       const urlParams = new URLSearchParams({
-        first: DEFAULT_PAGINATION_LIMIT,
-        ...Object.fromEntries(Object.entries(params).filter(([_, v]) => v !== null && v !== '')),
+        sortType: productFilter, skip: 0, limit: 10,
+        ...params,
       });
       const url = `/api/v1/product/${shop}/products/recommendations?${urlParams.toString()}`;
+
       const response = await fetch(url, { method: "GET" });
+
       if (response.ok) {
-        const { products: productsData, pageInfo: pageInfoData } = await response.json();
-        setProducts(productsData);
-        setPageInfo(pageInfoData);
+        const { products } = await response.json();
+  
+        setProducts(products);
       } else {
         console.error("HTTP-Error: " + response.status);
       }
     } catch (error) {
       console.error("Fetch error:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchProducts();
+    fetchProducts({ sortType: productFilter, skip: 0, limit: DEFAULT_PAGINATION_LIMIT });
   }, [shop]);
 
+  const handlePrevPage = () => {
+    const skip = pagination.skip - DEFAULT_PAGINATION_LIMIT;
+    const limit = DEFAULT_PAGINATION_LIMIT;
+    
+    fetchProducts({ sortType: productFilter, skip, limit });
+    setPagination({ limit, skip });
+};
+
   const handleNextPage = () => {
-    if (pageInfo.hasNextPage) {
-      fetchProducts({ sortType: productFilter, skip: 0, limit: 10 });
-    }
+      const skip = pagination.skip + DEFAULT_PAGINATION_LIMIT;
+      const limit = DEFAULT_PAGINATION_LIMIT;
+      
+      fetchProducts({ sortType: productFilter, skip, limit });
+      setPagination({ limit, skip });
   };
 
   return (
@@ -72,8 +76,6 @@ const  RecommendationsList = () => {
                 options={[
                   { label: 'Hot', value: 'HOT' },
                   { label: 'Best sellers', value: 'BEST_SELLERS' },
-                  { label: 'Most viewed', value: 'MOST_VIEWED' },
-                  { label: 'Most ordered', value: 'MOST_ORDERED' },
                 ]}
                 value={productFilter}
                 onChange={(value) => setProductFilter(value)}
@@ -88,10 +90,10 @@ const  RecommendationsList = () => {
                   <Card>
                     <Text as="h3">{product.title}</Text>
                     <Thumbnail
-                      source={product.image.url || ''}
-                      alt={product.image.altText || 'No Image Available'}
+                      source={product.featuredImage.url || ''}
+                      alt={product.featuredImage.altText || 'No Image Available'}
                     />,
-                    <Text as="h5"><p>{`${product.price.minVariantPrice.amount} ${product.price.minVariantPrice.currencyCode} - ${product.price.maxVariantPrice.amount} ${product.price.maxVariantPrice.currencyCode}`}</p></Text>
+                    <Text as="h5"><p>{`${product.priceRangeV2.maxVariantPrice.amount} ${product.priceRangeV2.minVariantPrice.currencyCode} - ${product.priceRangeV2.minVariantPrice.currencyCode}`}</p></Text>
                     <Button className="btn"> Buy <i className="fa fa-shopping-cart" aria-hidden="true"></i></Button>
                   </Card>
                 </Grid.Cell>
@@ -100,11 +102,9 @@ const  RecommendationsList = () => {
           </Grid>
           </BlockStack>
 
-          <BlockStack gap="400">
-            <Pagination
-              hasNext={pageInfo.hasNextPage}
-              onNext={() => handleNextPage()}
-            />
+          <BlockStack>
+            <Button onClick={() => handlePrevPage()}>Prev</Button>
+            <Button onClick={() => handleNextPage()}>Next</Button>
           </BlockStack>
       </Card>
     </Page>

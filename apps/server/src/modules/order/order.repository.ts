@@ -56,7 +56,7 @@ export class OrderRepository {
     limit: number,
   ): Promise<GetProductNode[]> {
     const storefrontClient =
-      new ShopifyAppInstallRepository.shopify.clients.Storefront({
+      new ShopifyAppInstallRepository.shopify.clients.Graphql({
         session: new Session(session),
       });
 
@@ -77,9 +77,19 @@ export class OrderRepository {
                 id
                 title
                 createdAt
+                priceRangeV2 {
+                    maxVariantPrice {
+                      amount
+                      currencyCode
+                    }
+                    minVariantPrice {
+                      amount
+                      currencyCode
+                    }
+                }
                 featuredImage {
-                  url
-                  altText
+                    url
+                    altText
                 }
               }
             }
