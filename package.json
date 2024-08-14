@@ -47,6 +47,7 @@
   },
   "private": true,
   "dependencies": {
+    "@nodeteam/nestjs-prisma-pagination": "^1.0.6",
     "dotenv": "^16.4.5",
     "turbo": "^2.0.6"
   },

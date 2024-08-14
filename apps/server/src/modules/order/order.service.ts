@@ -3,6 +3,8 @@ import { Prisma } from '@prisma/client';
 import { OrderRepository } from '@modules/order/order.repository';
 import { OrderDto } from '@modules/order/dtos/order.dto';
 import { ShopService } from '@modules/shop/shop.service';
+import { PaginationQueryDto } from '@modules/common/dtos/pagination-query.dto';
+import { PaginatorTypes } from '@nodeteam/nestjs-prisma-pagination';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 import { GetRecommendationsDto } from '@modules/product/dtos/get-recommendation.dto';
 import { GetProductNode } from '@modules/product/interfaces/get-products.interface';
@@ -44,11 +46,22 @@ export class OrderService {
     );
   }
 
-  public async findManyByShopId(shopName: string): Promise<OrderDto[]> {
+  public async findManyByShopId(
+    shopName: string,
+    paginationQueryDto: PaginationQueryDto,
+  ): Promise<PaginatorTypes.PaginatedResult<OrderDto[]>> {
     const { id: shopId } =
       await this.shopService.findOneByPrimaryDomain(shopName);
 
-    return this.orderRepository.findManyByShopId(shopId);
+    const orders = await this.orderRepository.findManyByShopId(
+      shopId,
+      paginationQueryDto,
+    );
+
+    return {
+      data: orders.data,
+      meta: orders.meta,
+    };
   }
 
   public async getProductRecommendations(

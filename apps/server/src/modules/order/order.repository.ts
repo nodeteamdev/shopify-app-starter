@@ -8,6 +8,13 @@ import {
 import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopify-app-install.repository';
 import { Injectable } from '@nestjs/common';
 import { Order, Prisma } from '@prisma/client';
+import { paginator, PaginatorTypes } from '@nodeteam/nestjs-prisma-pagination';
+import { DEFAULT_PAGINATION_LIMIT } from '@modules/common/constants/pagination.constants';
+import { PaginationQueryDto } from '@modules/common/dtos/pagination-query.dto';
+
+const paginate: PaginatorTypes.PaginateFunction = paginator({
+  perPage: DEFAULT_PAGINATION_LIMIT,
+});
 import { Session } from '@shopify/shopify-api';
 
 @Injectable()
@@ -20,8 +27,19 @@ export class OrderRepository {
     );
   }
 
-  public findManyByShopId(shopId: string): Promise<Order[]> {
-    return this.prismaService.order.findMany({ where: { shopId } });
+  public findManyByShopId(
+    shopId: string,
+    paginationQueryDto: PaginationQueryDto,
+  ): Promise<PaginatorTypes.PaginatedResult<Order[]>> {
+    return paginate(
+      this.prismaService.order,
+      {
+        where: { shopId },
+      },
+      {
+        ...paginationQueryDto,
+      },
+    );
   }
 
   public async getRecommendedProducts(
@@ -36,12 +54,12 @@ export class OrderRepository {
     }
 
     return this.prismaService.$queryRaw(Prisma.sql`
-      SELECT 
-          item->>'productId' AS "productId",  
+      SELECT
+          item->>'productId' AS "productId",
           COUNT(*)::int AS "countProducts",
         COUNT(*) OVER()::int AS count
       FROM orders
-      JOIN UNNEST("lineItems") AS item ON true 
+      JOIN UNNEST("lineItems") AS item ON true
       ${Prisma.raw(whereCond)}
       GROUP BY "productId"
       ORDER BY "countProducts" DESC
