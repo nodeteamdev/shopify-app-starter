@@ -41,6 +41,10 @@ function AppContent() {
               label: t("NavigationMenu.orders"),
               destination: "/orders",
             },
+            {
+              label: t("NavigationMenu.recommendations"),
+              destination: "/recommendations",
+            },
           ]}
         />
       )}

@@ -7,12 +7,16 @@ import { Product } from '@modules/product/interfaces/product.interface';
 import { ShopifyProductRepository } from '@modules/product/shopify-product.repository';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { GetRecommendationsDto } from '@modules/product/dtos/get-recommendation.dto';
+import { OrderService } from '@modules/order/order.service';
+import { GetProductNode } from '@modules/product/interfaces/get-products.interface';
 
 @Injectable()
 export class ProductService {
   constructor(
     private readonly shopifyProductRepository: ShopifyProductRepository,
     private readonly shopifyAuthSessionService: ShopifyAuthSessionService,
+    private readonly orderService: OrderService,
   ) {}
 
   public static mapProduct(product: Product): ProductDto {
@@ -61,6 +65,13 @@ export class ProductService {
     }
 
     return ProductService.mapProduct(product);
+  }
+
+  public async getProductRecommendations(
+    shopName: string,
+    query: GetRecommendationsDto,
+  ): Promise<{ products: GetProductNode[]; count: number }> {
+    return this.orderService.getProductRecommendations(shopName, query);
   }
 
   public async getMany(

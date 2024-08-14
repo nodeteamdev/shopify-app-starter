@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Page,
-  LegacyCard as Card,
+  Card,
   DataTable,
   Button,
   Thumbnail,
   TextField,
   Select,
   Pagination,
+  BlockStack,
 } from '@shopify/polaris';
 import { useAuthenticatedFetch } from '../hooks/index.js';
 
@@ -48,6 +49,7 @@ const  ProductList = () => {
     }
   };
 
+
   useEffect(() => {
     fetchProducts();
   }, [shop]);
@@ -82,7 +84,7 @@ const  ProductList = () => {
       fullWidth
     >
       <Card>
-        <Card.Section>
+        <BlockStack>
           <TextField
             label="Search"
             value={query}
@@ -109,7 +111,7 @@ const  ProductList = () => {
             onChange={setReverse}
           />
           <Button onClick={handleSearch}>Search</Button>
-        </Card.Section>
+        </BlockStack>
         <DataTable
           columnContentTypes={[
             'text',

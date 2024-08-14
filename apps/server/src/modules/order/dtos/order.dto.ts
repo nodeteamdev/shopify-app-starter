@@ -5,8 +5,11 @@ export class OrderDto implements Order {
   @ApiProperty({ type: String, example: '5789856203004' })
   readonly id: string;
 
-  @ApiProperty({ type: String })
-  readonly createdAt: string;
+  @ApiProperty({ type: Date })
+  readonly createdAt: Date;
+
+  @ApiProperty({ type: Date })
+  readonly updatedAt: Date;
 
   @ApiProperty({ type: [String], example: 'Discount code' })
   readonly discountCodes: string[];

@@ -100,7 +100,8 @@ model SubscriptionPlan {
 
 model Order {
   id                     String   @id(map: "pk_Order")
-  createdAt              String
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
   discountCodes          String[]
   currencyCode           String
   displayFinancialStatus String

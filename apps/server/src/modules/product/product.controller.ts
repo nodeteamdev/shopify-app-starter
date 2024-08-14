@@ -7,12 +7,23 @@ import { ProductsQueryDto } from '@modules/product/dtos/products.query.dto';
 import { ProductService } from '@modules/product/product.service';
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
+import { GetRecommendationsDto } from '@modules/product/dtos/get-recommendation.dto';
+import { GetProductNode } from '@modules/product/interfaces/get-products.interface';
 
 @ApiTags('Products')
 @ApiExtraModels(ProductsDto, ProductVariantsDto, ProductDto)
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
+
+  @ApiOkBaseResponse({ dto: ProductsDto })
+  @Get(':shopName/products/recommendations')
+  public getProductRecommendations(
+    @Param('shopName') shopName: string,
+    @Query() query: GetRecommendationsDto,
+  ): Promise<{ products: GetProductNode[]; count: number }> {
+    return this.productService.getProductRecommendations(shopName, query);
+  }
 
   @ApiNotFoundBaseResponse()
   @Get(':shopName/products/count')

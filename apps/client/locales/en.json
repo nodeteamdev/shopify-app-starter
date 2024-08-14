@@ -10,7 +10,8 @@
   "NavigationMenu": {
     "pageName": "First page",
     "products": "Products",
-    "orders": "Orders"
+    "orders": "Orders",
+    "recommendations": "Recommendations"
   },
   "NotFound": {
     "description": "Check the URL and try again, or use the search bar to find what you need.",

@@ -23,7 +23,7 @@
     "@shopify/app-bridge": "^3.7.10",
     "@shopify/app-bridge-react": "^3.7.10",
     "@shopify/i18next-shopify": "^0.2.9",
-    "@shopify/polaris": "^10.50.1",
+    "@shopify/polaris": "13.9.0",
     "@vitejs/plugin-react": "4.2.1",
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",

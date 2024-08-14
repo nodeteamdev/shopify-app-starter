@@ -62,7 +62,34 @@ export class ShopifyProductRepository {
     });
   }
 
-  public findMany(
+  public async getRecommendedProducts(session: Session, productId: string) {
+    const storefrontClient =
+      new ShopifyAppInstallRepository.shopify.clients.Storefront({
+        session: new Session(session),
+      });
+
+    const { body }: any = await storefrontClient.query({
+      data: {
+        query: `query productRecommendations($productId: ID!) {
+          productRecommendations(productId: $productId) {
+            id
+            title
+            featuredImage {
+              altText
+              url
+            }
+          }
+        }`,
+        variables: {
+          productId: `gid://shopify/Product/${productId}`,
+        },
+      },
+    });
+
+    return { productRecommendations: body.data.productRecommendations };
+  }
+
+  public async findMany(
     session: Session,
     productsQueryDto: ProductsQueryDto,
   ): Promise<RequestReturn<GraphqlBody<ProductsWithPageInfo>>> {

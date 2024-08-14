@@ -1,9 +1,9 @@
 import { useSelector } from 'react-redux';
 import {
-  AlphaCard as Card,
+  Card,
   Page,
   Layout,
-  VerticalStack as TextContainer,
+  TextContainer,
   Image,
   LegacyStack as Stack,
   Link,
