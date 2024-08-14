@@ -18,7 +18,7 @@ const  ProductList = () => {
   const fetch = useAuthenticatedFetch();
   const [products, setProducts] = useState([]);
   const [pageInfo, setPageInfo] = useState({ endCursor: null, hasNextPage: false });
-  const [loading, setLoading] = useState(false);
+  const [_loading, setLoading] = useState(false);
   const [query, setQuery] = useState('');
   const [sortKey, setSortKey] = useState('');
   const [reverse, setReverse] = useState('');

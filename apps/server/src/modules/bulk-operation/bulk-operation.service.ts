@@ -141,6 +141,13 @@ export class BulkOperationService {
       throw new BadRequestException(BULK_OPERATION_NOT_COMPLETED);
     }
 
+    if (
+      bulkOperation.status === BulkOperationStatusesEnum.COMPLETED &&
+      !bulkOperation.url
+    ) {
+      return;
+    }
+
     const { id: shopId } =
       await this.shopService.findOneByPrimaryDomain(shopName);
 

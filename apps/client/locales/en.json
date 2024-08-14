@@ -9,7 +9,8 @@
   },
   "NavigationMenu": {
     "pageName": "First page",
-    "products": "Products"
+    "products": "Products",
+    "orders": "Orders"
   },
   "NotFound": {
     "description": "Check the URL and try again, or use the search bar to find what you need.",
@@ -39,5 +40,9 @@
   "ProductsList": {
     "description": "This is a list of sample products. You can remove them at any time.",
     "title": "All products"
+  },
+  "OrdersList": {
+    "description": "This is a list of sample orders. You can remove them at any time.",
+    "title": "All orders"
   }
 }
