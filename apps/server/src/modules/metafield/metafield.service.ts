@@ -6,7 +6,9 @@ import { ShopifyMetafield } from '@modules/metafield/interfaces/shopify-metafiel
 
 @Injectable()
 export class MetafieldService {
-  constructor(private readonly shopifyMetafieldRepository: ShopifyMetafieldRepository) {}
+  constructor(
+    private readonly shopifyMetafieldRepository: ShopifyMetafieldRepository,
+  ) {}
 
   public async create(
     session: Session,
@@ -14,9 +16,14 @@ export class MetafieldService {
   ): Promise<ShopifyMetafield[]> {
     const {
       body: {
-        data: { metafieldsSet: { metafields } }
+        data: {
+          metafieldsSet: { metafields },
+        },
       },
-    } = await this.shopifyMetafieldRepository.create(session, createShopifyMetafield);
+    } = await this.shopifyMetafieldRepository.create(
+      session,
+      createShopifyMetafield,
+    );
 
     return metafields;
   }

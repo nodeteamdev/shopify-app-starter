@@ -76,7 +76,8 @@ async function bootstrap(): Promise<{
       preflightContinue: false,
       optionsSuccessStatus: 204,
       credentials: true,
-      allowedHeaders: 'Content-Type, Accept, Authorization, ngrok-skip-browser-warning',
+      allowedHeaders:
+        'Content-Type, Accept, Authorization, ngrok-skip-browser-warning',
     };
 
     app.enableCors(options);

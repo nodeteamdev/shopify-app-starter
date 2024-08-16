@@ -105,7 +105,8 @@ export class ShopifyAuthService {
       );
     }
 
-    const { apiKey, hostName } = this.configService.get<ShopifyConfig>('shopify');
+    const { apiKey, hostName } =
+      this.configService.get<ShopifyConfig>('shopify');
 
     await this.metafieldService.create(session, [
       {
@@ -114,7 +115,7 @@ export class ShopifyAuthService {
         value: hostName,
         namespace: 'host',
         type: 'single_line_text_field',
-      }
+      },
     ]);
 
     this.logger.debug(

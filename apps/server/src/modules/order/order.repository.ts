@@ -66,7 +66,7 @@ export class OrderRepository {
   }
 
   private getHotRecommendations(
-    query: GetRecommendationsDto
+    query: GetRecommendationsDto,
   ): Promise<{ productId: string; countProducts: number; count: number }[]> {
     const { skip, limit } = query;
 
