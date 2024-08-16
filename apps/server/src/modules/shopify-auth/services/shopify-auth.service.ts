@@ -11,6 +11,7 @@ import { AppSubscriptionStatusesEnum } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import { ShopifyConfig } from '@config/shopify.config';
 import { BulkOperationService } from '@modules/bulk-operation/bulk-operation.service';
+import { MetafieldService } from '@modules/metafield/metafield.service';
 
 @Injectable()
 export class ShopifyAuthService {
@@ -23,6 +24,7 @@ export class ShopifyAuthService {
     private readonly appSubscriptionService: AppSubscriptionService,
     private readonly configService: ConfigService,
     private readonly bulkOperationService: BulkOperationService,
+    private readonly metafieldService: MetafieldService,
   ) {}
 
   public async storeOfflineToken(req: Request, res: Response) {
@@ -103,7 +105,21 @@ export class ShopifyAuthService {
       );
     }
 
-    const { apiKey } = this.configService.get<ShopifyConfig>('shopify');
+    const { apiKey, hostName } = this.configService.get<ShopifyConfig>('shopify');
+
+    await this.metafieldService.create(session, [
+      {
+        key: 'starter',
+        ownerId: shopInfo.id,
+        value: hostName,
+        namespace: 'host',
+        type: 'single_line_text_field',
+      }
+    ]);
+
+    this.logger.debug(
+      `Metafields have been saved for the shop: ${shopInfo.name}`,
+    );
 
     const appSubscription =
       await this.appSubscriptionService.findOneByShopId(extractedShopId);

@@ -1,5 +1,6 @@
 import { BulkOperationModule } from '@modules/bulk-operation/bulk-operation.module';
 import { PrismaModule } from '@modules/common/providers/prisma';
+import { MetafieldModule } from '@modules/metafield/metafield.module';
 import { ShopModule } from '@modules/shop/shop.module';
 import { ShopifyService } from '@modules/shopify-api/services/shopify.service';
 import { ShopifyAppInstallRepository } from '@modules/shopify-app-install/shopify-app-install.repository';
@@ -18,6 +19,7 @@ import { forwardRef, Module } from '@nestjs/common';
     ShopModule,
     BulkOperationModule,
     forwardRef(() => SubscriptionModule),
+    MetafieldModule,
   ],
   providers: [
     ShopifyAuthService,
