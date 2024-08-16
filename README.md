@@ -57,6 +57,9 @@ $ npm run test:cov
       - Customers Data Request: `https://<your-url>/api/v1/mandatory-webhook/customers/data-request`
       - Customers Redact: `https://<your-url>/api/v1/mandatory-webhook/customers/redact`
       - Shop Redact: `https://<your-url>/api/v1/mandatory-webhook/shops/redact`
+  - In the API access section
+    - Protected customer data access:
+      - Choose `App functionality`
 - [x] Build your `.env` file in core project based on `.env.example` . Some envs explanation:
   - `DATABASE_URL`: Postgres connection URL. If you're using a locally hosted version, `postgresql://<username>:<password>@localhost:5432/<dbname>`
   - `API_HOST_NAME`: URL generated from Ngrok. It should not contain trailing slash.
