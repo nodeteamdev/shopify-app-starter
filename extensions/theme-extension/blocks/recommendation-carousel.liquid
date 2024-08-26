@@ -1,0 +1,29 @@
+{% schema %}
+{
+  "name": "Recommendation Carousel",
+  "target": "body",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Recommendations"
+    }
+  ]
+}
+{% endschema %}
+
+<div id="recommendation-carousel-section">
+  <h2>{{ settings.title }}</h2>
+  <div id="carousel-container"></div>
+</div>
+
+<script src='{{ 'recommendation-carousel.js' | asset_url }}' type='module'></script>
+{% assign metafield = shop.metafields.host.starter.value %}
+<script>
+  (() => {
+    const hostName = "{{ metafield }}"
+
+    window.MY_APP = { hostName }
+  })()
+</script>

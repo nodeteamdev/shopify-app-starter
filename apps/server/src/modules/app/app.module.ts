@@ -36,6 +36,7 @@ import { RedisModule as NestRedisModule } from '@songkeys/nestjs-redis';
 import { Redis } from 'ioredis';
 import { BulkOperationModule } from '@modules/bulk-operation/bulk-operation.module';
 import { OrderModule } from '@modules/order/order.module';
+import { MetafieldModule } from '@modules/metafield/metafield.module';
 
 const logger: Logger = new Logger('AppModule');
 
@@ -116,6 +117,7 @@ const logger: Logger = new Logger('AppModule');
     GraphqlModule,
     BulkOperationModule,
     OrderModule,
+    MetafieldModule,
   ],
   controllers: [AppController],
   providers: [

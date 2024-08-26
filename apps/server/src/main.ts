@@ -52,6 +52,7 @@ async function bootstrap(): Promise<{
   app.use(
     helmet({
       contentSecurityPolicy: false,
+      crossOriginResourcePolicy: false,
     }),
   );
 
@@ -75,7 +76,8 @@ async function bootstrap(): Promise<{
       preflightContinue: false,
       optionsSuccessStatus: 204,
       credentials: true,
-      allowedHeaders: 'Content-Type, Accept, Authorization',
+      allowedHeaders:
+        'Content-Type, Accept, Authorization, ngrok-skip-browser-warning',
     };
 
     app.enableCors(options);

@@ -42,15 +42,13 @@ export class OrderRepository {
     );
   }
 
-  public async getRecommendedProducts(
+  public getRecommendedProducts(
     query: GetRecommendationsDto,
   ): Promise<{ productId: string; countProducts: number; count: number }[]> {
     const { sortType, skip, limit } = query;
 
-    let whereCond = 'WHERE 1=1';
-
     if (sortType === RecommendationTypesEnum.HOT) {
-      whereCond += `AND "createdAt" > current_date - interval '30' day`;
+      return this.getHotRecommendations(query);
     }
 
     return this.prismaService.$queryRaw(Prisma.sql`
@@ -60,7 +58,26 @@ export class OrderRepository {
         COUNT(*) OVER()::int AS count
       FROM orders
       JOIN UNNEST("lineItems") AS item ON true
-      ${Prisma.raw(whereCond)}
+      GROUP BY "productId"
+      ORDER BY "countProducts" DESC
+      LIMIT '${Prisma.raw(String(limit))}'
+      OFFSET '${Prisma.raw(String(skip))}'
+    `);
+  }
+
+  private getHotRecommendations(
+    query: GetRecommendationsDto,
+  ): Promise<{ productId: string; countProducts: number; count: number }[]> {
+    const { skip, limit } = query;
+
+    return this.prismaService.$queryRaw(Prisma.sql`
+      SELECT
+          item->>'productId' AS "productId",
+          COUNT(*)::int AS "countProducts",
+        COUNT(*) OVER()::int AS count
+      FROM orders
+      JOIN UNNEST("lineItems") AS item ON true
+      WHERE "createdAt" > current_date - interval '30' day
       GROUP BY "productId"
       ORDER BY "countProducts" DESC
       LIMIT '${Prisma.raw(String(limit))}'
