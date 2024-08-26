@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ShopifyMetafieldRepository } from './shopify-metafield.repository';
+import { ShopifyMetafieldRepository } from '@modules/metafield/shopify-metafield.repository';
 import { Session } from '@shopify/shopify-api';
 import { CreateShopifyMetafield } from '@modules/metafield/interfaces/create-shopify-metafield.interface';
 import { ShopifyMetafield } from '@modules/metafield/interfaces/shopify-metafield.interface';
