@@ -16,9 +16,10 @@ export class ProductModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(VerifyRequest)
-      .exclude(
-        { path: 'v1/product/:shopName/products/recommendations', method: RequestMethod.GET },
-      )
+      .exclude({
+        path: 'v1/product/:shopName/products/recommendations',
+        method: RequestMethod.GET,
+      })
       .forRoutes(ProductController);
   }
 }
