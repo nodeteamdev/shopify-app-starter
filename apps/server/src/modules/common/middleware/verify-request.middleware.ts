@@ -3,17 +3,9 @@ import { NextFunction, Request, Response } from 'express';
 
 import { ShopifyService } from '@modules/shopify-api/services/shopify.service';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
-/* Services */
 
 @Injectable()
 export class VerifyRequest implements NestMiddleware {
-  private TEST_QUERY = `
-    {
-        shop {
-        name,
-        id
-        }
-    }`;
   constructor(
     private shopifyService: ShopifyService,
     private sessionService: ShopifyAuthSessionService,
