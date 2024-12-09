@@ -70,6 +70,10 @@ export class OrderService {
   ): Promise<{ products: GetProductNode[]; count: number }> {
     const orders = await this.orderRepository.getRecommendedProducts(query);
 
+    if (!orders || orders.length === 0) {
+      return { products: [], count: 0 };
+    }
+
     const shopifySession =
       await this.shopifyAuthSessionService.getShopifySessionByShopName(
         shopName,

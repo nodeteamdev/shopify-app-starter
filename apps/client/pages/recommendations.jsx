@@ -9,6 +9,9 @@ import {
   Text,
   Grid,
   Thumbnail,
+  Divider,
+  Box,
+  ButtonGroup,
 } from '@shopify/polaris';
 import { useAuthenticatedFetch } from '../hooks/index.js';
 
@@ -66,49 +69,75 @@ const  RecommendationsList = () => {
 
   return (
     <Page
-      title="Products in this collection"
-      primaryAction={<Button primary>Add product</Button>}
+      title="Products in this Collection"
+      primaryAction={<Button primary>Add Product</Button>}
       fullWidth
     >
-      <Card roundedAbove="sm">
-          <BlockStack gap="400">
+      <Card sectioned>
+        <BlockStack gap="4">
+          <Box padding="4">
             <Select
-                options={[
-                  { label: 'Hot', value: 'HOT' },
-                  { label: 'Best sellers', value: 'BEST_SELLERS' },
-                ]}
-                value={productFilter}
-                onChange={(value) => setProductFilter(value)}
-              />
-          </BlockStack>
-          <BlockStack gap="400">
-
-          <Grid columns={{xs: 3, sm: 3, md: 3, lg: 3, xl: 3 }}>
-            {
-              products.map((product) => (
-                <Grid.Cell columns={{xs: 3, sm: 3, md: 3, lg: 3, xl: 3 }}>
-                  <Card>
-                    <Text as="h3">{product.title}</Text>
-                    <Thumbnail
-                      source={product.featuredImage.url || ''}
-                      alt={product.featuredImage.altText || 'No Image Available'}
-                    />,
-                    <Text as="h5"><p>{`${product.priceRangeV2.maxVariantPrice.amount} ${product.priceRangeV2.minVariantPrice.currencyCode} - ${product.priceRangeV2.minVariantPrice.currencyCode}`}</p></Text>
-                    <Button className="btn"> Buy <i className="fa fa-shopping-cart" aria-hidden="true"></i></Button>
-                  </Card>
-                </Grid.Cell>
-              ))
-            }
-          </Grid>
-          </BlockStack>
-
-          <BlockStack>
-            <Button onClick={() => handlePrevPage()}>Prev</Button>
-            <Button onClick={() => handleNextPage()}>Next</Button>
-          </BlockStack>
+              label="Sort Products By"
+              options={[
+                { label: 'Hot', value: 'HOT' },
+                { label: 'Best Sellers', value: 'BEST_SELLERS' },
+              ]}
+              value={productFilter}
+              onChange={(value) => setProductFilter(value)}
+            />
+          </Box>
+  
+          <Divider />
+  
+          <Box padding="4" style={{ marginTop: '20px' }}>
+            <Grid columns={{ xs: 2, sm: 3, md: 4, lg: 4 }} gap="4">
+              {products.length > 0 ? (
+                products.map((product) => (
+                  <Grid.Cell key={product.id}>
+                    <Card title={product.title} sectioned>
+                      <BlockStack gap="3">
+                        <Thumbnail
+                          source={product.featuredImage?.url || ''}
+                          alt={product.featuredImage?.altText || 'No Image Available'}
+                          size="large"
+                        />
+                        <Text variant="headingMd">{product.title}</Text>
+                        <Text variant="bodyMd">
+                          {`${product.priceRangeV2.maxVariantPrice.amount} ${product.priceRangeV2.maxVariantPrice.currencyCode}`}
+                        </Text>
+                        <Button fullWidth>
+                          Buy <i className="fa fa-shopping-cart" aria-hidden="true"></i>
+                        </Button>
+                      </BlockStack>
+                    </Card>
+                  </Grid.Cell>
+                ))
+              ) : (
+                <Text>No products available.</Text>
+              )}
+            </Grid>
+          </Box>
+  
+          <Box style={{ marginTop: '20px' }} padding="4">
+              <ButtonGroup fullWidth>
+                <Button
+                  disabled={pagination.skip === 0}
+                  onClick={handlePrevPage}
+                >
+                  Previous
+                </Button>
+                <Button
+                  disabled={pagination.skip + pagination.limit >= products}
+                  onClick={handleNextPage}
+                >
+                  Next
+                </Button>
+              </ButtonGroup>
+          </Box>
+        </BlockStack>
       </Card>
     </Page>
-  );
-}
+  );  
+};
 
 export default RecommendationsList;
