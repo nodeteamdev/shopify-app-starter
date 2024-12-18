@@ -12,11 +12,11 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @ApiOkBaseResponse({ dto: OrderDto, isArray: true })
-  @Get(':shopName')
+  @Get(':shopId')
   public findMany(
-    @Param('shopName') shopName: string,
+    @Param('shopId') shopId: string,
     @Query() paginationQueryDto: PaginationQueryDto,
   ): Promise<PaginatorTypes.PaginatedResult<OrderDto[]>> {
-    return this.orderService.findManyByShopId(shopName, paginationQueryDto);
+    return this.orderService.findManyByShopId(shopId, paginationQueryDto);
   }
 }
