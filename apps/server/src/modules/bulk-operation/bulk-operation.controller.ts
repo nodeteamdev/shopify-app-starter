@@ -11,8 +11,8 @@ export class BulkOperationController {
   constructor(private readonly bulkOperationService: BulkOperationService) {}
 
   @ApiCreatedBaseResponse({ dto: OrderDto, isArray: true })
-  @Post(':shopName')
-  public create(@Param('shopName') shopName: string): Promise<OrderDto[]> {
-    return this.bulkOperationService.parseAndSaveOrders(shopName);
+  @Post(':shopId')
+  public create(@Param('shopId') shopId: string): Promise<OrderDto[]> {
+    return this.bulkOperationService.parseAndSaveOrders(shopId);
   }
 }

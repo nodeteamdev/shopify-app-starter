@@ -47,12 +47,9 @@ export class OrderService {
   }
 
   public async findManyByShopId(
-    shopName: string,
+    shopId: string,
     paginationQueryDto: PaginationQueryDto,
   ): Promise<PaginatorTypes.PaginatedResult<OrderDto[]>> {
-    const { id: shopId } =
-      await this.shopService.findOneByPrimaryDomain(shopName);
-
     const orders = await this.orderRepository.findManyByShopId(
       shopId,
       paginationQueryDto,
