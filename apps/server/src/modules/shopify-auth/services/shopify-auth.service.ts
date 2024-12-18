@@ -95,7 +95,9 @@ export class ShopifyAuthService {
       }: ${JSON.stringify({ session }, null, 2)}`,
     );
 
-    const { id: shopId } = await this.shopService.findOneByPrimaryDomain(shopInfo.myshopifyDomain);
+    const { id: shopId } = await this.shopService.findOneByPrimaryDomain(
+      shopInfo.myshopifyDomain,
+    );
 
     const orders = await this.bulkOperationService.parseAndSaveOrders(shopId);
 
