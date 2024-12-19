@@ -11,11 +11,12 @@ import { Order, Prisma } from '@prisma/client';
 import { paginator, PaginatorTypes } from '@nodeteam/nestjs-prisma-pagination';
 import { DEFAULT_PAGINATION_LIMIT } from '@modules/common/constants/pagination.constants';
 import { PaginationQueryDto } from '@modules/common/dtos/pagination-query.dto';
+import { Session } from '@shopify/shopify-api';
+import { FindFrequentlyBoughtProductsWithMainProduct } from '@modules/order/interfaces/find-frequently-bought-products-with-main-product.interface';
 
 const paginate: PaginatorTypes.PaginateFunction = paginator({
   perPage: DEFAULT_PAGINATION_LIMIT,
 });
-import { Session } from '@shopify/shopify-api';
 
 @Injectable()
 export class OrderRepository {
@@ -138,5 +139,70 @@ export class OrderRepository {
     });
 
     return products.edges.map((edge) => edge.node);
+  }
+
+  public findFrequentlyBoughtProductsWithMainProduct(
+    shopId: string,
+    mainProductId: string,
+    take: number,
+  ): Promise<FindFrequentlyBoughtProductsWithMainProduct> {
+    return this.prismaService.$queryRaw(Prisma.sql`
+      WITH product_orders AS (
+        SELECT
+          o.id AS order_id,
+          o."shopId",
+          (line_item->>'productId') AS productId
+        FROM
+          orders o,
+          LATERAL unnest(o."lineItems") AS line_item
+        WHERE
+          (line_item->>'productId') IS NOT NULL
+      ),
+      products AS (
+        SELECT
+          po1.productId AS main_product,
+          po2.productId AS co_product,
+          COUNT(*) AS co_purchase_count
+        FROM
+          product_orders po1
+        JOIN
+          product_orders po2
+          ON po1.order_id = po2.order_id
+          AND po1.productId <> po2.productId
+        WHERE
+          po1.productId = ${mainProductId}
+          AND po1."shopId" = ${shopId}
+        GROUP BY
+          po1.productId,
+          po2.productId
+      ),
+      limited_products AS (
+        SELECT
+          main_product,
+          co_product,
+          co_purchase_count
+        FROM (
+          SELECT *,
+            ROW_NUMBER() OVER (PARTITION BY main_product ORDER BY co_purchase_count DESC) AS row_num
+          FROM
+            products
+        ) ranked
+        WHERE
+          row_num <= ${take}
+      )
+      SELECT
+        main_product AS "mainProduct",
+        json_agg(
+          json_build_object(
+            'productId', co_product,
+            'count', co_purchase_count
+          )
+          ORDER BY co_purchase_count DESC
+        ) AS "products"
+      FROM
+        limited_products
+      GROUP BY
+        main_product
+    `);
   }
 }

@@ -10,6 +10,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { GetRecommendationsDto } from '@modules/product/dtos/get-recommendation.dto';
 import { OrderService } from '@modules/order/order.service';
 import { GetProductNode } from '@modules/product/interfaces/get-products.interface';
+import { GetFrequentlyBoughtProductsWithMainProduct } from '@modules/product/dtos/get-frequently-bought-products-with-main-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -136,5 +137,13 @@ export class ProductService {
       productVariants: nodes,
       pageInfo,
     };
+  }
+
+  public getFrequentlyBoughtProductsWithMainProduct(
+    shopId: string,
+    mainProductId: string,
+    take: number,
+  ): Promise<GetFrequentlyBoughtProductsWithMainProduct> {
+    return this.orderService.getFrequentlyBoughtProductsWithMainProduct(shopId, mainProductId, take);
   }
 }
