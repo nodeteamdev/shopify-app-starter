@@ -96,6 +96,10 @@ export class OrderService {
     mainProductId: string,
     take: number,
   ): Promise<FindFrequentlyBoughtProductsWithMainProduct> {
-    return this.orderRepository.findFrequentlyBoughtProductsWithMainProduct(shopId, mainProductId, take);
+    return this.orderRepository.findFrequentlyBoughtProductsWithMainProduct(
+      shopId,
+      mainProductId,
+      take,
+    );
   }
 }

@@ -144,6 +144,10 @@ export class ProductService {
     mainProductId: string,
     take: number,
   ): Promise<GetFrequentlyBoughtProductsWithMainProduct> {
-    return this.orderService.getFrequentlyBoughtProductsWithMainProduct(shopId, mainProductId, take);
+    return this.orderService.getFrequentlyBoughtProductsWithMainProduct(
+      shopId,
+      mainProductId,
+      take,
+    );
   }
 }
