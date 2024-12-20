@@ -93,12 +93,12 @@ export class OrderService {
 
   public getFrequentlyBoughtProductsWithMainProduct(
     shopId: string,
-    mainProductId: string,
+    mainProductIds: string[],
     take: number,
   ): Promise<FindFrequentlyBoughtProductsWithMainProduct> {
     return this.orderRepository.findFrequentlyBoughtProductsWithMainProduct(
       shopId,
-      mainProductId,
+      mainProductIds,
       take,
     );
   }

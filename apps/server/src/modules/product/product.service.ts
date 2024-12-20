@@ -141,12 +141,12 @@ export class ProductService {
 
   public getFrequentlyBoughtProductsWithMainProduct(
     shopId: string,
-    mainProductId: string,
+    mainProductIds: string[],
     take: number,
   ): Promise<GetFrequentlyBoughtProductsWithMainProduct> {
     return this.orderService.getFrequentlyBoughtProductsWithMainProduct(
       shopId,
-      mainProductId,
+      mainProductIds,
       take,
     );
   }

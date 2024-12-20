@@ -22,7 +22,7 @@ export class ProductModule {
           method: RequestMethod.GET,
         },
         {
-          path: 'v1/product/:shopId/products/:productId/frequently-bought',
+          path: 'v1/product/:shopId/frequently-bought-products',
           method: RequestMethod.GET,
         },
       )

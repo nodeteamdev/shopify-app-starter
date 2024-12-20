@@ -69,15 +69,14 @@ export class ProductController {
   }
 
   @ApiOkBaseResponse({ dto: GetFrequentlyBoughtProductsWithMainProduct })
-  @Get(':shopId/products/:productId/frequently-bought')
+  @Get(':shopId/frequently-bought-products')
   public getFrequentlyBoughtProducts(
     @Param('shopId') shopId: string,
-    @Param('productId') productId: string,
-    @Query() { take }: GetFrequentlyBoughtProductsQueryDto,
+    @Query() { take, mainProductIds }: GetFrequentlyBoughtProductsQueryDto,
   ): Promise<GetFrequentlyBoughtProductsWithMainProduct> {
     return this.productService.getFrequentlyBoughtProductsWithMainProduct(
       shopId,
-      productId,
+      mainProductIds,
       take,
     );
   }

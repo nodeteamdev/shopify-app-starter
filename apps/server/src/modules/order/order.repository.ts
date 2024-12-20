@@ -143,7 +143,7 @@ export class OrderRepository {
 
   public findFrequentlyBoughtProductsWithMainProduct(
     shopId: string,
-    mainProductId: string,
+    mainProductIds: string[],
     take: number,
   ): Promise<FindFrequentlyBoughtProductsWithMainProduct> {
     return this.prismaService.$queryRaw(Prisma.sql`
@@ -161,8 +161,8 @@ export class OrderRepository {
       products AS (
         SELECT
           po1.productId AS main_product,
-          po2.productId AS co_product,
-          COUNT(*) AS co_purchase_count
+          po2.productId AS product,
+          COUNT(*) AS product_count
         FROM
           product_orders po1
         JOIN
@@ -170,7 +170,7 @@ export class OrderRepository {
           ON po1.order_id = po2.order_id
           AND po1.productId <> po2.productId
         WHERE
-          po1.productId = ${mainProductId}
+          po1.productId = ANY (ARRAY[${mainProductIds}])
           AND po1."shopId" = ${shopId}
         GROUP BY
           po1.productId,
@@ -179,11 +179,11 @@ export class OrderRepository {
       limited_products AS (
         SELECT
           main_product,
-          co_product,
-          co_purchase_count
+          product,
+          product_count
         FROM (
           SELECT *,
-            ROW_NUMBER() OVER (PARTITION BY main_product ORDER BY co_purchase_count DESC) AS row_num
+            ROW_NUMBER() OVER (PARTITION BY main_product ORDER BY product_count DESC) AS row_num
           FROM
             products
         ) ranked
@@ -194,10 +194,10 @@ export class OrderRepository {
         main_product AS "mainProduct",
         json_agg(
           json_build_object(
-            'productId', co_product,
-            'count', co_purchase_count
+            'productId', product,
+            'count', product_count
           )
-          ORDER BY co_purchase_count DESC
+          ORDER BY product_count DESC
         ) AS "products"
       FROM
         limited_products
