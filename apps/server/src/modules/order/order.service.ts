@@ -8,6 +8,7 @@ import { PaginatorTypes } from '@nodeteam/nestjs-prisma-pagination';
 import { ShopifyAuthSessionService } from '@modules/shopify-auth/services/shopify-auth-session.service';
 import { GetRecommendationsDto } from '@modules/product/dtos/get-recommendation.dto';
 import { GetProductNode } from '@modules/product/interfaces/get-products.interface';
+import { FindFrequentlyBoughtProductsWithMainProduct } from '@modules/order/interfaces/find-frequently-bought-products-with-main-product.interface';
 
 @Injectable()
 export class OrderService {
@@ -88,5 +89,17 @@ export class OrderService {
     );
 
     return { products: products, count: orders[0]?.count || 0 };
+  }
+
+  public getFrequentlyBoughtProductsWithMainProduct(
+    shopId: string,
+    mainProductIds: string[],
+    take: number,
+  ): Promise<FindFrequentlyBoughtProductsWithMainProduct> {
+    return this.orderRepository.findFrequentlyBoughtProductsWithMainProduct(
+      shopId,
+      mainProductIds,
+      take,
+    );
   }
 }

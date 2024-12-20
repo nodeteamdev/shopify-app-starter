@@ -9,6 +9,8 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import { GetRecommendationsDto } from '@modules/product/dtos/get-recommendation.dto';
 import { GetProductNode } from '@modules/product/interfaces/get-products.interface';
+import { GetFrequentlyBoughtProductsWithMainProduct } from '@modules/product/dtos/get-frequently-bought-products-with-main-product.dto';
+import { GetFrequentlyBoughtProductsQueryDto } from './dtos/get-frequently-bought-products.query.dto';
 
 @ApiTags('Products')
 @ApiExtraModels(ProductsDto, ProductVariantsDto, ProductDto)
@@ -63,6 +65,19 @@ export class ProductController {
       shopName,
       productId,
       productsQueryDto,
+    );
+  }
+
+  @ApiOkBaseResponse({ dto: GetFrequentlyBoughtProductsWithMainProduct })
+  @Get(':shopId/frequently-bought-products')
+  public getFrequentlyBoughtProducts(
+    @Param('shopId') shopId: string,
+    @Query() { take, mainProductIds }: GetFrequentlyBoughtProductsQueryDto,
+  ): Promise<GetFrequentlyBoughtProductsWithMainProduct> {
+    return this.productService.getFrequentlyBoughtProductsWithMainProduct(
+      shopId,
+      mainProductIds,
+      take,
     );
   }
 }
