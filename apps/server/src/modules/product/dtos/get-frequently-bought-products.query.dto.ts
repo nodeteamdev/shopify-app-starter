@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsString, Max, Min } from 'class-validator';
+import { ArrayMaxSize, ArrayMinSize, IsNotEmpty, IsNumber, IsString, Max, Min } from 'class-validator';
 
 export class GetFrequentlyBoughtProductsQueryDto {
   @ApiProperty({
@@ -8,6 +8,8 @@ export class GetFrequentlyBoughtProductsQueryDto {
     example: ['8726990749914', '8726990422234'],
   })
   @IsString({ each: true })
+  @ArrayMinSize(1)
+  @ArrayMaxSize(10)
   @IsNotEmpty({ each: true })
   readonly mainProductIds: string[];
 
